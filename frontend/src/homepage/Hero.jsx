@@ -1,8 +1,11 @@
 import React from "react";
+import useScrollAnimation from "./useScrollAnimation";
 
 export default function Hero() {
+    const [ref, animationClass] = useScrollAnimation();
+
     return (
-        <section className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden">
+        <section ref={ref} className={`relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000 ${animationClass}`}>
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
                 <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
