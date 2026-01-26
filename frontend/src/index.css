@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Scrollbar width */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+/* Track (background) */
+::-webkit-scrollbar-track {
+    background: #0b2545;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Thumb (draggable part) */
+::-webkit-scrollbar-thumb {
+    background: #1f7a8c;
+    border-radius: 10px;
+    border: 3px solid #0b2545;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Thumb hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #2ab39b;
+    transform: scale(1.05);
+}
+
+/* Optional: Corner (where vertical and horizontal meet) */
+::-webkit-scrollbar-corner {
+    background: #0b2545;
+}
