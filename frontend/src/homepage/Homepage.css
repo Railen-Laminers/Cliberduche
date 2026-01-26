@@ -1,5 +1,3 @@
-/* Perspective utilities (add after Tailwind imports) */
-
 .perspective {
     perspective: 1100px;
     /* distance from viewer to the element */
@@ -20,14 +18,11 @@
     transition: box-shadow 300ms ease;
 }
 
-/* CSS-only hover fallback: subtle rotation (will sit on top of inline transform if JS disabled),
-   but because each card sets inline transform, this rule is intentionally small to avoid fighting the JS transforms. */
 .perspective:hover .card-inner {
     /* slight CSS-only tilt fallback, additive to inline transform if JS is disabled */
     transform: rotateX(6deg) rotateY(-6deg) translateZ(6px);
 }
 
-/* Helper sizes if you like utility-like classes (optional) */
 .perspective.w-72 {
     width: 18rem;
 }
@@ -38,4 +33,50 @@
 
 .perspective.h-64 {
     height: 16rem;
+}
+
+/* Custom animations */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.animation-delay-200 {
+    animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+    animation-delay: 0.4s;
+}
+
+.animation-delay-1000 {
+    animation-delay: 1s;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
 }

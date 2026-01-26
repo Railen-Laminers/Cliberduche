@@ -12,11 +12,13 @@ export default function HomePage() {
     return (
         <div className="font-sans bg-[#f4faf7] text-[#0b2545] min-h-screen">
             <Navbar />
-            <Hero />
-            <MissionVision />
-            <About />
-            <Services />
-            <Contact />
+            <main className="pt-16 md:pt-20">
+                <Hero />
+                <MissionVision />
+                <About />
+                <Services />
+                <Contact />
+            </main>
             <Footer />
         </div>
     );
