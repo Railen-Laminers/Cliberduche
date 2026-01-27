@@ -14,8 +14,8 @@ export default function HomePage() {
             <Navbar />
             <main className="pt-16 md:pt-20">
                 <Hero />
-                <MissionVision />
                 <About />
+                <MissionVision />
                 <Services />
                 <Contact />
             </main>

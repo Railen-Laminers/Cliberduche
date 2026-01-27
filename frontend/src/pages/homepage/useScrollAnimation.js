@@ -14,16 +14,20 @@ export default function useScrollAnimation(threshold = 0.1) {
             { threshold }
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
+        if (ref.current) observer.observe(ref.current);
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
+            if (ref.current) observer.unobserve(ref.current);
         };
     }, [threshold]);
 
-    return [ref, isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'];
+    return [
+        ref,
+        `
+        transition-all duration-700 ease-out
+        ${isVisible
+            ? 'opacity-100 translate-y-0 scale-100'
+            : 'opacity-0 translate-y-10 scale-95'}
+        `,
+    ];
 }

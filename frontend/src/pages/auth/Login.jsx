@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
+import useScrollAnimation from '../homepage/useScrollAnimation';
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -8,6 +9,9 @@ export default function Login() {
         password: ''
     });
     const [showPassword, setShowPassword] = useState(false);
+
+    // Scroll animation hook
+    const [loginRef, loginAnimation] = useScrollAnimation(0.2);
 
     const handleChange = (e) => {
         setFormData({
@@ -24,7 +28,8 @@ export default function Login() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] flex items-center justify-center px-4">
             <div className="max-w-md w-full">
-                {/* Back to Home Link */}
+
+                {/* Back to Home */}
                 <Link
                     to="/"
                     className="inline-flex items-center text-green-300 hover:text-green-100 transition-colors mb-8"
@@ -33,13 +38,19 @@ export default function Login() {
                     Back to Home
                 </Link>
 
-                {/* Login Form */}
-                <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20">
+                {/* Login Card */}
+                <div
+                    ref={loginRef}
+                    className={`bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20 ${loginAnimation}`}
+                >
                     <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-white mb-2">Login to Cliberduche</h1>
+                        <h1 className="text-3xl font-bold text-white mb-2">
+                            Login to Cliberduche
+                        </h1>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
+
                         {/* Email Field */}
                         <div className="relative">
                             <input
@@ -86,7 +97,8 @@ export default function Login() {
                             >
                                 Password
                             </label>
-                            {/* Show/Hide Password Toggle */}
+
+                            {/* Show / Hide Password */}
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
@@ -100,21 +112,27 @@ export default function Login() {
                             </button>
                         </div>
 
-                        {/* Remember Me & Forgot Password */}
+                        {/* Remember Me */}
                         <div className="flex items-center justify-between">
                             <label className="flex items-center">
                                 <input
                                     type="checkbox"
                                     className="w-4 h-4 text-green-600 bg-white/20 border-white/30 rounded focus:ring-green-500 focus:ring-2"
                                 />
-                                <span className="ml-2 text-sm text-white">Remember me</span>
+                                <span className="ml-2 text-sm text-white">
+                                    Remember me
+                                </span>
                             </label>
-                            <a href="#" className="text-sm text-green-300 hover:text-green-100 transition-colors">
+
+                            <a
+                                href="#"
+                                className="text-sm text-green-300 hover:text-green-100 transition-colors"
+                            >
                                 Forgot password?
                             </a>
                         </div>
 
-                        {/* Sign In Button */}
+                        {/* Submit Button */}
                         <button
                             type="submit"
                             className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
@@ -127,7 +145,10 @@ export default function Login() {
                     <div className="mt-6 text-center">
                         <p className="text-white/80 text-sm">
                             Don't have an account?{' '}
-                            <a href="#" className="text-green-300 hover:text-green-100 transition-colors font-medium">
+                            <a
+                                href="#"
+                                className="text-green-300 hover:text-green-100 transition-colors font-medium"
+                            >
                                 Contact us
                             </a>
                         </p>

@@ -2,10 +2,12 @@ import React from "react";
 import useScrollAnimation from "./useScrollAnimation";
 
 export default function Hero() {
-    const [ref, animationClass] = useScrollAnimation();
+    // Create separate refs for heading and buttons
+    const [headingRef, headingAnimationClass] = useScrollAnimation();
+    const [buttonsRef, buttonsAnimationClass] = useScrollAnimation();
 
     return (
-        <section ref={ref} className={`relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000 ${animationClass}`}>
+        <section className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
                 <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
@@ -13,21 +15,29 @@ export default function Hero() {
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
-
-                <h1 className="text-4xl md:text-6xl font-bold max-w-2xl leading-tight mb-6 animate-fade-in-up">
+                {/* Heading with scroll animation */}
+                <h1
+                    ref={headingRef}
+                    className={`text-4xl md:text-6xl font-bold max-w-2xl leading-tight mb-6 ${headingAnimationClass}`}
+                >
                     Reliable Building <br className="hidden md:block" /> And Construction Solutions
                 </h1>
-                <p className="mt-4 text-lg md:text-xl text-green-100 max-w-lg leading-relaxed animate-fade-in-up animation-delay-200">
+
+                <p className="mt-4 text-lg md:text-xl text-green-100 max-w-lg leading-relaxed">
                     Building Strong Foundations For Residential And Commercial Projects With Uncompromising Quality And Innovation.
                 </p>
-                <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start animate-fade-in-up animation-delay-400">
+
+                {/* Buttons with scroll animation */}
+                <div
+                    ref={buttonsRef}
+                    className={`mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start ${buttonsAnimationClass}`}
+                >
                     <button className="bg-green-400 hover:bg-green-500 text-[#0b2545] px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300">
                         Request A Quote
                     </button>
                     <button className="border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white">
                         View Our Work
                     </button>
-
                 </div>
             </div>
 

@@ -3,8 +3,6 @@ import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import useScrollAnimation from "./useScrollAnimation";
 
 export default function Contact() {
-    const [ref, animationClass] = useScrollAnimation();
-
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -20,22 +18,33 @@ export default function Contact() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission here
         console.log('Form submitted:', formData);
-        // Reset form
         setFormData({ name: '', email: '', details: '' });
     };
 
+    // Scroll animations for child elements
+    const [headingRef, headingAnim] = useScrollAnimation(0.2);
+    const [infoRef, infoAnim] = useScrollAnimation(0.2);
+    const [formRef, formAnim] = useScrollAnimation(0.2);
+
     return (
         <section
-            ref={ref}
             id="contact"
-            className={`min-h-screen flex items-center justify-center px-4 py-16 md:py-20 bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] transition-all duration-1000 ${animationClass}`}
+            className="min-h-screen flex items-center justify-center px-4 py-16 md:py-20 bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545]"
         >
             <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 md:gap-12">
+
                 {/* Left Info Section */}
-                <div className="flex flex-col justify-center text-white">
-                    <h3 className="text-3xl md:text-4xl font-bold mb-4">Let's Build Something Great</h3>
+                <div
+                    ref={infoRef}
+                    className={`flex flex-col justify-center text-white ${infoAnim}`}
+                >
+                    <h3
+                        ref={headingRef}
+                        className={`text-3xl md:text-4xl font-bold mb-4 ${headingAnim}`}
+                    >
+                        Let's Build Something Great
+                    </h3>
                     <p className="text-green-300 text-lg leading-relaxed mb-6">
                         Contact us for a consultation or project estimate. Our team is ready to bring your vision to life with expert guidance and transparent communication.
                     </p>
@@ -62,7 +71,11 @@ export default function Contact() {
                 </div>
 
                 {/* Contact Form Section */}
-                <form onSubmit={handleSubmit} className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20 space-y-6">
+                <form
+                    ref={formRef}
+                    onSubmit={handleSubmit}
+                    className={`bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20 space-y-6 ${formAnim}`}
+                >
                     <h4 className="text-2xl font-semibold text-white mb-2 text-center">Get In Touch</h4>
 
                     {/* Name Field */}
