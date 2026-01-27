@@ -2,16 +2,38 @@ import React from "react";
 import useScrollAnimation from "./useScrollAnimation";
 
 export default function Hero() {
-    // Create separate refs for heading and buttons
     const [headingRef, headingAnimationClass] = useScrollAnimation();
     const [buttonsRef, buttonsAnimationClass] = useScrollAnimation();
 
     return (
         <section className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
-                <div className="absolute bottom-10 right-10 w-48 h-48 bg-green-300 rounded-full blur-3xl"></div>
+            {/* Hexagon Background Pattern */}
+            <div className="absolute inset-0 pointer-events-none opacity-20">
+                <svg
+                    className="w-full h-full"
+                    viewBox="0 0 800 600"
+                    xmlns="http://www.w3.org/2000/svg"
+                    preserveAspectRatio="xMidYMid slice"
+                >
+                    <defs>
+                        <pattern
+                            id="hexPattern"
+                            x="0"
+                            y="0"
+                            width="100"
+                            height="86.6"
+                            patternUnits="userSpaceOnUse"
+                        >
+                            <polygon
+                                points="50,0 100,25 100,75 50,100 0,75 0,25"
+                                stroke="#38b000"
+                                strokeWidth="2"
+                                fill="none"
+                            />
+                        </pattern>
+                    </defs>
+                    <rect width="800" height="600" fill="url(#hexPattern)" />
+                </svg>
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
