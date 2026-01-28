@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import useScrollAnimation from '../homepage/useScrollAnimation';
+import logo from '/logo/cliberduche_logo.png';
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -10,7 +11,6 @@ export default function Login() {
     });
     const [showPassword, setShowPassword] = useState(false);
 
-    // Scroll animation hook
     const [loginRef, loginAnimation] = useScrollAnimation(0.2);
 
     const handleChange = (e) => {
@@ -32,7 +32,7 @@ export default function Login() {
                 {/* Back to Home */}
                 <Link
                     to="/"
-                    className="inline-flex items-center text-green-300 hover:text-green-100 transition-colors mb-8"
+                    className="inline-flex items-center text-green-300 hover:text-green-100 transition-colors mb-6"
                 >
                     <FaArrowLeft className="w-5 h-5 mr-2" />
                     Back to Home
@@ -41,17 +41,30 @@ export default function Login() {
                 {/* Login Card */}
                 <div
                     ref={loginRef}
-                    className={`bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20 ${loginAnimation}`}
+                    className={`relative bg-white/10 backdrop-blur-md rounded-2xl p-6 pt-14 shadow-2xl border border-white/20 ${loginAnimation}`}
                 >
-                    <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold text-white mb-2">
+
+                    {/* Floating Glass Logo */}
+                    <div className="absolute -top-9 left-1/2 -translate-x-1/2">
+                        <div className="bg-white/30 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/40">
+                            <img
+                                src={logo}
+                                alt="Cliberduche Logo"
+                                className="w-14 h-auto"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Header */}
+                    <div className="text-center mb-6">
+                        <h1 className="text-3xl font-bold text-white">
                             Login to Cliberduche
                         </h1>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-4">
 
-                        {/* Email Field */}
+                        {/* Email */}
                         <div className="relative">
                             <input
                                 type="email"
@@ -66,7 +79,7 @@ export default function Login() {
                             <label
                                 htmlFor="email"
                                 className={`absolute left-4 transition-all duration-300
-                                    ${formData.email
+                  ${formData.email
                                         ? 'top-0 text-green-400 text-sm'
                                         : 'top-3 text-white/60 text-base peer-placeholder-shown:text-white/60 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm'
                                     }`}
@@ -75,7 +88,7 @@ export default function Login() {
                             </label>
                         </div>
 
-                        {/* Password Field */}
+                        {/* Password */}
                         <div className="relative">
                             <input
                                 type={showPassword ? 'text' : 'password'}
@@ -90,7 +103,7 @@ export default function Login() {
                             <label
                                 htmlFor="password"
                                 className={`absolute left-4 transition-all duration-300
-                                    ${formData.password
+                  ${formData.password
                                         ? 'top-0 text-green-400 text-sm'
                                         : 'top-3 text-white/60 text-base peer-placeholder-shown:text-white/60 peer-placeholder-shown:text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm'
                                     }`}
@@ -98,61 +111,51 @@ export default function Login() {
                                 Password
                             </label>
 
-                            {/* Show / Hide Password */}
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-green-400"
                             >
-                                {showPassword ? (
-                                    <FaEyeSlash className="h-5 w-5" />
-                                ) : (
-                                    <FaEye className="h-5 w-5" />
-                                )}
+                                {showPassword ? <FaEyeSlash className="h-5 w-5" /> : <FaEye className="h-5 w-5" />}
                             </button>
                         </div>
 
-                        {/* Remember Me */}
-                        <div className="flex items-center justify-between">
+                        {/* Remember / Forgot */}
+                        <div className="flex items-center justify-between text-sm">
                             <label className="flex items-center">
                                 <input
                                     type="checkbox"
                                     className="w-4 h-4 text-green-600 bg-white/20 border-white/30 rounded focus:ring-green-500 focus:ring-2"
                                 />
-                                <span className="ml-2 text-sm text-white">
+                                <span className="ml-2 text-white">
                                     Remember me
                                 </span>
                             </label>
 
-                            <a
-                                href="#"
-                                className="text-sm text-green-300 hover:text-green-100 transition-colors"
-                            >
+                            <a href="#" className="text-green-300 hover:text-green-100 transition-colors">
                                 Forgot password?
                             </a>
                         </div>
 
-                        {/* Submit Button */}
+                        {/* Submit */}
                         <button
                             type="submit"
-                            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
+                            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
                         >
                             Sign In
                         </button>
                     </form>
 
                     {/* Footer */}
-                    <div className="mt-6 text-center">
+                    <div className="mt-4 text-center">
                         <p className="text-white/80 text-sm">
-                            Don't have an account?{' '}
-                            <a
-                                href="#"
-                                className="text-green-300 hover:text-green-100 transition-colors font-medium"
-                            >
+                            Don&apos;t have an account?{' '}
+                            <a href="#" className="text-green-300 hover:text-green-100 font-medium">
                                 Contact us
                             </a>
                         </p>
                     </div>
+
                 </div>
             </div>
         </div>

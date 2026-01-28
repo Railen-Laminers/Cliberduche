@@ -69,9 +69,13 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           to="/"
-          className="font-bold text-xl md:text-2xl text-slate-200 hover:text-green-300"
+          className="flex items-center gap-2 hover:opacity-90 transition-opacity"
         >
-          Cliberduche
+          <img
+            src="/logo/cliberduche_logo.png"
+            alt="Cliberduche Logo"
+            className="h-10 md:h-12 w-auto"
+          />
         </Link>
 
         {/* Desktop Nav */}

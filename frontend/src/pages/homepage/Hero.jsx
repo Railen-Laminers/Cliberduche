@@ -37,28 +37,32 @@ export default function Hero() {
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
-                {/* Heading with scroll animation */}
+                {/* Heading */}
                 <h1
                     ref={headingRef}
-                    className={`text-4xl md:text-6xl font-bold max-w-2xl leading-tight mb-6 ${headingAnimationClass}`}
+                    className={`text-4xl md:text-6xl font-bold max-w-3xl leading-tight mb-6 ${headingAnimationClass}`}
                 >
-                    Reliable Building <br className="hidden md:block" /> And Construction Solutions
+                    Building Strong Foundations <br className="hidden md:block" />
+                    for a Growing Philippines
                 </h1>
 
-                <p className="mt-4 text-lg md:text-xl text-green-100 max-w-lg leading-relaxed">
-                    Building Strong Foundations For Residential And Commercial Projects With Uncompromising Quality And Innovation.
+                {/* Subheading */}
+                <p className="mt-4 text-lg md:text-xl text-green-100 max-w-2xl leading-relaxed">
+                    <strong>CLIBERDUCHE CORPORATION</strong> delivers reliable backfilling,
+                    land development, and construction solutions across CALABARZON and
+                    beyond—driven by quality, sustainability, and long-term value.
                 </p>
 
-                {/* Buttons with scroll animation */}
+                {/* Buttons */}
                 <div
                     ref={buttonsRef}
                     className={`mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start ${buttonsAnimationClass}`}
                 >
                     <button className="bg-green-400 hover:bg-green-500 text-[#0b2545] px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300">
-                        Request A Quote
+                        Request a Quote
                     </button>
                     <button className="border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white">
-                        View Our Work
+                        View Our Projects
                     </button>
                 </div>
             </div>
