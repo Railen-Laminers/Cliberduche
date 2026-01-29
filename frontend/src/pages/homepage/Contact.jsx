@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import useScrollAnimation from "./useScrollAnimation";
+import Map from "./Map";
 
 export default function Contact({ introDone = true }) {
     const [formData, setFormData] = useState({
@@ -32,7 +33,7 @@ export default function Contact({ introDone = true }) {
             id="contact"
             className="min-h-screen flex items-center justify-center px-4 py-16 md:py-20 bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545]"
         >
-            <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 md:gap-12">
+            <div className="max-w-6xl w-full grid md:grid-cols-2 items-start gap-8 md:gap-12">
 
                 {/* COMPANY INFO */}
                 <div
@@ -53,12 +54,27 @@ export default function Contact({ introDone = true }) {
                     </p>
 
                     <p className="text-green-200 mb-8 leading-relaxed">
-                        We proudly serve clients across the <strong>CALABARZON region and
-                            beyond</strong>, delivering reliable, sustainable, and
-                        cost-effective solutions for commercial and industrial projects.
+                        We proudly serve clients across the <strong>CALABARZON region and beyond</strong>,
+                        delivering reliable, sustainable, and cost-effective solutions for
+                        commercial and industrial projects.
                     </p>
 
                     <div className="space-y-4">
+                        <div className="mt-6">
+                            <h5 className="text-lg font-semibold text-white mb-3">
+                                Our Location
+                            </h5>
+
+                            <Map />
+                        </div>
+                        <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-green-700/20 rounded-full flex items-center justify-center">
+                                <FaMapMarkerAlt className="w-5 h-5 text-green-400" />
+                            </div>
+                            <span className="font-medium">
+                                3rd floor CBD Building, Brgy. Pulo, National Highway, Cabuyao City, Laguna 4025
+                            </span>
+                        </div>
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-green-700/20 rounded-full flex items-center justify-center">
                                 <FaPhone className="w-5 h-5 text-green-400" />
@@ -72,15 +88,6 @@ export default function Contact({ introDone = true }) {
                             </div>
                             <span className="font-medium">info@cliberduche.com</span>
                         </div>
-
-                        <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-green-700/20 rounded-full flex items-center justify-center">
-                                <FaMapMarkerAlt className="w-5 h-5 text-green-400" />
-                            </div>
-                            <span className="font-medium">
-                                Laguna & Cavite, CALABARZON, Philippines
-                            </span>
-                        </div>
                     </div>
                 </div>
 
@@ -88,9 +95,9 @@ export default function Contact({ introDone = true }) {
                 <form
                     ref={formRef}
                     onSubmit={handleSubmit}
-                    className={`bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20 space-y-6 ${formAnim}`}
+                    className={`self-start max-w-md w-full mx-auto bg-white/10 backdrop-blur-md rounded-xl p-5 md:p-6 shadow-xl border border-white/20 space-y-4 ${formAnim}`}
                 >
-                    <h4 className="text-2xl font-semibold text-white mb-2 text-center">
+                    <h4 className="text-xl font-semibold text-white mb-1 text-center">
                         Request a Consultation
                     </h4>
 
@@ -104,7 +111,7 @@ export default function Contact({ introDone = true }) {
                             onChange={handleChange}
                             required
                             placeholder="Full Name"
-                            className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
+                            className="peer w-full px-4 pt-4 pb-1.5 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
                         />
                         <label
                             htmlFor="name"
@@ -127,7 +134,7 @@ export default function Contact({ introDone = true }) {
                             onChange={handleChange}
                             required
                             placeholder="Email Address"
-                            className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
+                            className="peer w-full px-4 pt-4 pb-1.5 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
                         />
                         <label
                             htmlFor="email"
@@ -148,10 +155,10 @@ export default function Contact({ introDone = true }) {
                             value={formData.details}
                             onChange={handleChange}
                             required
-                            rows={4}
+                            rows={3}
                             placeholder="Project Details"
-                            className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent resize-none focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
-                        ></textarea>
+                            className="peer w-full px-4 pt-4 pb-1.5 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent resize-none focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
+                        />
                         <label
                             htmlFor="details"
                             className={`absolute left-4 transition-all duration-300 ${formData.details

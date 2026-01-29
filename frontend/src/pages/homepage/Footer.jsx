@@ -118,7 +118,7 @@ export default function Footer({ introDone = true }) {
                                 </div>
                                 <div ref={addressRef} className={`flex items-center space-x-3 text-sm ${addressAnim}`}>
                                     <FaMapMarkerAlt className="text-green-300" />
-                                    <span>Laguna & Cavite, CALABARZON, Philippines</span>
+                                    <span>3rd floor CBD Building, Brgy. Pulo, National Highway, Cabuyao City, Laguna 4025</span>
                                 </div>
                             </div>
                         </div>
