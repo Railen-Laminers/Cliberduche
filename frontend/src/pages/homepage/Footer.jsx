@@ -61,7 +61,6 @@ export default function Footer({ introDone = true }) {
 
     // Scroll animations
     const [logoRef, logoAnim] = useScrollAnimation(0.2, introDone);
-    const [headingRef, headingAnim] = useScrollAnimation(0.2, introDone);
     const [socialRef, socialAnim] = useScrollAnimation(0.2, introDone);
     const [contactHeadingRef, contactHeadingAnim] = useScrollAnimation(0.2, introDone);
     const [phoneRef, phoneAnim] = useScrollAnimation(0.2, introDone);
@@ -92,17 +91,8 @@ export default function Footer({ introDone = true }) {
             <footer className="bg-[#0b2545] text-white px-6 md:px-10 py-12 md:py-16">
                 <div className="max-w-6xl mx-auto">
                     <div className="grid md:grid-cols-4 gap-8 mb-8 items-start">
-                        {/* Logo + Text + Social */}
+                        {/* Social + Contact Info */}
                         <div className="md:col-span-2 flex flex-col">
-                            <div className="flex items-center space-x-3 mb-3">
-                                <img
-                                    ref={logoRef}
-                                    src="/logo/cliberduche_logo.png"
-                                    alt="Cliberduche Logo"
-                                    className={`w-12 md:w-16 h-auto object-contain ${logoAnim}`}
-                                />
-                            </div>
-
                             <div ref={socialRef} className={`flex space-x-3 ${socialAnim}`}>
                                 <a href="#" aria-label="Facebook" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">
                                     <FaFacebook />
@@ -169,17 +159,34 @@ export default function Footer({ introDone = true }) {
                     </div>
 
                     {/* Footer Bottom */}
-                    <div className="border-t border-gray-700 pt-8">
+                    <div className="border-t border-gray-700 pt-8 relative">
+                        {/* Large Logo in bottom-right corner */}
+                        <img
+                            ref={logoRef}
+                            src="/logo/cliberduche_logo.png"
+                            alt="Cliberduche Logo"
+                            className={`w-36 md:w-48 h-auto object-contain absolute bottom-8 right-8 ${logoAnim}`}
+                        />
+
                         <div className="flex flex-col md:flex-row justify-between items-center">
-                            <p className={`text-gray-400 text-sm transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`} style={{ transitionDelay: '0.2s' }}>
+                            <p
+                                className={`text-gray-400 text-sm transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`}
+                                style={{ transitionDelay: '0.2s' }}
+                            >
                                 © {new Date().getFullYear()} CLIBERDUCHE CORPORATION. All rights reserved.
                             </p>
 
                             <div className="flex items-center space-x-6 mt-4 md:mt-0">
-                                <span className={`text-gray-400 hover:text-green-300 text-sm cursor-pointer transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`} style={{ transitionDelay: '0.4s' }}>
+                                <span
+                                    className={`text-gray-400 hover:text-green-300 text-sm cursor-pointer transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`}
+                                    style={{ transitionDelay: '0.4s' }}
+                                >
                                     Privacy Policy
                                 </span>
-                                <span className={`text-gray-400 hover:text-green-300 text-sm cursor-pointer transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`} style={{ transitionDelay: '0.6s' }}>
+                                <span
+                                    className={`text-gray-400 hover:text-green-300 text-sm cursor-pointer transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`}
+                                    style={{ transitionDelay: '0.6s' }}
+                                >
                                     Terms of Service
                                 </span>
                             </div>

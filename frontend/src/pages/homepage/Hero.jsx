@@ -1,8 +1,8 @@
 import React from "react";
+import { LuInfinity } from "react-icons/lu";
 import useScrollAnimation from "./useScrollAnimation";
 
 export default function Hero({ introDone = true }) {
-    // Scroll animations
     const [headingRef, headingAnim] = useScrollAnimation(0.1, introDone);
     const [subheadingRef, subheadingAnim] = useScrollAnimation(0.1, introDone);
     const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
@@ -41,7 +41,6 @@ export default function Hero({ introDone = true }) {
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
-                {/* Heading */}
                 <h1
                     ref={headingRef}
                     className={`text-4xl md:text-6xl font-bold max-w-3xl leading-tight mb-6 ${headingAnim}`}
@@ -50,7 +49,6 @@ export default function Hero({ introDone = true }) {
                     for a Growing Philippines
                 </h1>
 
-                {/* Subheading */}
                 <p
                     ref={subheadingRef}
                     className={`mt-4 text-lg md:text-xl text-green-100 max-w-2xl leading-relaxed ${subheadingAnim}`}
@@ -60,7 +58,6 @@ export default function Hero({ introDone = true }) {
                     beyond—driven by quality, sustainability, and long-term value.
                 </p>
 
-                {/* Buttons */}
                 <div
                     ref={buttonsRef}
                     className={`mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start ${buttonsAnim}`}
@@ -74,18 +71,19 @@ export default function Hero({ introDone = true }) {
                 </div>
             </div>
 
-            {/* Floating Elements */}
+            {/* Floating Infinity Elements */}
             <div
                 ref={float1Ref}
                 className={`absolute top-1/4 right-10 hidden lg:block animate-float ${float1Anim}`}
             >
-                <div className="w-16 h-16 bg-green-400 rounded-full opacity-20"></div>
+                <LuInfinity className="w-16 h-16 text-green-400 opacity-20" />
             </div>
+
             <div
                 ref={float2Ref}
                 className={`absolute bottom-1/4 left-10 hidden lg:block animate-float animation-delay-1000 ${float2Anim}`}
             >
-                <div className="w-12 h-12 bg-white rounded-full opacity-10"></div>
+                <LuInfinity className="w-12 h-12 text-white opacity-10" />
             </div>
         </section>
     );
