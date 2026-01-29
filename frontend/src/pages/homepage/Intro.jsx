@@ -6,13 +6,17 @@ export default function Intro({ logoSrc, title, onFinish }) {
     const logoRef = useRef(null);
     const titleRef = useRef(null);
     const subtitleRef = useRef(null);
-    const skipRef = useRef(false); // for controlling speed
+    const skipRef = useRef(false); // controls speed
+    const hasPlayed = useRef(false); // prevent double execution in Strict Mode
 
     const [typedTitle, setTypedTitle] = useState("");
     const [isTyping, setIsTyping] = useState(true);
-    const [skipActive, setSkipActive] = useState(false); // new state for indicator
+    const [skipActive, setSkipActive] = useState(false);
 
     useEffect(() => {
+        if (hasPlayed.current) return; // prevent double execution
+        hasPlayed.current = true;
+
         const overlay = overlayRef.current;
         const logo = logoRef.current;
         const titleEl = titleRef.current;
@@ -20,12 +24,14 @@ export default function Intro({ logoSrc, title, onFinish }) {
 
         if (!overlay || !logo || !titleEl || !subtitleEl) return;
 
-        // Initial styles
+        // Reset skip and initial styles
+        skipRef.current = false;
         logo.style.opacity = "0";
         titleEl.style.opacity = "1";
         subtitleEl.style.opacity = "0";
         subtitleEl.style.transform = "translateY(-8px)";
 
+        // Consistent sleep function
         const sleep = (ms) =>
             new Promise((res) => setTimeout(res, skipRef.current ? ms / 2 : ms));
 
@@ -54,6 +60,16 @@ export default function Intro({ logoSrc, title, onFinish }) {
             logo.style.animation = "logoLoop 1.8s ease-in-out infinite alternate";
             await sleep(800);
 
+            // === Exit texts first ===
+            titleEl.style.transition = "opacity 500ms ease, transform 500ms ease";
+            subtitleEl.style.transition = "opacity 500ms ease, transform 500ms ease";
+            titleEl.style.opacity = "0";
+            titleEl.style.transform = "translateY(-20px)";
+            subtitleEl.style.opacity = "0";
+            subtitleEl.style.transform = "translateY(-20px)";
+
+            await sleep(500); // wait for text to fully exit
+
             // Move logo to navbar
             const target = document.getElementById("nav-logo");
             if (!target) {
@@ -81,26 +97,21 @@ export default function Intro({ logoSrc, title, onFinish }) {
             logo.style.height = `${logoRect.height}px`;
             logo.style.margin = "0";
             logo.style.zIndex = "9999";
+            logo.style.transform = "translate(0,0) scale(1)";
 
-            // Animate logo to navbar
             const moveDuration = skipRef.current ? 600 : 1200;
             logo.style.transition = `transform ${moveDuration}ms cubic-bezier(.22,1,.36,1)`;
-            logo.style.transform = "translate(0,0) scale(1)";
+
+            // Wait a frame for browser to paint initial transform
             requestAnimationFrame(() => {
-                logo.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+                requestAnimationFrame(() => {
+                    logo.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+                });
             });
 
             await sleep(moveDuration);
 
-            // Exit texts
-            titleEl.style.transition = "opacity 500ms ease, transform 500ms ease";
-            subtitleEl.style.transition = "opacity 500ms ease, transform 500ms ease";
-            titleEl.style.opacity = "0";
-            titleEl.style.transform = "translateY(-20px)";
-            subtitleEl.style.opacity = "0";
-            subtitleEl.style.transform = "translateY(-20px)";
-
-            await sleep(500);
+            // Fade out overlay after logo finished moving
             overlay.style.transition = "background-color 400ms ease, backdrop-filter 400ms ease";
             overlay.style.backgroundColor = "rgba(0,0,0,0)";
             overlay.style.backdropFilter = "blur(0px)";
@@ -115,7 +126,7 @@ export default function Intro({ logoSrc, title, onFinish }) {
     // Handle skip click
     const handleSkip = () => {
         skipRef.current = true;
-        setSkipActive(true); // activate indicator
+        setSkipActive(true);
     };
 
     return (
@@ -138,7 +149,6 @@ export default function Intro({ logoSrc, title, onFinish }) {
           .blink { animation: blink 1s steps(2, start) infinite; }
           @keyframes blink { 0% {opacity:1;} 50% {opacity:0;} 100% {opacity:1;} }
 
-          /* Skip button hover and active effects */
           .skip-btn {
             transition: transform 150ms ease, text-shadow 150ms ease, opacity 150ms ease, color 150ms ease;
           }
@@ -148,8 +158,8 @@ export default function Intro({ logoSrc, title, onFinish }) {
             opacity: 1;
           }
           .skip-active {
-            color: #3cff66; /* color change when active */
-            text-shadow: 0 0 16px rgba(0,255,234,0.9); /* glowing effect */
+            color: #3cff66;
+            text-shadow: 0 0 16px rgba(0,255,234,0.9);
           }
         `}
             </style>
@@ -182,7 +192,11 @@ export default function Intro({ logoSrc, title, onFinish }) {
                     }}
                 >
                     {typedTitle.split("").map((char, i) => (
-                        <span key={i} className="wave-char" style={{ animationDelay: `${i * 40}ms` }}>
+                        <span
+                            key={i}
+                            className="wave-char"
+                            style={{ animationDelay: `${i * 40}ms` }}
+                        >
                             {char}
                         </span>
                     ))}
