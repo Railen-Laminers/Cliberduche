@@ -22,6 +22,7 @@ export default function Footer({ introDone = true }) {
         }
     }, [introDone]);
 
+    // Scroll to top
     const scrollToTop = () => {
         const start = window.scrollY;
         const duration = 500;
@@ -31,6 +32,27 @@ export default function Footer({ introDone = true }) {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
             window.scrollTo(0, start * (1 - progress));
+            if (progress < 1) requestAnimationFrame(animateScroll);
+        };
+
+        requestAnimationFrame(animateScroll);
+    };
+
+    // Smooth scroll to section
+    const scrollToSection = (selector) => {
+        const target = document.querySelector(selector);
+        if (!target) return;
+
+        const start = window.scrollY;
+        const end = target.getBoundingClientRect().top + start;
+        const distance = end - start;
+        const duration = 500;
+        const startTime = performance.now();
+
+        const animateScroll = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            window.scrollTo(0, start + distance * progress);
             if (progress < 1) requestAnimationFrame(animateScroll);
         };
 
@@ -61,8 +83,7 @@ export default function Footer({ introDone = true }) {
 
     const companyLinks = [
         { label: "About Us", href: "#about" },
-        { label: "Mission & Vision", href: "#mission-vision" },
-        { label: "Projects", href: "#projects" },
+        { label: "Services", href: "#services" },
         { label: "Contact", href: "#contact" },
     ];
 
@@ -80,10 +101,6 @@ export default function Footer({ introDone = true }) {
                                     alt="Cliberduche Logo"
                                     className={`w-12 md:w-16 h-auto object-contain ${logoAnim}`}
                                 />
-                                <div ref={headingRef} className={`${headingAnim} flex flex-col`}>
-                                    <span className="font-bold text-xl md:text-2xl">CLIBERDUCHE</span>
-                                    <span className="text-sm md:text-base font-semibold">CORPORATION</span>
-                                </div>
                             </div>
 
                             <div ref={socialRef} className={`flex space-x-3 ${socialAnim}`}>
@@ -122,7 +139,12 @@ export default function Footer({ introDone = true }) {
                             <ul className="space-y-2 text-gray-300">
                                 {services.map((s, i) => (
                                     <li key={i} ref={serviceRefs} className={`hover:text-green-300 text-sm ${serviceAnim}`}>
-                                        <a href="#services" className="inline-block">{s}</a>
+                                        <button
+                                            onClick={() => scrollToSection("#services")}
+                                            className="inline-block text-left"
+                                        >
+                                            {s}
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
@@ -134,7 +156,12 @@ export default function Footer({ introDone = true }) {
                             <ul className="space-y-2 text-gray-300">
                                 {companyLinks.map((link, i) => (
                                     <li key={i} ref={companyRefs} className={`hover:text-green-300 text-sm ${companyAnim}`}>
-                                        <a href={link.href} className="inline-block">{link.label}</a>
+                                        <button
+                                            onClick={() => scrollToSection(link.href)}
+                                            className="inline-block text-left"
+                                        >
+                                            {link.label}
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
