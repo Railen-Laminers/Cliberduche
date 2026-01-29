@@ -1,3 +1,4 @@
+// About.jsx
 import React from "react";
 import PerspectiveCard from "./PerspectiveCard";
 import { FaCheck } from "react-icons/fa";
@@ -8,9 +9,9 @@ import img3 from "/img_3.png";
 
 import useScrollAnimation from "./useScrollAnimation";
 
-export default function About() {
-  const [textRef, textAnimation] = useScrollAnimation();
-  const [cardRef, cardAnimation] = useScrollAnimation();
+export default function About({ introDone = true }) {
+  const [textRef, textAnimation] = useScrollAnimation(0.1, introDone);
+  const [cardRef, cardAnimation] = useScrollAnimation(0.1, introDone);
 
   return (
     <section
@@ -50,7 +51,7 @@ export default function About() {
 
         <p className="text-gray-600 leading-relaxed mb-8">
           As client needs expanded, CLIBERDUCHE CORPORATION grew into a one-stop
-          shop offering General Engineering, Civil Works, and Construction &
+          shop offering General Engineering, Civil Works, and Construction &amp;
           Development for both horizontal and vertical projects. We remain
           committed to sustainable and eco-friendly practices, strictly adhering
           to DENR regulations and government standards.

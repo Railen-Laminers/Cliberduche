@@ -1,8 +1,9 @@
+// Contact.jsx
 import React, { useState } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import useScrollAnimation from "./useScrollAnimation";
 
-export default function Contact() {
+export default function Contact({ introDone = true }) {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -22,9 +23,9 @@ export default function Contact() {
         setFormData({ name: "", email: "", details: "" });
     };
 
-    const [headingRef, headingAnim] = useScrollAnimation(0.2);
-    const [infoRef, infoAnim] = useScrollAnimation(0.2);
-    const [formRef, formAnim] = useScrollAnimation(0.2);
+    const [headingRef, headingAnim] = useScrollAnimation(0.2, introDone);
+    const [infoRef, infoAnim] = useScrollAnimation(0.2, introDone);
+    const [formRef, formAnim] = useScrollAnimation(0.2, introDone);
 
     return (
         <section
@@ -108,8 +109,8 @@ export default function Contact() {
                         <label
                             htmlFor="name"
                             className={`absolute left-4 transition-all duration-300 ${formData.name
-                                    ? "top-0 text-green-400 text-sm"
-                                    : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
+                                ? "top-0 text-green-400 text-sm"
+                                : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
                                 }`}
                         >
                             Full Name
@@ -131,8 +132,8 @@ export default function Contact() {
                         <label
                             htmlFor="email"
                             className={`absolute left-4 transition-all duration-300 ${formData.email
-                                    ? "top-0 text-green-400 text-sm"
-                                    : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
+                                ? "top-0 text-green-400 text-sm"
+                                : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
                                 }`}
                         >
                             Email Address
@@ -154,8 +155,8 @@ export default function Contact() {
                         <label
                             htmlFor="details"
                             className={`absolute left-4 transition-all duration-300 ${formData.details
-                                    ? "top-0 text-green-400 text-sm"
-                                    : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
+                                ? "top-0 text-green-400 text-sm"
+                                : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
                                 }`}
                         >
                             Project Details

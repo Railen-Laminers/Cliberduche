@@ -1,9 +1,13 @@
 import React from "react";
 import useScrollAnimation from "./useScrollAnimation";
 
-export default function Hero() {
-    const [headingRef, headingAnimationClass] = useScrollAnimation();
-    const [buttonsRef, buttonsAnimationClass] = useScrollAnimation();
+export default function Hero({ introDone = true }) {
+    // Scroll animations
+    const [headingRef, headingAnim] = useScrollAnimation(0.1, introDone);
+    const [subheadingRef, subheadingAnim] = useScrollAnimation(0.1, introDone);
+    const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
+    const [float1Ref, float1Anim] = useScrollAnimation(0.1, introDone);
+    const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
 
     return (
         <section className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000">
@@ -40,14 +44,17 @@ export default function Hero() {
                 {/* Heading */}
                 <h1
                     ref={headingRef}
-                    className={`text-4xl md:text-6xl font-bold max-w-3xl leading-tight mb-6 ${headingAnimationClass}`}
+                    className={`text-4xl md:text-6xl font-bold max-w-3xl leading-tight mb-6 ${headingAnim}`}
                 >
                     Building Strong Foundations <br className="hidden md:block" />
                     for a Growing Philippines
                 </h1>
 
                 {/* Subheading */}
-                <p className="mt-4 text-lg md:text-xl text-green-100 max-w-2xl leading-relaxed">
+                <p
+                    ref={subheadingRef}
+                    className={`mt-4 text-lg md:text-xl text-green-100 max-w-2xl leading-relaxed ${subheadingAnim}`}
+                >
                     <strong>CLIBERDUCHE CORPORATION</strong> delivers reliable backfilling,
                     land development, and construction solutions across CALABARZON and
                     beyond—driven by quality, sustainability, and long-term value.
@@ -56,7 +63,7 @@ export default function Hero() {
                 {/* Buttons */}
                 <div
                     ref={buttonsRef}
-                    className={`mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start ${buttonsAnimationClass}`}
+                    className={`mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start ${buttonsAnim}`}
                 >
                     <button className="bg-green-400 hover:bg-green-500 text-[#0b2545] px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300">
                         Request a Quote
@@ -68,10 +75,16 @@ export default function Hero() {
             </div>
 
             {/* Floating Elements */}
-            <div className="absolute top-1/4 right-10 hidden lg:block animate-float">
+            <div
+                ref={float1Ref}
+                className={`absolute top-1/4 right-10 hidden lg:block animate-float ${float1Anim}`}
+            >
                 <div className="w-16 h-16 bg-green-400 rounded-full opacity-20"></div>
             </div>
-            <div className="absolute bottom-1/4 left-10 hidden lg:block animate-float animation-delay-1000">
+            <div
+                ref={float2Ref}
+                className={`absolute bottom-1/4 left-10 hidden lg:block animate-float animation-delay-1000 ${float2Anim}`}
+            >
                 <div className="w-12 h-12 bg-white rounded-full opacity-10"></div>
             </div>
         </section>

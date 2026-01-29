@@ -1,13 +1,14 @@
+// MissionVision.jsx
 import React, { useRef, useEffect, useState } from "react";
 import PerspectiveCard from "./PerspectiveCard";
 import { FaBolt, FaEye, FaShieldAlt, FaCheckCircle, FaBalanceScale } from "react-icons/fa";
 import useScrollAnimation from "./useScrollAnimation";
 
-export default function MissionVision() {
-    const [headingRef, headingAnim] = useScrollAnimation();
-    const [missionRef, missionAnim] = useScrollAnimation();
-    const [visionRef, visionAnim] = useScrollAnimation();
-    const [valuesRef, valuesAnim] = useScrollAnimation();
+export default function MissionVision({ introDone = true }) {
+    const [headingRef, headingAnim] = useScrollAnimation(0.1, introDone);
+    const [missionRef, missionAnim] = useScrollAnimation(0.1, introDone);
+    const [visionRef, visionAnim] = useScrollAnimation(0.1, introDone);
+    const [valuesRef, valuesAnim] = useScrollAnimation(0.1, introDone);
 
     const missionCardRef = useRef(null);
     const [visionHeight, setVisionHeight] = useState("auto");

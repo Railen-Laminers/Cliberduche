@@ -1,4 +1,4 @@
-// Services.js
+// Services.jsx
 import React from "react";
 import PerspectiveCard from "./PerspectiveCard";
 import {
@@ -10,8 +10,8 @@ import {
 } from "react-icons/fa";
 import useScrollAnimation from "./useScrollAnimation";
 
-export default function Services() {
-    const [ref, animationClass] = useScrollAnimation();
+export default function Services({ introDone = true }) {
+    const [ref, animationClass] = useScrollAnimation(0.1, introDone);
 
     const services = [
         {
