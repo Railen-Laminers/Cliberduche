@@ -11,42 +11,12 @@ export default function Hero({ introDone = true }) {
 
     return (
         <section className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000">
-            {/* Hexagon Background Pattern */}
-            <div className="absolute inset-0 pointer-events-none opacity-20">
-                <svg
-                    className="w-full h-full"
-                    viewBox="0 0 800 600"
-                    xmlns="http://www.w3.org/2000/svg"
-                    preserveAspectRatio="xMidYMid slice"
-                >
-                    <defs>
-                        <pattern
-                            id="hexPattern"
-                            x="0"
-                            y="0"
-                            width="100"
-                            height="86.6"
-                            patternUnits="userSpaceOnUse"
-                        >
-                            <polygon
-                                points="50,0 100,25 100,75 50,100 0,75 0,25"
-                                stroke="#38b000"
-                                strokeWidth="2"
-                                fill="none"
-                            />
-                        </pattern>
-                    </defs>
-                    <rect width="800" height="600" fill="url(#hexPattern)" />
-                </svg>
-            </div>
-
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
                 <h1
                     ref={headingRef}
                     className={`text-4xl md:text-6xl font-bold max-w-3xl leading-tight mb-6 ${headingAnim}`}
                 >
-                    Building Strong Foundations <br className="hidden md:block" />
-                    for a Growing Philippines
+                    Building Excellence, Delivering Trust
                 </h1>
 
                 <p
