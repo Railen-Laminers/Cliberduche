@@ -7,9 +7,10 @@ import useScrollAnimation from "./useScrollAnimation";
 export default function Navbar({ introDone = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const [activeSection, setActiveSection] = useState("home");
 
   // Scroll animation hooks
+  const [homeRef, homeClass] = useScrollAnimation(0.1, introDone);
   const [aboutRef, aboutClass] = useScrollAnimation(0.1, introDone);
   const [servicesRef, servicesClass] = useScrollAnimation(0.1, introDone);
   const [contactRef, contactClass] = useScrollAnimation(0.1, introDone);
@@ -19,7 +20,7 @@ export default function Navbar({ introDone = false }) {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
-      const sections = ["about", "services", "contact"];
+      const sections = ["home", "about", "services", "contact"];
       sections.forEach((id) => {
         const section = document.getElementById(id);
         if (section) {
@@ -76,16 +77,16 @@ export default function Navbar({ introDone = false }) {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
-        ? "bg-[#0b2545] shadow-lg border-b border-white/10"
-        : "bg-[#0b2545]"
+          ? "bg-[#0b2545] shadow-lg border-b border-white/10"
+          : "bg-[#0b2545]"
         }`}
     >
       <div className="h-16 md:h-20 flex items-center justify-between px-6 md:px-10">
         {/* Logo */}
         <button
           onClick={() => {
-            scrollToTop(); // smooth scroll to top
-            setIsOpen(false); // close drawer if open
+            scrollToTop();
+            setIsOpen(false);
           }}
           className="flex items-center gap-2 hover:opacity-90 transition-opacity"
         >
@@ -102,6 +103,19 @@ export default function Navbar({ introDone = false }) {
         <nav
           className={`hidden md:flex items-center space-x-8 text-sm font-medium ${textColor}`}
         >
+          <button
+            ref={homeRef}
+            onClick={() => smoothScrollTo("home")}
+            className={`${homeClass} relative transition-colors hover:text-green-300 ${activeSection === "home" ? "text-green-300" : ""
+              }`}
+          >
+            Home
+            <span
+              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "home" ? "w-full" : "w-0"
+                }`}
+            />
+          </button>
+
           <button
             ref={aboutRef}
             onClick={() => smoothScrollTo("about")}
@@ -169,6 +183,15 @@ export default function Navbar({ introDone = false }) {
           <button
             className="text-left text-lg font-medium py-2 hover:text-green-300"
             onClick={() => {
+              smoothScrollTo("home");
+              setIsOpen(false);
+            }}
+          >
+            Home
+          </button>
+          <button
+            className="text-left text-lg font-medium py-2 hover:text-green-300"
+            onClick={() => {
               smoothScrollTo("about");
               setIsOpen(false);
             }}
@@ -196,7 +219,7 @@ export default function Navbar({ introDone = false }) {
         </nav>
 
         {/* Bottom: Login Button */}
-        <div className="px-4 mb-6 text-white ">
+        <div className="px-4 mb-6 text-white">
           <button
             className="w-full text-left text-lg font-medium py-2 hover:text-green-300 border-t border-green-300"
             onClick={() => {

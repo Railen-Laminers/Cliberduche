@@ -1,4 +1,3 @@
-
 .perspective {
     perspective: 1100px;
     /* distance from viewer to the element */
@@ -10,7 +9,9 @@
 .card-inner {
     transform-style: preserve-3d;
     will-change: transform;
-    /* transform default will be set inline from React for per-instance base poses */
+    /* help text rendering when transforms are present */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Optional soft shadows for depth illusion */

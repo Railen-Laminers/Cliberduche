@@ -10,7 +10,9 @@ export default function Hero({ introDone = true }) {
     const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
 
     return (
-        <section className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000">
+        <section 
+        id="home"
+        className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000">
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
                 <h1
                     ref={headingRef}

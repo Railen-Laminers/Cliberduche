@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Intro from "./Intro";
-import Hero from "./Hero";
+import Home from "./Home";
 import MissionVision from "./MissionVision";
 import About from "./About";
 import Services from "./Services";
@@ -29,7 +29,7 @@ export default function HomePage() {
 
             <main className="pt-16 md:pt-20">
                 {/* pass introDone to any section using scroll animations */}
-                <Hero introDone={introDone} />
+                <Home introDone={introDone} />
                 <About introDone={introDone} />
                 <MissionVision introDone={introDone} />
                 <Services introDone={introDone} />

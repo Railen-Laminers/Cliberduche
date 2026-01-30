@@ -81,6 +81,7 @@ export default function Footer({ introDone = true }) {
     ];
 
     const companyLinks = [
+        { label: "Home", href: "#home" },
         { label: "About Us", href: "#about" },
         { label: "Services", href: "#services" },
         { label: "Contact", href: "#contact" },
