@@ -3,9 +3,9 @@ import React from "react";
 import PerspectiveCard from "./PerspectiveCard";
 import { FaCheck } from "react-icons/fa";
 
-import img1 from "/img_1.png";
-import img2 from "/img_2.png";
-import img3 from "/img_3.png";
+import img1 from "/about/img_1.png";
+import img2 from "/about/img_2.png";
+import img3 from "/about/img_3.png";
 
 import useScrollAnimation from "./useScrollAnimation";
 

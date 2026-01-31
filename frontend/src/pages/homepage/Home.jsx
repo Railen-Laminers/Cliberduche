@@ -1,8 +1,10 @@
 import React from "react";
 import { LuInfinity } from "react-icons/lu";
 import useScrollAnimation from "./useScrollAnimation";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero({ introDone = true }) {
+    const navigate = useNavigate();
     const [headingRef, headingAnim] = useScrollAnimation(0.1, introDone);
     const [subheadingRef, subheadingAnim] = useScrollAnimation(0.1, introDone);
     const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
@@ -10,9 +12,9 @@ export default function Hero({ introDone = true }) {
     const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
 
     return (
-        <section 
-        id="home"
-        className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000">
+        <section
+            id="home"
+            className="relative bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000">
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
                 <h1
                     ref={headingRef}
@@ -37,7 +39,10 @@ export default function Hero({ introDone = true }) {
                     <button className="bg-green-400 hover:bg-green-500 text-[#0b2545] px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300">
                         Request a Quote
                     </button>
-                    <button className="border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white">
+                    <button
+                        onClick={() => navigate("/projects")}
+                        className="border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white"
+                    >
                         View Our Projects
                     </button>
                 </div>
