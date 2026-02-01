@@ -1,6 +1,6 @@
 // Navbar.jsx
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import useScrollAnimation from "./useScrollAnimation";
 
@@ -8,6 +8,7 @@ export default function Navbar({ introDone = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const navigate = useNavigate(); // For mobile login navigation
 
   // Scroll animation hooks
   const [homeRef, homeClass] = useScrollAnimation(0.1, introDone);
@@ -44,8 +45,7 @@ export default function Navbar({ introDone = false }) {
       target.getBoundingClientRect().top + window.scrollY - headerOffset;
     const start = window.scrollY;
     const distance = targetPosition - start;
-    // Scroll to top
-    const duration = 300; // 300ms instead of 600ms
+    const duration = 300; // 300ms scroll
 
     const startTime = performance.now();
 
@@ -58,7 +58,7 @@ export default function Navbar({ introDone = false }) {
     requestAnimationFrame(animateScroll);
   };
 
-  // Smooth scroll to top
+  // Scroll to top
   const scrollToTop = () => {
     const start = window.scrollY;
     const duration = 500;
@@ -79,8 +79,8 @@ export default function Navbar({ introDone = false }) {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
-        ? "bg-[#0b2545] shadow-lg border-b border-white/10"
-        : "bg-[#0b2545]"
+          ? "bg-[#0b2545] shadow-lg border-b border-white/10"
+          : "bg-[#0b2545]"
         }`}
     >
       <div className="h-16 md:h-20 flex items-center justify-between px-6 md:px-10">
@@ -226,7 +226,7 @@ export default function Navbar({ introDone = false }) {
             className="w-full text-left text-lg font-medium py-2 hover:text-green-300 border-t border-green-300"
             onClick={() => {
               setIsOpen(false);
-              window.location.href = "/login";
+              navigate("/login"); // fixed navigation
             }}
           >
             Login
