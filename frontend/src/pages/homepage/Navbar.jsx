@@ -44,7 +44,9 @@ export default function Navbar({ introDone = false }) {
       target.getBoundingClientRect().top + window.scrollY - headerOffset;
     const start = window.scrollY;
     const distance = targetPosition - start;
-    const duration = 600;
+    // Scroll to top
+    const duration = 300; // 300ms instead of 600ms
+
     const startTime = performance.now();
 
     const animateScroll = (currentTime) => {
@@ -77,8 +79,8 @@ export default function Navbar({ introDone = false }) {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
-          ? "bg-[#0b2545] shadow-lg border-b border-white/10"
-          : "bg-[#0b2545]"
+        ? "bg-[#0b2545] shadow-lg border-b border-white/10"
+        : "bg-[#0b2545]"
         }`}
     >
       <div className="h-16 md:h-20 flex items-center justify-between px-6 md:px-10">
