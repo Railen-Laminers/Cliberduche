@@ -9,7 +9,7 @@ import Contact from "./Contact";
 import Footer from "./Footer";
 import './Homepage.css';
 
-export default function HomePage() {
+export default function Homepage() {
     const [introPlaying, setIntroPlaying] = useState(true);
     const introDone = !introPlaying;
 
