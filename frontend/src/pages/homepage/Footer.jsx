@@ -13,7 +13,7 @@ import useScrollAnimation from "./useScrollAnimation";
 export default function Footer({ introDone = true }) {
     const [visible, setVisible] = useState(false);
 
-    // Scroll listener for "Back to Top" button
+    // Back to top visibility
     useEffect(() => {
         const toggleVisibility = () => setVisible(window.scrollY > 300);
         if (introDone) {
@@ -28,17 +28,16 @@ export default function Footer({ introDone = true }) {
         const duration = 500;
         const startTime = performance.now();
 
-        const animateScroll = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+        const animate = (time) => {
+            const progress = Math.min((time - startTime) / duration, 1);
             window.scrollTo(0, start * (1 - progress));
-            if (progress < 1) requestAnimationFrame(animateScroll);
+            if (progress < 1) requestAnimationFrame(animate);
         };
 
-        requestAnimationFrame(animateScroll);
+        requestAnimationFrame(animate);
     };
 
-    // Smooth scroll to section
+    // Scroll to section
     const scrollToSection = (selector) => {
         const target = document.querySelector(selector);
         if (!target) return;
@@ -49,14 +48,13 @@ export default function Footer({ introDone = true }) {
         const duration = 500;
         const startTime = performance.now();
 
-        const animateScroll = (currentTime) => {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+        const animate = (time) => {
+            const progress = Math.min((time - startTime) / duration, 1);
             window.scrollTo(0, start + distance * progress);
-            if (progress < 1) requestAnimationFrame(animateScroll);
+            if (progress < 1) requestAnimationFrame(animate);
         };
 
-        requestAnimationFrame(animateScroll);
+        requestAnimationFrame(animate);
     };
 
     // Scroll animations
@@ -71,7 +69,6 @@ export default function Footer({ introDone = true }) {
     const [companyHeadingRef, companyHeadingAnim] = useScrollAnimation(0.2, introDone);
     const [companyRefs, companyAnim] = useScrollAnimation(0.2, introDone);
 
-    // Data
     const services = [
         "Backfill & Land Sourcing",
         "Land Development",
@@ -89,114 +86,117 @@ export default function Footer({ introDone = true }) {
 
     return (
         <>
-            <footer className="bg-[#0b2545] text-white px-6 md:px-10 py-12 md:py-16">
-                <div className="max-w-6xl mx-auto">
-                    <div className="grid md:grid-cols-4 gap-8 mb-8 items-start">
-                        {/* Social + Contact Info */}
-                        <div className="md:col-span-2 flex flex-col">
-                            <div ref={socialRef} className={`flex space-x-3 ${socialAnim}`}>
-                                <a href="#" aria-label="Facebook" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">
-                                    <FaFacebook />
-                                </a>
-                                <a href="#" aria-label="Twitter" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">
-                                    <FaTwitter />
-                                </a>
-                                <a href="#" aria-label="LinkedIn" className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors">
-                                    <FaLinkedin />
-                                </a>
+            <footer className="relative bg-[#081c33] text-white overflow-hidden">
+                {/* background accent */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 via-transparent to-transparent pointer-events-none" />
+
+                <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-20">
+                    <div className="grid md:grid-cols-12 gap-12 items-start">
+                        {/* BRAND + CONTACT */}
+                        <div className="md:col-span-5 space-y-10">
+                            <img
+                                ref={logoRef}
+                                src="/logo/cliberduche_logo.png"
+                                alt="Cliberduche Logo"
+                                className={`w-44 md:w-56 ${logoAnim}`}
+                            />
+
+                            {/* Social */}
+                            <div
+                                ref={socialRef}
+                                className={`flex space-x-4 ${socialAnim}`}
+                            >
+                                {[FaFacebook, FaTwitter, FaLinkedin].map((Icon, i) => (
+                                    <a
+                                        key={i}
+                                        href="#"
+                                        className="group w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-green-400 transition"
+                                    >
+                                        <Icon className="text-lg group-hover:text-green-400 transition" />
+                                    </a>
+                                ))}
                             </div>
 
-                            {/* Contact Info */}
-                            <div className="mt-6 space-y-2 text-gray-200">
-                                <h5 ref={contactHeadingRef} className={`font-semibold text-lg ${contactHeadingAnim}`}>Contact</h5>
-                                <div ref={phoneRef} className={`flex items-center space-x-3 text-sm ${phoneAnim}`}>
-                                    <FaPhone className="text-green-300" />
-                                    <span>(+63) 9XX-XXX-XXXX</span>
-                                </div>
-                                <div ref={emailRef} className={`flex items-center space-x-3 text-sm ${emailAnim}`}>
-                                    <FaEnvelope className="text-green-300" />
-                                    <span>info@cliberduche.com</span>
-                                </div>
-                                <div ref={addressRef} className={`flex items-center space-x-3 text-sm ${addressAnim}`}>
-                                    <FaMapMarkerAlt className="text-green-300" />
-                                    <span>3rd floor CBD Building, Brgy. Pulo, National Highway, Cabuyao City, Laguna 4025</span>
-                                </div>
+                            
+                        </div>
+
+                        {/* NAVIGATION */}
+                        <div className="md:col-span-7 grid sm:grid-cols-2 gap-12">
+                            {/* Services */}
+                            <div>
+                                <h5
+                                    ref={servicesHeadingRef}
+                                    className={`mb-6 text-lg font-semibold tracking-wide ${servicesHeadingAnim}`}
+                                >
+                                    Services
+                                </h5>
+                                <ul className="space-y-4">
+                                    {services.map((s, i) => (
+                                        <li
+                                            key={i}
+                                            ref={serviceRefs}
+                                            className={`group text-sm text-gray-400 hover:text-green-300 transition ${serviceAnim}`}
+                                        >
+                                            <button
+                                                onClick={() => scrollToSection("#services")}
+                                                className="relative pl-6 text-left"
+                                            >
+                                                <span className="absolute left-0 top-2 w-2 h-2 bg-green-400 rounded-full scale-0 group-hover:scale-100 transition" />
+                                                {s}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
-                        </div>
 
-                        {/* Services */}
-                        <div>
-                            <h5 ref={servicesHeadingRef} className={`font-semibold mb-4 text-lg ${servicesHeadingAnim}`}>Services</h5>
-                            <ul className="space-y-2 text-gray-300">
-                                {services.map((s, i) => (
-                                    <li key={i} ref={serviceRefs} className={`hover:text-green-300 text-sm ${serviceAnim}`}>
-                                        <button
-                                            onClick={() => scrollToSection("#services")}
-                                            className="inline-block text-left"
+                            {/* Company */}
+                            <div>
+                                <h5
+                                    ref={companyHeadingRef}
+                                    className={`mb-6 text-lg font-semibold tracking-wide ${companyHeadingAnim}`}
+                                >
+                                    Company
+                                </h5>
+                                <ul className="space-y-4">
+                                    {companyLinks.map((link, i) => (
+                                        <li
+                                            key={i}
+                                            ref={companyRefs}
+                                            className={`group text-sm text-gray-400 hover:text-green-300 transition ${companyAnim}`}
                                         >
-                                            {s}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        {/* Company */}
-                        <div>
-                            <h5 ref={companyHeadingRef} className={`font-semibold mb-4 text-lg ${companyHeadingAnim}`}>Company</h5>
-                            <ul className="space-y-2 text-gray-300">
-                                {companyLinks.map((link, i) => (
-                                    <li key={i} ref={companyRefs} className={`hover:text-green-300 text-sm ${companyAnim}`}>
-                                        <button
-                                            onClick={() => scrollToSection(link.href)}
-                                            className="inline-block text-left"
-                                        >
-                                            {link.label}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
+                                            <button
+                                                onClick={() => scrollToSection(link.href)}
+                                                className="relative pl-6 text-left"
+                                            >
+                                                <span className="absolute left-0 top-2 w-2 h-2 bg-green-400 rounded-full scale-0 group-hover:scale-100 transition" />
+                                                {link.label}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Footer Bottom */}
-                    <div className="border-t border-gray-700 pt-8 relative">
-                        {/* Large Logo in bottom-right corner */}
-                        <img
-                            ref={logoRef}
-                            src="/logo/cliberduche_logo.png"
-                            alt="Cliberduche Logo"
-                            className={`w-36 md:w-48 h-auto object-contain absolute bottom-8 right-8 ${logoAnim}`}
-                        />
+                    {/* BOTTOM */}
+                    <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <p className="text-sm text-gray-500">
+                            © {new Date().getFullYear()} CLIBERDUCHE CORPORATION. All rights reserved.
+                        </p>
 
-                        <div className="flex flex-col md:flex-row justify-between items-center">
-                            <p
-                                className={`text-gray-400 text-sm transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`}
-                                style={{ transitionDelay: '0.2s' }}
-                            >
-                                © {new Date().getFullYear()} CLIBERDUCHE CORPORATION. All rights reserved.
-                            </p>
-
-                            <div className="flex items-center space-x-6 mt-4 md:mt-0">
-                                <span
-                                    className={`text-gray-400 hover:text-green-300 text-sm cursor-pointer transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`}
-                                    style={{ transitionDelay: '0.4s' }}
-                                >
-                                    Privacy Policy
-                                </span>
-                                <span
-                                    className={`text-gray-400 hover:text-green-300 text-sm cursor-pointer transition-all duration-700 ease-out opacity-0 translate-y-10 scale-95`}
-                                    style={{ transitionDelay: '0.6s' }}
-                                >
-                                    Terms of Service
-                                </span>
-                            </div>
+                        <div className="flex gap-8 text-sm text-gray-500">
+                            <span className="hover:text-green-300 cursor-pointer transition">
+                                Privacy Policy
+                            </span>
+                            <span className="hover:text-green-300 cursor-pointer transition">
+                                Terms of Service
+                            </span>
                         </div>
                     </div>
                 </div>
             </footer>
 
-            {/* Back To Top Button */}
+            {/* Back to top */}
             {introDone && (
                 <button
                     onClick={scrollToTop}

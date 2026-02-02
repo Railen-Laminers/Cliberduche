@@ -36,6 +36,7 @@ export default function Login() {
                     className="inline-flex items-center text-green-300 hover:text-green-100 transition-colors mb-6"
                 >
                     <FaArrowLeft className="w-5 h-5 mr-2" />
+                    <span className="text-sm tracking-wider font-medium">RETURN HOME</span>
                 </Link>
 
                 {/* Login Card with Perspective */}

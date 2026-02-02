@@ -5,3 +5,10 @@ Backend
 
 Frontend
 - npm install
+
+
+Tasks for frontend
+- boring navbar
+- borng button
+- boring footer
+- boring project page

@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import useScrollAnimation from "./useScrollAnimation";
 import Map from "./Map";
+import PerspectiveCard from "./PerspectiveCard";
+import logo from "/logo/cliberduche_logo.png";
 
 export default function Contact({ introDone = true }) {
     const [formData, setFormData] = useState({
@@ -33,9 +35,9 @@ export default function Contact({ introDone = true }) {
             id="contact"
             className="min-h-screen flex items-center justify-center px-4 py-16 md:py-20 bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545]"
         >
-            <div className="max-w-6xl w-full grid md:grid-cols-2 items-start gap-8 md:gap-12">
+            <div className="max-w-6xl w-full grid md:grid-cols-2 gap-10 md:gap-14 items-start">
 
-                {/* COMPANY INFO */}
+                {/* ================= COMPANY INFO ================= */}
                 <div
                     ref={infoRef}
                     className={`flex flex-col justify-center text-white ${infoAnim}`}
@@ -54,9 +56,10 @@ export default function Contact({ introDone = true }) {
                     </p>
 
                     <p className="text-green-200 mb-8 leading-relaxed">
-                        We proudly serve clients across the <strong>CALABARZON region and beyond</strong>,
-                        delivering reliable, sustainable, and cost-effective solutions for
-                        commercial and industrial projects.
+                        We proudly serve clients across the{" "}
+                        <strong>CALABARZON region and beyond</strong>, delivering reliable,
+                        sustainable, and cost-effective solutions for commercial and
+                        industrial projects.
                     </p>
 
                     <div className="space-y-4">
@@ -64,17 +67,19 @@ export default function Contact({ introDone = true }) {
                             <h5 className="text-lg font-semibold text-white mb-3">
                                 Our Location
                             </h5>
-
                             <Map />
                         </div>
+
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-green-700/20 rounded-full flex items-center justify-center">
                                 <FaMapMarkerAlt className="w-5 h-5 text-green-400" />
                             </div>
                             <span className="font-medium">
-                                3rd floor CBD Building, Brgy. Pulo, National Highway, Cabuyao City, Laguna 4025
+                                3rd floor CBD Building, Brgy. Pulo, National Highway,
+                                Cabuyao City, Laguna 4025
                             </span>
                         </div>
+
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-green-700/20 rounded-full flex items-center justify-center">
                                 <FaPhone className="w-5 h-5 text-green-400" />
@@ -91,93 +96,116 @@ export default function Contact({ introDone = true }) {
                     </div>
                 </div>
 
-                {/* CONTACT FORM */}
-                <form
-                    ref={formRef}
-                    onSubmit={handleSubmit}
-                    className={`self-start max-w-md w-full mx-auto bg-white/10 backdrop-blur-md rounded-xl p-5 md:p-6 shadow-xl border border-white/20 space-y-4 ${formAnim}`}
+                {/* ================= CONTACT FORM ================= */}
+                <PerspectiveCard
+                    className={`relative ${formAnim}`}
+                    maxRotate={12}
+                    defaultScale={1.03}
                 >
-                    <h4 className="text-xl font-semibold text-white mb-1 text-center">
-                        Request a Consultation
-                    </h4>
-
-                    {/* NAME */}
-                    <div className="relative">
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            placeholder="Full Name"
-                            className="peer w-full px-4 pt-4 pb-1.5 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
-                        />
-                        <label
-                            htmlFor="name"
-                            className={`absolute left-4 transition-all duration-300 ${formData.name
-                                ? "top-0 text-green-400 text-sm"
-                                : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
-                                }`}
-                        >
-                            Full Name
-                        </label>
-                    </div>
-
-                    {/* EMAIL */}
-                    <div className="relative">
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                            placeholder="Email Address"
-                            className="peer w-full px-4 pt-4 pb-1.5 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
-                        />
-                        <label
-                            htmlFor="email"
-                            className={`absolute left-4 transition-all duration-300 ${formData.email
-                                ? "top-0 text-green-400 text-sm"
-                                : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
-                                }`}
-                        >
-                            Email Address
-                        </label>
-                    </div>
-
-                    {/* DETAILS */}
-                    <div className="relative">
-                        <textarea
-                            id="details"
-                            name="details"
-                            value={formData.details}
-                            onChange={handleChange}
-                            required
-                            rows={3}
-                            placeholder="Project Details"
-                            className="peer w-full px-4 pt-4 pb-1.5 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent resize-none focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
-                        />
-                        <label
-                            htmlFor="details"
-                            className={`absolute left-4 transition-all duration-300 ${formData.details
-                                ? "top-0 text-green-400 text-sm"
-                                : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
-                                }`}
-                        >
-                            Project Details
-                        </label>
-                    </div>
-
-                    {/* SUBMIT */}
-                    <button
-                        type="submit"
-                        className="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
+                    <form
+                        ref={formRef}
+                        onSubmit={handleSubmit}
+                        className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 pt-14 shadow-2xl border border-white/20 space-y-4 max-w-md w-full mx-auto"
                     >
-                        Send Message
-                    </button>
-                </form>
+                        {/* Floating Glass Logo */}
+                        <div className="absolute -top-9 left-1/2 -translate-x-1/2">
+                            <div className="bg-white/30 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/40">
+                                <img
+                                    src={logo}
+                                    alt="Cliberduche Logo"
+                                    className="w-14 h-auto"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Header */}
+                        <div className="text-center mb-6">
+                            <h4 className="text-2xl font-bold text-white">
+                                Request a Consultation
+                            </h4>
+                        </div>
+
+                        {/* Name */}
+                        <div className="relative">
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                                placeholder="Full Name"
+                                className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
+                            />
+                            <label
+                                htmlFor="name"
+                                className={`absolute left-4 transition-all duration-300
+                                    ${formData.name
+                                        ? "top-0 text-green-400 text-sm"
+                                        : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
+                                    }`}
+                            >
+                                Full Name
+                            </label>
+                        </div>
+
+                        {/* Email */}
+                        <div className="relative">
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                placeholder="Email Address"
+                                className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
+                            />
+                            <label
+                                htmlFor="email"
+                                className={`absolute left-4 transition-all duration-300
+                                    ${formData.email
+                                        ? "top-0 text-green-400 text-sm"
+                                        : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
+                                    }`}
+                            >
+                                Email Address
+                            </label>
+                        </div>
+
+                        {/* Details */}
+                        <div className="relative">
+                            <textarea
+                                id="details"
+                                name="details"
+                                value={formData.details}
+                                onChange={handleChange}
+                                required
+                                rows={4}
+                                placeholder="Project Details"
+                                className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-transparent resize-none focus:border-green-400 focus:ring-2 focus:ring-green-400 outline-none transition-all duration-300"
+                            />
+                            <label
+                                htmlFor="details"
+                                className={`absolute left-4 transition-all duration-300
+                                    ${formData.details
+                                        ? "top-0 text-green-400 text-sm"
+                                        : "top-3 text-white/60 text-base peer-focus:top-0 peer-focus:text-green-400 peer-focus:text-sm"
+                                    }`}
+                            >
+                                Project Details
+                            </label>
+                        </div>
+
+                        {/* Submit */}
+                        <button
+                            type="submit"
+                            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300"
+                        >
+                            Send Message
+                        </button>
+                    </form>
+                </PerspectiveCard>
             </div>
         </section>
     );
