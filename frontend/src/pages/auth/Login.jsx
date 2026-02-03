@@ -27,17 +27,18 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] flex items-center justify-center px-4">
-            <div className="max-w-md w-full">
+        <div className="min-h-screen bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] flex items-center justify-center px-4 relative">
+            {/* Fixed Return Home Button - Always at top left */}
+            <Link
+                to="/"
+                className="fixed top-6 left-6 z-40 inline-flex items-center bg-white/90 backdrop-blur-sm text-[#0b2545] hover:text-[#1f7a8c] hover:bg-white transition-all duration-300 group px-4 py-3 rounded-full shadow-lg"
+            >
+                <FaArrowLeft className="w-5 h-5 mr-3 group-hover:-translate-x-1 transition-transform" />
+                <span className="text-sm tracking-wider font-medium">RETURN HOME</span>
+            </Link>
 
-                {/* Back to Home */}
-                <Link
-                    to="/"
-                    className="inline-flex items-center text-green-300 hover:text-green-100 transition-colors mb-6"
-                >
-                    <FaArrowLeft className="w-5 h-5 mr-2" />
-                    <span className="text-sm tracking-wider font-medium">RETURN HOME</span>
-                </Link>
+            <div className="max-w-md w-full">
+                {/* Removed the inline return home link */}
 
                 {/* Login Card with Perspective */}
                 <PerspectiveCard

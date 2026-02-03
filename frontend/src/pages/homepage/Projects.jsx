@@ -123,6 +123,15 @@ export default function Projects({ introDone = true }) {
 
   return (
     <div className="bg-white text-[#0b2545] overflow-x-hidden" ref={containerRef}>
+      {/* Fixed Return Home Button - Always at top left */}
+      <Link
+        to="/"
+        className="fixed top-6 left-6 z-40 inline-flex items-center bg-white/90 backdrop-blur-sm text-[#0b2545] hover:text-[#1f7a8c] hover:bg-white transition-all duration-300 group px-4 py-3 rounded-full shadow-lg"
+      >
+        <FaArrowLeft className="w-5 h-5 mr-3 group-hover:-translate-x-1 transition-transform" />
+        <span className="text-sm tracking-wider font-medium">RETURN HOME</span>
+      </Link>
+
       {/* Hero Section - Full viewport height */}
       <section
         className="relative text-white px-6 md:px-10 overflow-hidden bg-cover bg-bottom bg-fixed min-h-screen flex items-center"
@@ -130,16 +139,8 @@ export default function Projects({ introDone = true }) {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-[#0b2545]/85 via-[#1f7a8c]/70 to-[#0b2545]/85"></div>
 
-        <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left w-full pt-16">
-          <ScrollAnimatedItem threshold={0.1} introDone={introDone}>
-            <Link
-              to="/"
-              className="inline-flex items-center text-green-200 hover:text-green-400 transition-all duration-300 group mb-8"
-            >
-              <FaArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-              <span className="text-sm tracking-wider font-medium">RETURN HOME</span>
-            </Link>
-          </ScrollAnimatedItem>
+        <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left w-full pt-20">
+          {/* Removed the button from here since it's now fixed at top */}
 
           <ScrollAnimatedItem threshold={0.1} introDone={introDone}>
             <h1 className="text-5xl md:text-7xl font-bold max-w-3xl leading-tight mb-6">
