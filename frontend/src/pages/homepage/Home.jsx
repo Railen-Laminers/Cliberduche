@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LuInfinity } from "react-icons/lu";
 import useScrollAnimation from "./useScrollAnimation";
 import { useNavigate } from "react-router-dom";
@@ -6,20 +6,39 @@ import office from "/office.jpg";
 
 export default function Hero({ introDone = true }) {
     const navigate = useNavigate();
+
+    // Scroll animations
     const [headingRef, headingAnim] = useScrollAnimation(0.1, introDone);
     const [subheadingRef, subheadingAnim] = useScrollAnimation(0.1, introDone);
     const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
     const [float1Ref, float1Anim] = useScrollAnimation(0.1, introDone);
     const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
 
+    // Fix mobile 100vh issue
+    useEffect(() => {
+        const setVh = () => {
+            document.documentElement.style.setProperty(
+                "--vh",
+                `${window.innerHeight * 0.01}px`
+            );
+        };
+
+        setVh();
+        window.addEventListener("resize", setVh);
+        return () => window.removeEventListener("resize", setVh);
+    }, []);
+
     return (
         <section
             id="home"
-            className="relative text-white px-6 md:px-10 pt-0 pb-32 overflow-hidden transition-all duration-1000 bg-cover bg-center bg-fixed"
-            style={{ backgroundImage: `url(${office})` }}
+            className="relative text-white px-6 md:px-10 overflow-hidden transition-all duration-1000 bg-cover bg-center bg-fixed"
+            style={{
+                backgroundImage: `url(${office})`,
+                minHeight: "calc(var(--vh, 1vh) * 100)",
+            }}
         >
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0b2545]/80 via-[#1f7a8c]/70 to-[#0b2545]/80"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0b2545]/80 via-[#1f7a8c]/70 to-[#0b2545]/80" />
 
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
                 <h1
