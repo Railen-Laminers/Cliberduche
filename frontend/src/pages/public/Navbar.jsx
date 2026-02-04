@@ -1,78 +1,35 @@
 // Navbar.jsx
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
-import useScrollAnimation from "./useScrollAnimation";
+import useScrollAnimation from "../../hooks/useScrollAnimation";
 
 export default function Navbar({ introDone = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const navigate = useNavigate(); // For mobile login navigation
+  const navigate = useNavigate(); // For mobile navigation
+  const location = useLocation();
 
-  // Scroll animation hooks
+  // Scroll animation hooks (kept for small nav animations)
   const [homeRef, homeClass] = useScrollAnimation(0.1, introDone);
   const [aboutRef, aboutClass] = useScrollAnimation(0.1, introDone);
   const [servicesRef, servicesClass] = useScrollAnimation(0.1, introDone);
+  const [projectsRef, projectsClass] = useScrollAnimation(0.1, introDone);
   const [contactRef, contactClass] = useScrollAnimation(0.1, introDone);
   const [loginRef, loginClass] = useScrollAnimation(0.1, introDone);
 
-  // Scroll listener for active section
+  // Update scrolled / active based on route
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      const sections = ["home", "about", "services", "contact"];
-      sections.forEach((id) => {
-        const section = document.getElementById(id);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= 120 && rect.bottom >= 120) {
-            setActiveSection(id);
-          }
-        }
-      });
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Smooth scroll to section
-  const smoothScrollTo = (id) => {
-    const target = document.getElementById(id);
-    if (!target) return;
-    const headerOffset = 80;
-    const targetPosition =
-      target.getBoundingClientRect().top + window.scrollY - headerOffset;
-    const start = window.scrollY;
-    const distance = targetPosition - start;
-    const duration = 300; // 300ms scroll
-
-    const startTime = performance.now();
-
-    const animateScroll = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      window.scrollTo(0, start + distance * progress);
-      if (progress < 1) requestAnimationFrame(animateScroll);
-    };
-    requestAnimationFrame(animateScroll);
-  };
-
-  // Scroll to top
-  const scrollToTop = () => {
-    const start = window.scrollY;
-    const duration = 500;
-    const startTime = performance.now();
-
-    const animateScroll = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      window.scrollTo(0, start * (1 - progress));
-      if (progress < 1) requestAnimationFrame(animateScroll);
-    };
-
-    requestAnimationFrame(animateScroll);
-  };
+    setIsScrolled(window.scrollY > 50);
+    const path = location.pathname;
+    if (path === "/" || path === "") setActiveSection("home");
+    else if (path.startsWith("/about")) setActiveSection("about");
+    else if (path.startsWith("/services")) setActiveSection("services");
+    else if (path.startsWith("/projects")) setActiveSection("projects");
+    else if (path.startsWith("/contact")) setActiveSection("contact");
+    else setActiveSection("");
+  }, [location.pathname]);
 
   const textColor = isScrolled ? "text-white" : "text-slate-300";
 
@@ -87,7 +44,7 @@ export default function Navbar({ introDone = false }) {
         {/* Logo */}
         <button
           onClick={() => {
-            scrollToTop();
+            navigate("/");
             setIsOpen(false);
           }}
           className="flex items-center gap-2 hover:opacity-90 transition-opacity"
@@ -105,57 +62,60 @@ export default function Navbar({ introDone = false }) {
         <nav
           className={`hidden md:flex items-center space-x-8 text-sm font-medium ${textColor}`}
         >
-          <button
+          <Link
             ref={homeRef}
-            onClick={() => smoothScrollTo("home")}
-            className={`${homeClass} relative transition-colors hover:text-green-300 ${activeSection === "home" ? "text-green-300" : ""
-              }`}
+            to="/"
+            className={`${homeClass} relative transition-colors hover:text-green-300 ${activeSection === "home" ? "text-green-300" : ""}`}
           >
             Home
             <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "home" ? "w-full" : "w-0"
-                }`}
+              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "home" ? "w-full" : "w-0"}`}
             />
-          </button>
+          </Link>
 
-          <button
+          <Link
             ref={aboutRef}
-            onClick={() => smoothScrollTo("about")}
-            className={`${aboutClass} relative transition-colors hover:text-green-300 ${activeSection === "about" ? "text-green-300" : ""
-              }`}
+            to="/about"
+            className={`${aboutClass} relative transition-colors hover:text-green-300 ${activeSection === "about" ? "text-green-300" : ""}`}
           >
             About
             <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "about" ? "w-full" : "w-0"
-                }`}
+              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "about" ? "w-full" : "w-0"}`}
             />
-          </button>
+          </Link>
 
-          <button
+          <Link
             ref={servicesRef}
-            onClick={() => smoothScrollTo("services")}
-            className={`${servicesClass} relative transition-colors hover:text-green-300 ${activeSection === "services" ? "text-green-300" : ""
-              }`}
+            to="/services"
+            className={`${servicesClass} relative transition-colors hover:text-green-300 ${activeSection === "services" ? "text-green-300" : ""}`}
           >
             Services
             <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "services" ? "w-full" : "w-0"
-                }`}
+              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "services" ? "w-full" : "w-0"}`}
             />
-          </button>
+          </Link>
 
-          <button
+          <Link
+            ref={projectsRef}
+            to="/projects"
+            className={`${projectsClass} relative transition-colors hover:text-green-300 ${activeSection === "projects" ? "text-green-300" : ""}`}
+          >
+            Projects
+            <span
+              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "projects" ? "w-full" : "w-0"}`}
+            />
+          </Link>
+
+          <Link
             ref={contactRef}
-            onClick={() => smoothScrollTo("contact")}
-            className={`${contactClass} relative transition-colors hover:text-green-300 ${activeSection === "contact" ? "text-green-300" : ""
-              }`}
+            to="/contact"
+            className={`${contactClass} relative transition-colors hover:text-green-300 ${activeSection === "contact" ? "text-green-300" : ""}`}
           >
             Contact
             <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "contact" ? "w-full" : "w-0"
-                }`}
+              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "contact" ? "w-full" : "w-0"}`}
             />
-          </button>
+          </Link>
 
           <Link
             ref={loginRef}
@@ -185,7 +145,7 @@ export default function Navbar({ introDone = false }) {
           <button
             className="text-left text-lg font-medium py-2 hover:text-green-300"
             onClick={() => {
-              smoothScrollTo("home");
+              navigate("/");
               setIsOpen(false);
             }}
           >
@@ -194,7 +154,7 @@ export default function Navbar({ introDone = false }) {
           <button
             className="text-left text-lg font-medium py-2 hover:text-green-300"
             onClick={() => {
-              smoothScrollTo("about");
+              navigate("/about");
               setIsOpen(false);
             }}
           >
@@ -203,7 +163,7 @@ export default function Navbar({ introDone = false }) {
           <button
             className="text-left text-lg font-medium py-2 hover:text-green-300"
             onClick={() => {
-              smoothScrollTo("services");
+              navigate("/services");
               setIsOpen(false);
             }}
           >
@@ -212,7 +172,16 @@ export default function Navbar({ introDone = false }) {
           <button
             className="text-left text-lg font-medium py-2 hover:text-green-300"
             onClick={() => {
-              smoothScrollTo("contact");
+              navigate("/projects");
+              setIsOpen(false);
+            }}
+          >
+            Projects
+          </button>
+          <button
+            className="text-left text-lg font-medium py-2 hover:text-green-300"
+            onClick={() => {
+              navigate("/contact");
               setIsOpen(false);
             }}
           >

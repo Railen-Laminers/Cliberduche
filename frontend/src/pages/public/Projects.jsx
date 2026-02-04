@@ -12,8 +12,8 @@ import {
   FaCheck
 } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
-import useScrollAnimation from "./useScrollAnimation";
-import PerspectiveCard from "./PerspectiveCard";
+import useScrollAnimation from "../../hooks/useScrollAnimation";
+import PerspectiveCard from "../../components/PerspectiveCard";
 import { projects } from "./projectsData";
 import heroImage from "/projects/northport_ongoing/northport_img_5.jpg";
 

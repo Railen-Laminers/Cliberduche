@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
 import Intro from "./Intro";
 import Home from "./Home";
-import MissionVision from "./MissionVision";
 import About from "./About";
 import Services from "./Services";
 import Contact from "./Contact";
+import Projects from "./Projects";
 import Footer from "./Footer";
 import './Homepage.css';
 
@@ -28,15 +29,20 @@ export default function Homepage() {
             )}
 
             <main className="pt-16 md:pt-20">
-                {/* pass introDone to any section using scroll animations */}
-                <Home introDone={introDone} />
-                <About introDone={introDone} />
-                <MissionVision introDone={introDone} />
-                <Services introDone={introDone} />
-                <Contact introDone={introDone} />
+                <Routes>
+                    {/* Index / Home */}
+                    <Route index element={<Home introDone={introDone} />} />
+                    <Route path="/" element={<Home introDone={introDone} />} />
+
+                    {/* Dedicated pages */}
+                    <Route path="/about" element={<About introDone={introDone} />} />
+                    <Route path="/services" element={<Services introDone={introDone} />} />
+                    <Route path="/projects" element={<Projects introDone={introDone} />} />
+                    <Route path="/contact" element={<Contact introDone={introDone} />} />
+                </Routes>
             </main>
 
-            {/* Pass introDone to Footer so scroll animations wait */}
+            {/* Pass introDone to Footer so animations can wait */}
             <Footer introDone={introDone} />
         </div>
     );

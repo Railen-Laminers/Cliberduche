@@ -8,10 +8,12 @@ import {
     FaEnvelope,
     FaMapMarkerAlt,
 } from "react-icons/fa";
-import useScrollAnimation from "./useScrollAnimation";
+import useScrollAnimation from "../../hooks/useScrollAnimation";
+import { useNavigate } from "react-router-dom";
 
 export default function Footer({ introDone = true }) {
     const [visible, setVisible] = useState(false);
+    const navigate = useNavigate();
 
     // Back to top visibility
     useEffect(() => {
@@ -37,25 +39,7 @@ export default function Footer({ introDone = true }) {
         requestAnimationFrame(animate);
     };
 
-    // Scroll to section
-    const scrollToSection = (selector) => {
-        const target = document.querySelector(selector);
-        if (!target) return;
-
-        const start = window.scrollY;
-        const end = target.getBoundingClientRect().top + start;
-        const distance = end - start;
-        const duration = 500;
-        const startTime = performance.now();
-
-        const animate = (time) => {
-            const progress = Math.min((time - startTime) / duration, 1);
-            window.scrollTo(0, start + distance * progress);
-            if (progress < 1) requestAnimationFrame(animate);
-        };
-
-        requestAnimationFrame(animate);
-    };
+    // NOTE: Section-scrolling removed; footer links now navigate to dedicated routes.
 
     // Scroll animations
     const [logoRef, logoAnim] = useScrollAnimation(0.2, introDone);
@@ -78,10 +62,10 @@ export default function Footer({ introDone = true }) {
     ];
 
     const companyLinks = [
-        { label: "Home", href: "#home" },
-        { label: "About Us", href: "#about" },
-        { label: "Services", href: "#services" },
-        { label: "Contact", href: "#contact" },
+        { label: "Home", href: "/" },
+        { label: "About Us", href: "/about" },
+        { label: "Services", href: "/services" },
+        { label: "Contact", href: "/contact" },
     ];
 
     return (
@@ -138,14 +122,14 @@ export default function Footer({ introDone = true }) {
                                             className={`group text-sm text-gray-400 hover:text-green-300 transition ${serviceAnim}`}
                                         >
                                             <button
-                                                onClick={() => scrollToSection("#services")}
+                                                onClick={() => navigate('/services')}
                                                 className="relative pl-6 text-left"
                                             >
                                                 <span className="absolute left-0 top-2 w-2 h-2 bg-green-400 rounded-full scale-0 group-hover:scale-100 transition" />
                                                 {s}
                                             </button>
                                         </li>
-                                    ))}
+                                    ))} 
                                 </ul>
                             </div>
 
@@ -165,7 +149,7 @@ export default function Footer({ introDone = true }) {
                                             className={`group text-sm text-gray-400 hover:text-green-300 transition ${companyAnim}`}
                                         >
                                             <button
-                                                onClick={() => scrollToSection(link.href)}
+                                                onClick={() => navigate(link.href)}
                                                 className="relative pl-6 text-left"
                                             >
                                                 <span className="absolute left-0 top-2 w-2 h-2 bg-green-400 rounded-full scale-0 group-hover:scale-100 transition" />

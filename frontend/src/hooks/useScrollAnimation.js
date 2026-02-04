@@ -51,8 +51,14 @@ export default function useScrollAnimation(threshold = 0.1, enabled = true) {
         };
     }, [threshold, enabled]);
 
-    const className = `transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95'
-        }`;
+    const className = `
+  transition-all duration-700 ease-out
+  ${isVisible
+            ? 'opacity-100 translate-y-0 scale-100 blur-0'
+            : 'opacity-0 translate-y-10 scale-95 blur-sm'
+        }
+`;
+
 
     return [ref, className, isVisible];
 }

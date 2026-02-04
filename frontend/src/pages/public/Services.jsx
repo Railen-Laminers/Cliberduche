@@ -1,6 +1,6 @@
 // Services.jsx
 import React from "react";
-import PerspectiveCard from "./PerspectiveCard";
+import PerspectiveCard from "../../components/PerspectiveCard";
 import {
     FaTruckLoading,
     FaMountain,
@@ -8,7 +8,7 @@ import {
     FaTools,
     FaProjectDiagram,
 } from "react-icons/fa";
-import useScrollAnimation from "./useScrollAnimation";
+import useScrollAnimation from "../../hooks/useScrollAnimation";
 
 export default function Services({ introDone = true }) {
     const [ref, animationClass] = useScrollAnimation(0.1, introDone);

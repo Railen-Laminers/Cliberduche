@@ -1,9 +1,9 @@
 // Contact.jsx
 import React, { useState } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import useScrollAnimation from "./useScrollAnimation";
+import useScrollAnimation from "../../hooks/useScrollAnimation";
 import Map from "./Map";
-import PerspectiveCard from "./PerspectiveCard";
+import PerspectiveCard from "../../components/PerspectiveCard";
 import logo from "/logo/cliberduche_logo.png";
 
 export default function Contact({ introDone = true }) {

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { LuInfinity } from "react-icons/lu";
-import useScrollAnimation from "./useScrollAnimation";
+import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { useNavigate } from "react-router-dom";
 import office from "/office.jpg";
 

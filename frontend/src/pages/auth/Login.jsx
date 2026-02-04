@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
-import useScrollAnimation from '../homepage/useScrollAnimation';
+import useScrollAnimation from '../../hooks/useScrollAnimation';
 import logo from '/logo/cliberduche_logo.png';
-import PerspectiveCard from '../homepage/PerspectiveCard';
+import PerspectiveCard from '../../components/PerspectiveCard';
 
 export default function Login() {
     const [formData, setFormData] = useState({
