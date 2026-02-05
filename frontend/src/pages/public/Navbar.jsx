@@ -1,4 +1,3 @@
-// Navbar.jsx
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -6,22 +5,22 @@ import useScrollAnimation from "../../hooks/useScrollAnimation";
 
 export default function Navbar({ introDone = false }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const navigate = useNavigate(); // For mobile navigation
+  const [isTop, setIsTop] = useState(true); // Track scroll at top
+  const [overlayActive, setOverlayActive] = useState(false); // Page overlay on link hover
+  const navigate = useNavigate();
   const location = useLocation();
 
-  // Scroll animation hooks (kept for small nav animations)
-  const [homeRef, homeClass] = useScrollAnimation(0.1, introDone);
-  const [aboutRef, aboutClass] = useScrollAnimation(0.1, introDone);
-  const [servicesRef, servicesClass] = useScrollAnimation(0.1, introDone);
-  const [projectsRef, projectsClass] = useScrollAnimation(0.1, introDone);
-  const [contactRef, contactClass] = useScrollAnimation(0.1, introDone);
-  const [loginRef, loginClass] = useScrollAnimation(0.1, introDone);
+  // Scroll animation hooks
+  const [homeRef] = useScrollAnimation(0.1, introDone);
+  const [aboutRef] = useScrollAnimation(0.1, introDone);
+  const [servicesRef] = useScrollAnimation(0.1, introDone);
+  const [projectsRef] = useScrollAnimation(0.1, introDone);
+  const [contactRef] = useScrollAnimation(0.1, introDone);
+  const [loginRef] = useScrollAnimation(0.1, introDone);
 
-  // Update scrolled / active based on route
+  // Set active section based on pathname
   useEffect(() => {
-    setIsScrolled(window.scrollY > 50);
     const path = location.pathname;
     if (path === "/" || path === "") setActiveSection("home");
     else if (path.startsWith("/about")) setActiveSection("about");
@@ -31,171 +30,123 @@ export default function Navbar({ introDone = false }) {
     else setActiveSection("");
   }, [location.pathname]);
 
-  const textColor = isScrolled ? "text-white" : "text-slate-300";
+  // Scroll listener to fade logo
+  useEffect(() => {
+    const handleScroll = () => setIsTop(window.scrollY < 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navItems = [
+    { path: "/", label: "Home", ref: homeRef },
+    { path: "/about", label: "About", ref: aboutRef },
+    { path: "/services", label: "Services", ref: servicesRef },
+    { path: "/projects", label: "Projects", ref: projectsRef },
+    { path: "/contact", label: "Contact", ref: contactRef },
+  ];
 
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
-          ? "bg-[#0b2545] shadow-lg border-b border-white/10"
-          : "bg-[#0b2545]"
-        }`}
-    >
-      <div className="h-16 md:h-20 flex items-center justify-between px-6 md:px-10">
+    <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300">
+      <div className="flex items-center justify-between px-6 md:px-12 h-20 md:h-20 bg-transparent">
         {/* Logo */}
         <button
-          onClick={() => {
-            navigate("/");
-            setIsOpen(false);
-          }}
-          className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+          onClick={() => navigate("/")}
+          className={`flex items-center gap-2 transition-opacity duration-500 ${introDone && isTop ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
         >
           <img
-            id="nav-logo"
             src="/logo/cliberduche_logo.png"
             alt="Cliberduche Logo"
-            className={`h-10 md:h-12 w-auto transition-opacity duration-400 ${introDone ? "opacity-100" : "opacity-0"
-              }`}
+            className="h-10 md:h-12 w-auto"
           />
         </button>
 
-        {/* Desktop Nav */}
-        <nav
-          className={`hidden md:flex items-center space-x-8 text-sm font-medium ${textColor}`}
-        >
-          <Link
-            ref={homeRef}
-            to="/"
-            className={`${homeClass} relative transition-colors hover:text-green-300 ${activeSection === "home" ? "text-green-300" : ""}`}
-          >
-            Home
-            <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "home" ? "w-full" : "w-0"}`}
-            />
-          </Link>
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-200 bg-slate-900/70 backdrop-blur-md backdrop-saturate-150 px-6 py-3 rounded-2xl shadow-md relative z-20">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              ref={item.ref}
+              to={item.path}
+              className={`relative group transition-colors ${activeSection === item.label.toLowerCase() ? "text-green-300" : ""
+                }`}
+              onMouseEnter={() => setOverlayActive(true)}
+              onMouseLeave={() => setOverlayActive(false)}
+            >
+              {/* Spotlight effect */}
+              <span className="relative z-10 px-2 py-1">
+                {item.label}
+                <span className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></span>
+              </span>
 
-          <Link
-            ref={aboutRef}
-            to="/about"
-            className={`${aboutClass} relative transition-colors hover:text-green-300 ${activeSection === "about" ? "text-green-300" : ""}`}
-          >
-            About
-            <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "about" ? "w-full" : "w-0"}`}
-            />
-          </Link>
+              {/* Underline animation */}
+              <span
+                className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === item.label.toLowerCase() ? "w-full" : "w-0"
+                  }`}
+              />
+            </Link>
+          ))}
 
-          <Link
-            ref={servicesRef}
-            to="/services"
-            className={`${servicesClass} relative transition-colors hover:text-green-300 ${activeSection === "services" ? "text-green-300" : ""}`}
-          >
-            Services
-            <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "services" ? "w-full" : "w-0"}`}
-            />
-          </Link>
-
-          <Link
-            ref={projectsRef}
-            to="/projects"
-            className={`${projectsClass} relative transition-colors hover:text-green-300 ${activeSection === "projects" ? "text-green-300" : ""}`}
-          >
-            Projects
-            <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "projects" ? "w-full" : "w-0"}`}
-            />
-          </Link>
-
-          <Link
-            ref={contactRef}
-            to="/contact"
-            className={`${contactClass} relative transition-colors hover:text-green-300 ${activeSection === "contact" ? "text-green-300" : ""}`}
-          >
-            Contact
-            <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === "contact" ? "w-full" : "w-0"}`}
-            />
-          </Link>
-
+          {/* Login button */}
           <Link
             ref={loginRef}
             to="/login"
-            className={`${loginClass} bg-green-500 px-4 py-2 rounded-full text-white hover:bg-green-600`}
+            className="relative group bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition"
+            onMouseEnter={() => setOverlayActive(true)}
+            onMouseLeave={() => setOverlayActive(false)}
           >
-            Login
+            <span className="relative z-10 px-1 py-0.5">
+              Login
+              <span className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></span>
+            </span>
+            <span className="absolute -bottom-1 left-0 h-0.5 bg-green-300 w-0 hover:w-full transition-all duration-300" />
           </Link>
         </nav>
 
-        {/* Mobile toggle button */}
+        {/* Mobile menu button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-white text-2xl z-50"
+          className="md:hidden relative z-50 text-green-500 text-2xl p-2 rounded-full border-2 border-green-500 
+                     bg-slate-900/70 backdrop-blur-md hover:bg-green-500/20 
+                     transition-all duration-300 ease-in-out"
         >
           {isOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
 
-      {/* Mobile Side Drawer */}
+      {/* Overlay for hovering nav links */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-[#0b2545] z-40 transform transition-transform duration-300 shadow-lg flex flex-col justify-between ${isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-0 bg-black/20 pointer-events-none z-10 transition-opacity duration-500 ${overlayActive ? "opacity-100" : "opacity-0"
+          }`}
+      />
+
+      {/* Mobile drawer (right side) */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-slate-900/70 backdrop-blur-md rounded-2xl shadow-md z-40 transform transition-transform duration-300 flex flex-col justify-between ${isOpen ? "translate-x-0" : "translate-x-full"
           }`}
       >
-        {/* Top Group: Nav Links */}
-        <nav className="flex flex-col mt-6 space-y-4 text-white px-4">
-          <button
-            className="text-left text-lg font-medium py-2 hover:text-green-300"
-            onClick={() => {
-              navigate("/");
-              setIsOpen(false);
-            }}
-          >
-            Home
-          </button>
-          <button
-            className="text-left text-lg font-medium py-2 hover:text-green-300"
-            onClick={() => {
-              navigate("/about");
-              setIsOpen(false);
-            }}
-          >
-            About
-          </button>
-          <button
-            className="text-left text-lg font-medium py-2 hover:text-green-300"
-            onClick={() => {
-              navigate("/services");
-              setIsOpen(false);
-            }}
-          >
-            Services
-          </button>
-          <button
-            className="text-left text-lg font-medium py-2 hover:text-green-300"
-            onClick={() => {
-              navigate("/projects");
-              setIsOpen(false);
-            }}
-          >
-            Projects
-          </button>
-          <button
-            className="text-left text-lg font-medium py-2 hover:text-green-300"
-            onClick={() => {
-              navigate("/contact");
-              setIsOpen(false);
-            }}
-          >
-            Contact
-          </button>
+        <nav className="flex flex-col mt-6 space-y-4 text-white px-6">
+          {navItems.map((item) => (
+            <button
+              key={item.path}
+              className={`text-left text-lg font-medium py-2 hover:text-green-300 transition-colors ${activeSection === item.label.toLowerCase() ? "text-green-300" : ""
+                }`}
+              onClick={() => {
+                navigate(item.path);
+                setIsOpen(false);
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
         </nav>
 
-        {/* Bottom: Login Button */}
-        <div className="px-4 mb-6 text-white">
+        <div className="px-6 mb-6 text-white">
           <button
-            className="w-full text-left text-lg font-medium py-2 hover:text-green-300 border-t border-green-300"
+            className="w-full text-left text-lg font-medium py-2 hover:text-green-300 border-t border-green-300 transition-colors"
             onClick={() => {
+              navigate("/login");
               setIsOpen(false);
-              navigate("/login"); // fixed navigation
             }}
           >
             Login
@@ -203,12 +154,12 @@ export default function Navbar({ introDone = false }) {
         </div>
       </div>
 
-      {/* Overlay behind drawer */}
+      {/* Mobile overlay */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
           className="fixed inset-0 bg-black/50 z-30"
-        ></div>
+        />
       )}
     </header>
   );

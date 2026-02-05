@@ -69,7 +69,7 @@ export default function Hero({ introDone = true }) {
                         onClick={() => navigate("/projects")}
                         className="border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white"
                     >
-                        View Our Projects
+                        View Projects
                     </button>
                 </div>
             </div>

@@ -135,11 +135,11 @@ export default function About({ introDone = true }) {
           className={`text-center transition-all duration-1000 ${mvHeadingAnim}`}
         >
           <h3 className="text-3xl md:text-4xl font-bold mb-4 text-[#0b2545]">
-            Our Mission, Vision & Core Values
+            Mission, Vision & Core Values
           </h3>
           <p className="text-gray-600 mb-12 max-w-3xl mx-auto">
             Guided by purpose, driven by excellence, and grounded in values that
-            define how we serve our clients, communities, and partners.
+            define how the company serves clients, communities, and partners.
           </p>
         </div>
 
@@ -165,17 +165,17 @@ export default function About({ introDone = true }) {
                   <FaBolt className="w-6 h-6 text-green-600" />
                 </div>
                 <h4 className="text-xl md:text-2xl font-semibold mb-4 text-[#0b2545]">
-                  Our Mission
+                  Corporate Mission
                 </h4>
                 <p className="text-gray-600 leading-relaxed">
-                  We are a responsible land development and construction company
+                  CLIBERDUCHE CORPORATION is a responsible land development and construction company
                   committed to delivering high-quality backfilling materials and
                   engineering solutions for infrastructure and development
-                  projects. We support sustainable land development by strictly
+                  projects. The company supports sustainable land development by strictly
                   adhering to Philippine environmental regulations, while
                   creating employment opportunities that contribute to the
-                  country’s economic growth. We strive to deliver lasting value
-                  to our communities, clients, investors, employees, and
+                  country's economic growth. The company strives to deliver lasting value
+                  to communities, clients, investors, employees, and
                   stakeholders.
                 </p>
               </div>
@@ -202,10 +202,10 @@ export default function About({ introDone = true }) {
                   <FaEye className="w-6 h-6 text-green-700" />
                 </div>
                 <h4 className="text-xl md:text-2xl font-semibold mb-4 text-[#0b2545]">
-                  Our Vision
+                  Corporate Vision
                 </h4>
                 <p className="text-gray-600 leading-relaxed">
-                  To be a highly respected, world-class land development and
+                  CLIBERDUCHE CORPORATION aims to be a highly respected, world-class land development and
                   natural resources company, recognized for adhering to
                   international standards in engineering, environmental
                   protection, and sustainable development—transforming land
@@ -222,7 +222,7 @@ export default function About({ introDone = true }) {
           className={`transition-all duration-1000 ${valuesAnim}`}
         >
           <h4 className="text-2xl md:text-3xl font-bold text-center mb-10 text-[#0b2545]">
-            Our Core Values
+            Core Values
           </h4>
 
           <div className="grid md:grid-cols-3 gap-8">

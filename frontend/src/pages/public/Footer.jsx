@@ -1,21 +1,87 @@
-import React, { useEffect, useState } from "react";
-import {
-    FaFacebook,
-    FaTwitter,
-    FaLinkedin,
-    FaArrowUp,
-    FaPhone,
-    FaEnvelope,
-    FaMapMarkerAlt,
-} from "react-icons/fa";
+import React, { useEffect, useState, useRef } from "react";
+import { FaFacebook, FaTwitter, FaLinkedin, FaArrowUp } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { useNavigate } from "react-router-dom";
 
 export default function Footer({ introDone = true }) {
-    const [visible, setVisible] = useState(false);
     const navigate = useNavigate();
+    const [visible, setVisible] = useState(false);
 
-    // Back to top visibility
+    const footerRef = useRef(null);
+    const [inView, setInView] = useState(false);
+    const [exitTrigger, setExitTrigger] = useState(false);
+
+    // Detect footer entry
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => setInView(entry.isIntersecting),
+            { threshold: 0.1 }
+        );
+        if (footerRef.current) observer.observe(footerRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    // Detect halfway scroll for exit animation
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!footerRef.current) return;
+            const footerTop = footerRef.current.getBoundingClientRect().top + window.scrollY;
+            const footerHeight = footerRef.current.offsetHeight;
+            const scrollY = window.scrollY + window.innerHeight;
+
+            if (scrollY < footerTop + footerHeight / 2) {
+                setExitTrigger(true); // start exit typing
+            } else {
+                setExitTrigger(false);
+            }
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    // Typewriter animation for CLIBERDUCHE
+    const mainWord = "CLIBERDUCHE";
+    const corpWord = "CORPORATION";
+    const [typedMain, setTypedMain] = useState("");
+    const [typedCorp, setTypedCorp] = useState("");
+    const [isTyping, setIsTyping] = useState(true);
+
+    useEffect(() => {
+        let timeout;
+        const sleep = (ms) => new Promise((res) => (timeout = setTimeout(res, ms)));
+
+        const playTypewriter = async () => {
+            setIsTyping(true);
+            if (inView && !exitTrigger) {
+                // Animate CLIBERDUCHE typing
+                for (let i = 0; i <= mainWord.length; i++) {
+                    setTypedMain(mainWord.slice(0, i));
+                    await sleep(70);
+                }
+
+                // Animate CORPORATION combined: first 3 letters type, rest fade in
+                for (let i = 1; i <= 3; i++) {
+                    setTypedCorp(corpWord.slice(0, i));
+                    await sleep(70);
+                }
+                setTypedCorp(corpWord); // fade in rest instantly
+                setIsTyping(false);
+            } else if (exitTrigger) {
+                // Exit animation: delete CLIBERDUCHE
+                for (let i = mainWord.length; i >= 0; i--) {
+                    setTypedMain(mainWord.slice(0, i));
+                    await sleep(50);
+                }
+                setTypedCorp(""); // fade out CORPORATION
+                setIsTyping(false);
+            }
+        };
+
+        playTypewriter();
+        return () => clearTimeout(timeout);
+    }, [inView, exitTrigger]);
+
+    // Back to top button visibility
     useEffect(() => {
         const toggleVisibility = () => setVisible(window.scrollY > 300);
         if (introDone) {
@@ -24,7 +90,6 @@ export default function Footer({ introDone = true }) {
         }
     }, [introDone]);
 
-    // Scroll to top
     const scrollToTop = () => {
         const start = window.scrollY;
         const duration = 500;
@@ -39,142 +104,90 @@ export default function Footer({ introDone = true }) {
         requestAnimationFrame(animate);
     };
 
-    // NOTE: Section-scrolling removed; footer links now navigate to dedicated routes.
-
     // Scroll animations
     const [logoRef, logoAnim] = useScrollAnimation(0.2, introDone);
     const [socialRef, socialAnim] = useScrollAnimation(0.2, introDone);
-    const [contactHeadingRef, contactHeadingAnim] = useScrollAnimation(0.2, introDone);
-    const [phoneRef, phoneAnim] = useScrollAnimation(0.2, introDone);
-    const [emailRef, emailAnim] = useScrollAnimation(0.2, introDone);
-    const [addressRef, addressAnim] = useScrollAnimation(0.2, introDone);
-    const [servicesHeadingRef, servicesHeadingAnim] = useScrollAnimation(0.2, introDone);
-    const [serviceRefs, serviceAnim] = useScrollAnimation(0.2, introDone);
-    const [companyHeadingRef, companyHeadingAnim] = useScrollAnimation(0.2, introDone);
     const [companyRefs, companyAnim] = useScrollAnimation(0.2, introDone);
-
-    const services = [
-        "Backfill & Land Sourcing",
-        "Land Development",
-        "Site Management",
-        "Equipment Leasing",
-        "Project Management Consultation",
-    ];
 
     const companyLinks = [
         { label: "Home", href: "/" },
-        { label: "About Us", href: "/about" },
+        { label: "About", href: "/about" },
         { label: "Services", href: "/services" },
         { label: "Contact", href: "/contact" },
     ];
 
     return (
         <>
-            <footer className="relative bg-[#081c33] text-white overflow-hidden">
-                {/* background accent */}
+            <footer ref={footerRef} className="relative bg-[#081c33] text-white overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 via-transparent to-transparent pointer-events-none" />
 
                 <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-20">
-                    <div className="grid md:grid-cols-12 gap-12 items-start">
-                        {/* BRAND + CONTACT */}
-                        <div className="md:col-span-5 space-y-10">
-                            <img
-                                ref={logoRef}
-                                src="/logo/cliberduche_logo.png"
-                                alt="Cliberduche Logo"
-                                className={`w-44 md:w-56 ${logoAnim}`}
-                            />
+                    {/* LOGO + COMPANY NAME */}
+                    <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6 mb-10">
+                        <img
+                            ref={logoRef}
+                            src="/logo/cliberduche_logo.png"
+                            alt="Cliberduche Logo"
+                            className={`w-32 md:w-44 ${logoAnim}`}
+                        />
 
-                            {/* Social */}
-                            <div
-                                ref={socialRef}
-                                className={`flex space-x-4 ${socialAnim}`}
-                            >
-                                {[FaFacebook, FaTwitter, FaLinkedin].map((Icon, i) => (
-                                    <a
-                                        key={i}
-                                        href="#"
-                                        className="group w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-green-400 transition"
-                                    >
-                                        <Icon className="text-lg group-hover:text-green-400 transition" />
-                                    </a>
+                        <div className="flex flex-col leading-tight">
+                            {/* CLIBERDUCHE */}
+                            <h1 className="text-3xl md:text-5xl font-bold flex flex-wrap">
+                                {typedMain.split("").map((char, i) => (
+                                    <span key={i} className="char" style={{ animationDelay: `${i * 30}ms` }}>
+                                        {char}
+                                    </span>
                                 ))}
-                            </div>
+                                <span className={`ml-1 cursor ${isTyping ? "blink" : ""}`}>|</span>
+                            </h1>
 
-                            
-                        </div>
-
-                        {/* NAVIGATION */}
-                        <div className="md:col-span-7 grid sm:grid-cols-2 gap-12">
-                            {/* Services */}
-                            <div>
-                                <h5
-                                    ref={servicesHeadingRef}
-                                    className={`mb-6 text-lg font-semibold tracking-wide ${servicesHeadingAnim}`}
-                                >
-                                    Services
-                                </h5>
-                                <ul className="space-y-4">
-                                    {services.map((s, i) => (
-                                        <li
-                                            key={i}
-                                            ref={serviceRefs}
-                                            className={`group text-sm text-gray-400 hover:text-green-300 transition ${serviceAnim}`}
-                                        >
-                                            <button
-                                                onClick={() => navigate('/services')}
-                                                className="relative pl-6 text-left"
-                                            >
-                                                <span className="absolute left-0 top-2 w-2 h-2 bg-green-400 rounded-full scale-0 group-hover:scale-100 transition" />
-                                                {s}
-                                            </button>
-                                        </li>
-                                    ))} 
-                                </ul>
-                            </div>
-
-                            {/* Company */}
-                            <div>
-                                <h5
-                                    ref={companyHeadingRef}
-                                    className={`mb-6 text-lg font-semibold tracking-wide ${companyHeadingAnim}`}
-                                >
-                                    Company
-                                </h5>
-                                <ul className="space-y-4">
-                                    {companyLinks.map((link, i) => (
-                                        <li
-                                            key={i}
-                                            ref={companyRefs}
-                                            className={`group text-sm text-gray-400 hover:text-green-300 transition ${companyAnim}`}
-                                        >
-                                            <button
-                                                onClick={() => navigate(link.href)}
-                                                className="relative pl-6 text-left"
-                                            >
-                                                <span className="absolute left-0 top-2 w-2 h-2 bg-green-400 rounded-full scale-0 group-hover:scale-100 transition" />
-                                                {link.label}
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            {/* CORPORATION */}
+                            <h2
+                                className={`text-xl md:text-2xl font-semibold mt-0.5 transition-opacity duration-500 ${typedCorp ? "opacity-100" : "opacity-0"
+                                    }`}
+                            >
+                                {typedCorp}
+                            </h2>
                         </div>
                     </div>
 
-                    {/* BOTTOM */}
+                    {/* SOCIAL + NAV */}
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                        <div ref={socialRef} className="flex space-x-4 justify-start w-full md:w-auto">
+                            {[FaFacebook, FaTwitter, FaLinkedin].map((Icon, i) => (
+                                <a
+                                    key={i}
+                                    href="#"
+                                    className="group w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-green-400 transition"
+                                >
+                                    <Icon className="text-lg group-hover:text-green-400 transition" />
+                                </a>
+                            ))}
+                        </div>
+
+                        <div className="flex flex-wrap justify-end gap-6 md:gap-12 w-full md:w-auto mt-4 md:mt-0">
+                            {companyLinks.map((link, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => navigate(link.href)}
+                                    ref={companyRefs}
+                                    className={`text-sm text-gray-400 hover:text-green-300 transition ${companyAnim}`}
+                                >
+                                    {link.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* BOTTOM LEGAL */}
                     <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
                         <p className="text-sm text-gray-500">
-                            © {new Date().getFullYear()} CLIBERDUCHE CORPORATION. All rights reserved.
+                            © {new Date().getFullYear()} . All rights reserved.
                         </p>
-
                         <div className="flex gap-8 text-sm text-gray-500">
-                            <span className="hover:text-green-300 cursor-pointer transition">
-                                Privacy Policy
-                            </span>
-                            <span className="hover:text-green-300 cursor-pointer transition">
-                                Terms of Service
-                            </span>
+                            <span className="hover:text-green-300 cursor-pointer transition">Privacy Policy</span>
+                            <span className="hover:text-green-300 cursor-pointer transition">Terms of Service</span>
                         </div>
                     </div>
                 </div>
@@ -191,6 +204,16 @@ export default function Footer({ introDone = true }) {
                     <FaArrowUp />
                 </button>
             )}
+
+            {/* Inline CSS for typewriter effect */}
+            <style>{`
+        .char { opacity: 0; animation: fadeChar 280ms ease forwards; }
+        @keyframes fadeChar { from { opacity: 0; } to { opacity: 1; } }
+
+        .cursor { font-weight: 400; }
+        .blink { animation: blink 1s steps(2, start) infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+      `}</style>
         </>
     );
 }

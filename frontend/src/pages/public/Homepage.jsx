@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+
 import Navbar from "./Navbar";
 import Intro from "./Intro";
 import Home from "./Home";
@@ -8,42 +9,65 @@ import Services from "./Services";
 import Contact from "./Contact";
 import Projects from "./Projects";
 import Footer from "./Footer";
-import './Homepage.css';
+
+import SmoothScroll from "../../components/SmoothScroll";
+import "./Homepage.css";
+
+// ScrollToTop works for both window scroll and SmoothScroll container
+function ScrollToTop() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        // Reset native window scroll
+        window.scrollTo(0, 0);
+
+        // Reset SmoothScroll container if it exists
+        const scrollContainer = document.querySelector(".smooth-scroll");
+        if (scrollContainer) {
+            scrollContainer.scrollTop = 0;
+        }
+    }, [pathname]);
+
+    return null;
+}
 
 export default function Homepage() {
     const [introPlaying, setIntroPlaying] = useState(true);
     const introDone = !introPlaying;
+    const { pathname } = useLocation();
+
+    const isHome = pathname === "/";
+    const noTopPadding = isHome || pathname === "/projects";
 
     return (
-        <div className="font-sans bg-[#f4faf7] text-[#0b2545] min-h-screen">
-            {/* pass introDone flag to navbar so its logo can fade in after intro */}
-            <Navbar introDone={introDone} />
+        // Force SmoothScroll to remount on route change to reset scroll
+        <SmoothScroll ease={0.08} key={pathname} className="smooth-scroll">
+            <ScrollToTop /> {/* scroll resets on every route change */}
 
-            {/* intro overlay (renders while introPlaying === true) */}
-            {introPlaying && (
-                <Intro
-                    logoSrc="/logo/cliberduche_logo.png"
-                    title="Cliberduche"
-                    onFinish={() => setIntroPlaying(false)}
-                />
-            )}
+            <div className="font-sans bg-[#f4faf7] text-[#0b2545] min-h-screen bg-white">
+                <Navbar introDone={introDone} />
 
-            <main className="pt-16 md:pt-20">
-                <Routes>
-                    {/* Index / Home */}
-                    <Route index element={<Home introDone={introDone} />} />
-                    <Route path="/" element={<Home introDone={introDone} />} />
+                {introPlaying && (
+                    <Intro
+                        logoSrc="/logo/cliberduche_logo.png"
+                        title="Cliberduche"
+                        onFinish={() => setIntroPlaying(false)}
+                    />
+                )}
 
-                    {/* Dedicated pages */}
-                    <Route path="/about" element={<About introDone={introDone} />} />
-                    <Route path="/services" element={<Services introDone={introDone} />} />
-                    <Route path="/projects" element={<Projects introDone={introDone} />} />
-                    <Route path="/contact" element={<Contact introDone={introDone} />} />
-                </Routes>
-            </main>
+                <main className={noTopPadding ? "" : "pt-16 md:pt-20"}>
+                    <Routes>
+                        <Route index element={<Home introDone={introDone} />} />
+                        <Route path="/" element={<Home introDone={introDone} />} />
+                        <Route path="/about" element={<About introDone={introDone} />} />
+                        <Route path="/services" element={<Services introDone={introDone} />} />
+                        <Route path="/projects" element={<Projects introDone={introDone} />} />
+                        <Route path="/contact" element={<Contact introDone={introDone} />} />
+                    </Routes>
+                </main>
 
-            {/* Pass introDone to Footer so animations can wait */}
-            <Footer introDone={introDone} />
-        </div>
+                <Footer introDone={introDone} />
+            </div>
+        </SmoothScroll>
     );
 }

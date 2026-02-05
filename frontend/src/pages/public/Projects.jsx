@@ -123,14 +123,6 @@ export default function Projects({ introDone = true }) {
 
   return (
     <div className="bg-white text-[#0b2545] overflow-x-hidden" ref={containerRef}>
-      {/* Fixed Return Home Button - Always at top left */}
-      <Link
-        to="/"
-        className="fixed top-6 left-6 z-40 inline-flex items-center bg-white/90 backdrop-blur-sm text-[#0b2545] hover:text-[#1f7a8c] hover:bg-white transition-all duration-300 group px-4 py-3 rounded-full shadow-lg"
-      >
-        <FaArrowLeft className="w-5 h-5 mr-3 group-hover:-translate-x-1 transition-transform" />
-        <span className="text-sm tracking-wider font-medium">RETURN HOME</span>
-      </Link>
 
       {/* Hero Section - Full viewport height */}
       <section
@@ -144,10 +136,10 @@ export default function Projects({ introDone = true }) {
 
           <ScrollAnimatedItem threshold={0.1} introDone={introDone}>
             <h1 className="text-5xl md:text-7xl font-bold max-w-3xl leading-tight mb-6">
-              Our Projects
+              Projects
             </h1>
             <p className="mt-4 text-xl md:text-2xl text-green-100 max-w-2xl leading-relaxed">
-              Discover our ongoing and completed developments across CALABARZON—where quality materials,
+              Discover ongoing and completed developments across CALABARZON—where quality materials,
               sustainable practices, and engineering excellence converge.
             </p>
           </ScrollAnimatedItem>

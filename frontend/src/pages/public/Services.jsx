@@ -50,11 +50,11 @@ export default function Services({ introDone = true }) {
         <section
             ref={ref}
             id="services"
-            className={`px-6 md:px-10 py-16 md:py-20 bg-gray-50 rounded-t-[120px] transition-all duration-1000 ${animationClass}`}
+            className={`px-6 md:px-10 py-16 md:py-20 bg-white rounded-t-[120px] transition-all duration-1000 ${animationClass}`}
         >
             <div className="max-w-6xl mx-auto">
                 <h3 className="text-3xl md:text-4xl font-bold mb-4 text-center text-[#0b2545]">
-                    Our Services
+                    Professional Services
                 </h3>
 
                 <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
