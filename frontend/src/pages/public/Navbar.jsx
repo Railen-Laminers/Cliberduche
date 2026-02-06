@@ -109,10 +109,7 @@ export default function Navbar({ introDone = false }) {
               Login
               <span className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></span>
             </span>
-            <span
-              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 w-full transform origin-left transition-transform duration-500 group-hover:scale-x-100 ${isActive("/login") ? "scale-x-100" : "scale-x-0"
-                }`}
-            />
+
           </Link>
         </nav>
 

@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FaFacebook, FaTwitter, FaLinkedin, FaArrowUp } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { useNavigate } from "react-router-dom";
 
 export default function Footer({ introDone = true }) {
     const navigate = useNavigate();
-    const [visible, setVisible] = useState(false);
 
     const footerRef = useRef(null);
     const [inView, setInView] = useState(false);
@@ -81,29 +80,6 @@ export default function Footer({ introDone = true }) {
         return () => clearTimeout(timeout);
     }, [inView, exitTrigger]);
 
-    // Back to top button visibility
-    useEffect(() => {
-        const toggleVisibility = () => setVisible(window.scrollY > 300);
-        if (introDone) {
-            window.addEventListener("scroll", toggleVisibility);
-            return () => window.removeEventListener("scroll", toggleVisibility);
-        }
-    }, [introDone]);
-
-    const scrollToTop = () => {
-        const start = window.scrollY;
-        const duration = 500;
-        const startTime = performance.now();
-
-        const animate = (time) => {
-            const progress = Math.min((time - startTime) / duration, 1);
-            window.scrollTo(0, start * (1 - progress));
-            if (progress < 1) requestAnimationFrame(animate);
-        };
-
-        requestAnimationFrame(animate);
-    };
-
     // Scroll animations
     const [logoRef, logoAnim] = useScrollAnimation(0.2, introDone);
     const [socialRef, socialAnim] = useScrollAnimation(0.2, introDone);
@@ -117,93 +93,79 @@ export default function Footer({ introDone = true }) {
     ];
 
     return (
-        <>
-            <footer ref={footerRef} className="relative bg-[#081c33] text-white overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 via-transparent to-transparent pointer-events-none" />
+        <footer ref={footerRef} className="relative bg-[#081c33] text-white overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 via-transparent to-transparent pointer-events-none" />
 
-                <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-20">
-                    {/* LOGO + COMPANY NAME */}
-                    <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6 mb-10">
-                        <img
-                            ref={logoRef}
-                            src="/logo/cliberduche_logo.png"
-                            alt="Cliberduche Logo"
-                            className={`w-32 md:w-44 ${logoAnim}`}
-                        />
+            <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-20">
+                {/* LOGO + COMPANY NAME */}
+                <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6 mb-10">
+                    <img
+                        ref={logoRef}
+                        src="/logo/cliberduche_logo.png"
+                        alt="Cliberduche Logo"
+                        className={`w-32 md:w-44 ${logoAnim}`}
+                    />
 
-                        <div className="flex flex-col leading-tight">
-                            {/* CLIBERDUCHE */}
-                            <h1 className="text-3xl md:text-5xl font-bold flex flex-wrap">
-                                {typedMain.split("").map((char, i) => (
-                                    <span key={i} className="char" style={{ animationDelay: `${i * 30}ms` }}>
-                                        {char}
-                                    </span>
-                                ))}
-                                <span className={`ml-1 cursor ${isTyping ? "blink" : ""}`}>|</span>
-                            </h1>
-
-                            {/* CORPORATION */}
-                            <h2
-                                className={`text-xl md:text-2xl font-semibold mt-0.5 transition-opacity duration-500 ${typedCorp ? "opacity-100" : "opacity-0"
-                                    }`}
-                            >
-                                {typedCorp}
-                            </h2>
-                        </div>
-                    </div>
-
-                    {/* SOCIAL + NAV */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                        <div ref={socialRef} className="flex space-x-4 justify-start w-full md:w-auto">
-                            {[FaFacebook, FaTwitter, FaLinkedin].map((Icon, i) => (
-                                <a
-                                    key={i}
-                                    href="#"
-                                    className="group w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-green-400 transition"
-                                >
-                                    <Icon className="text-lg group-hover:text-green-400 transition" />
-                                </a>
+                    <div className="flex flex-col leading-tight">
+                        {/* CLIBERDUCHE */}
+                        <h1 className="text-3xl md:text-5xl font-bold flex flex-wrap">
+                            {typedMain.split("").map((char, i) => (
+                                <span key={i} className="char" style={{ animationDelay: `${i * 30}ms` }}>
+                                    {char}
+                                </span>
                             ))}
-                        </div>
+                            <span className={`ml-1 cursor ${isTyping ? "blink" : ""}`}>|</span>
+                        </h1>
 
-                        <div className="flex flex-wrap justify-end gap-6 md:gap-12 w-full md:w-auto mt-4 md:mt-0">
-                            {companyLinks.map((link, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => navigate(link.href)}
-                                    ref={companyRefs}
-                                    className={`text-sm text-gray-400 hover:text-green-300 transition ${companyAnim}`}
-                                >
-                                    {link.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* BOTTOM LEGAL */}
-                    <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <p className="text-sm text-gray-500">
-                            © {new Date().getFullYear()} . All rights reserved.
-                        </p>
-                        <div className="flex gap-8 text-sm text-gray-500">
-                            <span className="hover:text-green-300 cursor-pointer transition">Privacy Policy</span>
-                            <span className="hover:text-green-300 cursor-pointer transition">Terms of Service</span>
-                        </div>
+                        {/* CORPORATION */}
+                        <h2
+                            className={`text-xl md:text-2xl font-semibold mt-0.5 transition-opacity duration-500 ${typedCorp ? "opacity-100" : "opacity-0"
+                                }`}
+                        >
+                            {typedCorp}
+                        </h2>
                     </div>
                 </div>
-            </footer>
 
-            {/* Back to top */}
-            {introDone && (
-                <button
-                    onClick={scrollToTop}
-                    aria-label="Back to top"
-                    className={`fixed bottom-6 right-6 z-50 p-3 rounded-full bg-green-500 text-white shadow-lg transition-all duration-300
-                    ${visible ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
-                >
-                    <FaArrowUp />
-                </button>
-            )}
+                {/* SOCIAL + NAV */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                    <div ref={socialRef} className="flex space-x-4 justify-start w-full md:w-auto">
+                        {[FaFacebook, FaTwitter, FaLinkedin].map((Icon, i) => (
+                            <a
+                                key={i}
+                                href="#"
+                                className="group w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-green-400 transition"
+                            >
+                                <Icon className="text-lg group-hover:text-green-400 transition" />
+                            </a>
+                        ))}
+                    </div>
+
+                    <div className="flex flex-wrap justify-end gap-6 md:gap-12 w-full md:w-auto mt-4 md:mt-0">
+                        {companyLinks.map((link, i) => (
+                            <button
+                                key={i}
+                                onClick={() => navigate(link.href)}
+                                ref={companyRefs}
+                                className={`text-sm text-gray-400 hover:text-green-300 transition ${companyAnim}`}
+                            >
+                                {link.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* BOTTOM LEGAL */}
+                <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p className="text-sm text-gray-500">
+                        © {new Date().getFullYear()} . All rights reserved.
+                    </p>
+                    <div className="flex gap-8 text-sm text-gray-500">
+                        <span className="hover:text-green-300 cursor-pointer transition">Privacy Policy</span>
+                        <span className="hover:text-green-300 cursor-pointer transition">Terms of Service</span>
+                    </div>
+                </div>
+            </div>
 
             {/* Inline CSS for typewriter effect */}
             <style>{`
@@ -214,6 +176,6 @@ export default function Footer({ introDone = true }) {
         .blink { animation: blink 1s steps(2, start) infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
       `}</style>
-        </>
+        </footer>
     );
 }

@@ -9,6 +9,7 @@ import Services from "./Services";
 import Contact from "./Contact";
 import Projects from "./Projects";
 import Footer from "./Footer";
+import BackToTopButton from "../../components/BackToTopButton";
 
 import SmoothScroll from "../../components/SmoothScroll";
 import "./Homepage.css";
@@ -18,10 +19,24 @@ function ScrollToTop() {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        // Detect if touch device
+        const isTouchDevice =
+            'ontouchstart' in window ||
+            navigator.maxTouchPoints > 0 ||
+            navigator.msMaxTouchPoints > 0;
 
-        const scrollContainer = document.querySelector(".smooth-scroll");
-        if (scrollContainer) scrollContainer.scrollTop = 0;
+        if (isTouchDevice) {
+            // Mobile: use native scroll
+            window.scrollTo({
+                top: 0,
+                behavior: 'auto' // instant on route change
+            });
+        } else {
+            // Desktop: use custom smooth scroll
+            window.scrollTo(0, 0);
+            const scrollContainer = document.querySelector(".smooth-scroll");
+            if (scrollContainer) scrollContainer.scrollTop = 0;
+        }
     }, [pathname]);
 
     return null;
@@ -63,6 +78,9 @@ export default function Homepage() {
                 </main>
 
                 <Footer introDone={introDone} />
+
+                {/* Back to top button - only after intro completes */}
+                {introDone && <BackToTopButton />}
             </SmoothScroll>
         </div>
     );

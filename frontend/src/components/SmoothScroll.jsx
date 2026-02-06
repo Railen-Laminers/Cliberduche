@@ -1,71 +1,120 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /**
- * Hybrid SmoothScroll
- * - Keeps the same wheel-driven smoothing behavior you had.
- * - Still allows manual interactions (scrollbar drag, touch, keyboard).
+ * Universal SmoothScroll
+ * - Wheel-driven smoothing for desktop
+ * - Native smooth scrolling for touch devices (iOS, Android)
+ * - Supports scrollbar drag, keyboard, touch gestures
+ * - Handles all edge cases and browser quirks
  *
  * Props:
- *  - ease (number): smoothing factor, lower = smoother/slower (default 0.08)
- *  - className (string): optional wrapper class so parent code can query the container
+ *  - ease (number): smoothing factor for desktop (default 0.08)
+ *  - className (string): optional wrapper class
  */
 export default function SmoothScroll({ children, ease = 0.08, className = "" }) {
+    const isTouchDevice = useRef(false);
+
     useEffect(() => {
-        let target = window.scrollY || 0; // desired scroll position
-        let current = window.scrollY || 0; // current (animated) scroll position
+        // Detect touch capability
+        isTouchDevice.current =
+            'ontouchstart' in window ||
+            navigator.maxTouchPoints > 0 ||
+            navigator.msMaxTouchPoints > 0;
+
+        // If touch device, use native smooth scroll instead
+        if (isTouchDevice.current) {
+            document.documentElement.style.scrollBehavior = 'smooth';
+            return () => {
+                document.documentElement.style.scrollBehavior = '';
+            };
+        }
+
+        // Desktop smooth scroll implementation
+        let target = window.scrollY || window.pageYOffset || 0;
+        let current = window.scrollY || window.pageYOffset || 0;
         let rafId = null;
-        let lastScrollTime = 0; // track when manual scroll last happened
-        const wheelOptions = { passive: false };
+        let isUserScrolling = false;
+        let userScrollTimeout = null;
 
-        // clamp helper
+        // Helper: get max scroll
+        const getMaxScroll = () => {
+            return Math.max(
+                0,
+                Math.max(
+                    document.documentElement.scrollHeight,
+                    document.body.scrollHeight
+                ) - window.innerHeight
+            );
+        };
+
+        // Helper: clamp target
         const clampTarget = () => {
-            const maxScroll = Math.max(
-                document.documentElement.scrollHeight,
-                document.body.scrollHeight
-            ) - window.innerHeight;
-            target = Math.max(0, Math.min(target, Math.max(0, maxScroll)));
+            const maxScroll = getMaxScroll();
+            target = Math.max(0, Math.min(target, maxScroll));
         };
 
-        // Wheel: keep original behaviour (accumulate delta, prevent default)
+        // Wheel handler (desktop only)
         const onWheel = (e) => {
-            // accumulate wheel delta
-            target += e.deltaY;
+            e.preventDefault();
+
+            // Handle different wheel delta modes
+            let delta = e.deltaY;
+            if (e.deltaMode === 1) { // DOM_DELTA_LINE
+                delta *= 16; // approximate line height
+            } else if (e.deltaMode === 2) { // DOM_DELTA_PAGE
+                delta *= window.innerHeight;
+            }
+
+            target += delta;
             clampTarget();
-            e.preventDefault(); // keep the same wheel-driven feel
-            lastScrollTime = Date.now();
+            isUserScrolling = true;
+
+            clearTimeout(userScrollTimeout);
+            userScrollTimeout = setTimeout(() => {
+                isUserScrolling = false;
+            }, 100);
         };
 
-        // Native scroll: happens for touch, scrollbar drag, keyboard, etc.
-        // Detect manual scroll by comparing window.scrollY to our animated current position
+        // Native scroll handler (keyboard, scrollbar, programmatic)
         const onScroll = () => {
-            const actualScroll = window.scrollY || 0;
-            // Only sync if user manually scrolled (not from our animation)
-            if (Math.abs(actualScroll - current) > 1) {
+            const actualScroll = window.scrollY || window.pageYOffset || 0;
+
+            // Sync if user manually scrolled (threshold accounts for sub-pixel differences)
+            if (Math.abs(actualScroll - current) > 2) {
                 target = actualScroll;
                 current = actualScroll;
                 clampTarget();
-                lastScrollTime = Date.now();
+                isUserScrolling = true;
+
+                clearTimeout(userScrollTimeout);
+                userScrollTimeout = setTimeout(() => {
+                    isUserScrolling = false;
+                }, 100);
             }
         };
 
         // Animation loop
         const animate = () => {
-            // interpolate smoothly toward target
-            if (Math.abs(target - current) > 0.1) {
-                current += (target - current) * ease;
+            const diff = target - current;
+
+            if (Math.abs(diff) > 0.1) {
+                current += diff * ease;
+
+                // Use different scroll methods for better compatibility
+                if (window.scrollTo) {
+                    window.scrollTo(0, current);
+                } else {
+                    document.documentElement.scrollTop = current;
+                    document.body.scrollTop = current; // For older browsers
+                }
             } else {
                 current = target;
             }
 
-            window.scrollTo(0, current);
             rafId = requestAnimationFrame(animate);
         };
 
-        // Start
-        window.addEventListener("wheel", onWheel, wheelOptions);
-        window.addEventListener("scroll", onScroll, { passive: true });
-
-        // Allow other parts of the app to set the smooth target (eg. Back-to-top)
+        // Custom event for programmatic scrolling
         const onSetTarget = (e) => {
             const v = Number(e?.detail ?? 0);
             if (Number.isFinite(v)) {
@@ -73,28 +122,34 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
                 clampTarget();
             }
         };
-        window.addEventListener("smooth-scroll-set-target", onSetTarget);
 
-        // Initialize values in case page wasn't at 0
-        target = current = window.scrollY || 0;
-        rafId = requestAnimationFrame(animate);
-
-        // Keep clamp up-to-date on resize/content change
+        // Resize handler
         const onResize = () => {
             clampTarget();
         };
-        window.addEventListener("resize", onResize);
+
+        // Initialize
+        target = current = window.scrollY || window.pageYOffset || 0;
+
+        // Add event listeners
+        window.addEventListener("wheel", onWheel, { passive: false });
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onResize, { passive: true });
+        window.addEventListener("smooth-scroll-set-target", onSetTarget);
+
+        // Start animation
+        rafId = requestAnimationFrame(animate);
 
         // Cleanup
         return () => {
-            window.removeEventListener("wheel", onWheel, wheelOptions);
+            window.removeEventListener("wheel", onWheel);
             window.removeEventListener("scroll", onScroll);
             window.removeEventListener("resize", onResize);
             window.removeEventListener("smooth-scroll-set-target", onSetTarget);
+            clearTimeout(userScrollTimeout);
             if (rafId) cancelAnimationFrame(rafId);
         };
     }, [ease]);
 
-    // Render wrapper so parent code can query it (Homepage was querying `.smooth-scroll`)
     return <div className={className}>{children}</div>;
 }
