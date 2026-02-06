@@ -1,34 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
-import useScrollAnimation from "../../hooks/useScrollAnimation";
 
 export default function Navbar({ introDone = false }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
   const [isTop, setIsTop] = useState(true); // Track scroll at top
   const [overlayActive, setOverlayActive] = useState(false); // Page overlay on link hover
+  const [navAnimationDone, setNavAnimationDone] = useState(false); // Track if nav animation has played
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Scroll animation hooks
-  const [homeRef] = useScrollAnimation(0.1, introDone);
-  const [aboutRef] = useScrollAnimation(0.1, introDone);
-  const [servicesRef] = useScrollAnimation(0.1, introDone);
-  const [projectsRef] = useScrollAnimation(0.1, introDone);
-  const [contactRef] = useScrollAnimation(0.1, introDone);
-  const [loginRef] = useScrollAnimation(0.1, introDone);
+  // Use refs for nav items
+  const navContainerRef = useRef(null);
+  const homeRef = useRef(null);
+  const aboutRef = useRef(null);
+  const servicesRef = useRef(null);
+  const projectsRef = useRef(null);
+  const contactRef = useRef(null);
+  const loginRef = useRef(null);
 
-  // Set active section based on pathname
+  // Trigger nav animation once after intro
   useEffect(() => {
-    const path = location.pathname;
-    if (path === "/" || path === "") setActiveSection("home");
-    else if (path.startsWith("/about")) setActiveSection("about");
-    else if (path.startsWith("/services")) setActiveSection("services");
-    else if (path.startsWith("/projects")) setActiveSection("projects");
-    else if (path.startsWith("/contact")) setActiveSection("contact");
-    else setActiveSection("");
-  }, [location.pathname]);
+    if (introDone && !navAnimationDone) {
+      setNavAnimationDone(true);
+    }
+  }, [introDone]);
 
   // Scroll listener to fade logo
   useEffect(() => {
@@ -45,11 +41,15 @@ export default function Navbar({ introDone = false }) {
     { path: "/contact", label: "Contact", ref: contactRef },
   ];
 
+  // Helper function to check if a link is active
+  const isActive = (path) => location.pathname === path;
+
   return (
     <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300">
       <div className="flex items-center justify-between px-6 md:px-12 h-20 md:h-20 bg-transparent">
         {/* Logo */}
         <button
+          id="nav-logo"
           onClick={() => navigate("/")}
           className={`flex items-center gap-2 transition-opacity duration-500 ${introDone && isTop ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
@@ -62,36 +62,46 @@ export default function Navbar({ introDone = false }) {
         </button>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-200 bg-slate-900/70 backdrop-blur-md backdrop-saturate-150 px-6 py-3 rounded-2xl shadow-md relative z-20">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              ref={item.ref}
-              to={item.path}
-              className={`relative group transition-colors ${activeSection === item.label.toLowerCase() ? "text-green-300" : ""
-                }`}
-              onMouseEnter={() => setOverlayActive(true)}
-              onMouseLeave={() => setOverlayActive(false)}
-            >
-              {/* Spotlight effect */}
-              <span className="relative z-10 px-2 py-1">
-                {item.label}
-                <span className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></span>
-              </span>
+        <nav
+          ref={navContainerRef}
+          className={`hidden md:flex items-center space-x-8 text-sm font-medium text-slate-200 bg-slate-900/70 backdrop-blur-md backdrop-saturate-150 px-6 py-3 rounded-2xl shadow-md relative z-20 transition-all duration-700 ease-out ${navAnimationDone ? "opacity-100 translate-y-0 scale-100 blur-0" : "opacity-0 translate-y-10 scale-95 blur-sm"
+            }`}
+        >
+          {navItems.map((item, index) => {
+            const delay = 0.1 * (index + 1);
 
-              {/* Underline animation */}
-              <span
-                className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 transition-all duration-300 ${activeSection === item.label.toLowerCase() ? "w-full" : "w-0"
-                  }`}
-              />
-            </Link>
-          ))}
+            return (
+              <Link
+                key={item.path}
+                ref={item.ref}
+                to={item.path}
+                className={`relative group transition-all duration-700 ease-out ${navAnimationDone ? "opacity-100 translate-y-0 scale-100 blur-0" : "opacity-0 translate-y-10 scale-95 blur-sm"
+                  } ${isActive(item.path) ? "text-green-300" : ""}`}
+                style={{ transitionDelay: navAnimationDone ? `${delay}s` : "0s" }}
+                onMouseEnter={() => setOverlayActive(true)}
+                onMouseLeave={() => setOverlayActive(false)}
+              >
+                <span className="relative z-10 px-2 py-1">
+                  {item.label}
+                  <span className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></span>
+                </span>
+
+                {/* Smooth underline */}
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 w-full transform origin-left transition-transform duration-500 group-hover:scale-x-100 ${isActive(item.path) ? "scale-x-100" : "scale-x-0"
+                    }`}
+                />
+              </Link>
+            );
+          })}
 
           {/* Login button */}
           <Link
             ref={loginRef}
             to="/login"
-            className="relative group bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition"
+            className={`relative group bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition-all duration-700 ease-out ${navAnimationDone ? "opacity-100 translate-y-0 scale-100 blur-0" : "opacity-0 translate-y-10 scale-95 blur-sm"
+              }`}
+            style={{ transitionDelay: navAnimationDone ? "0.6s" : "0s" }}
             onMouseEnter={() => setOverlayActive(true)}
             onMouseLeave={() => setOverlayActive(false)}
           >
@@ -99,7 +109,10 @@ export default function Navbar({ introDone = false }) {
               Login
               <span className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></span>
             </span>
-            <span className="absolute -bottom-1 left-0 h-0.5 bg-green-300 w-0 hover:w-full transition-all duration-300" />
+            <span
+              className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 w-full transform origin-left transition-transform duration-500 group-hover:scale-x-100 ${isActive("/login") ? "scale-x-100" : "scale-x-0"
+                }`}
+            />
           </Link>
         </nav>
 
@@ -129,7 +142,7 @@ export default function Navbar({ introDone = false }) {
           {navItems.map((item) => (
             <button
               key={item.path}
-              className={`text-left text-lg font-medium py-2 hover:text-green-300 transition-colors ${activeSection === item.label.toLowerCase() ? "text-green-300" : ""
+              className={`text-left text-lg font-medium py-2 transition-colors ${isActive(item.path) ? "text-green-300" : "hover:text-green-300"
                 }`}
               onClick={() => {
                 navigate(item.path);

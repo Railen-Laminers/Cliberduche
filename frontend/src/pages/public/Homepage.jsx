@@ -13,19 +13,15 @@ import Footer from "./Footer";
 import SmoothScroll from "../../components/SmoothScroll";
 import "./Homepage.css";
 
-// ScrollToTop works for both window scroll and SmoothScroll container
+// Scroll to top on route change
 function ScrollToTop() {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        // Reset native window scroll
         window.scrollTo(0, 0);
 
-        // Reset SmoothScroll container if it exists
         const scrollContainer = document.querySelector(".smooth-scroll");
-        if (scrollContainer) {
-            scrollContainer.scrollTop = 0;
-        }
+        if (scrollContainer) scrollContainer.scrollTop = 0;
     }, [pathname]);
 
     return null;
@@ -40,12 +36,12 @@ export default function Homepage() {
     const noTopPadding = isHome || pathname === "/projects";
 
     return (
-        // Force SmoothScroll to remount on route change to reset scroll
-        <SmoothScroll ease={0.08} key={pathname} className="smooth-scroll">
-            <ScrollToTop /> {/* scroll resets on every route change */}
+        <div className="font-sans bg-[#f4faf7] text-[#0b2545] min-h-screen bg-white">
+            {/* Navbar always mounted, won't reanimate on route change */}
+            <Navbar introDone={introDone} />
 
-            <div className="font-sans bg-[#f4faf7] text-[#0b2545] min-h-screen bg-white">
-                <Navbar introDone={introDone} />
+            <SmoothScroll ease={0.08} className="smooth-scroll">
+                <ScrollToTop /> {/* resets scroll on route change */}
 
                 {introPlaying && (
                     <Intro
@@ -67,7 +63,7 @@ export default function Homepage() {
                 </main>
 
                 <Footer introDone={introDone} />
-            </div>
-        </SmoothScroll>
+            </SmoothScroll>
+        </div>
     );
 }

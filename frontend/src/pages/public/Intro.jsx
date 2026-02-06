@@ -150,10 +150,11 @@ export default function Intro({ logoSrc, title = "Cliberduche Corporation", onFi
             // Signal parent to remove the Intro overlay
             onFinish?.();
 
-            // Restore the nav-logo's transition shortly after so future transitions work normally
+            // Restore the nav-logo's transition and clear inline styles so Tailwind classes can take over
             setTimeout(() => {
                 try {
                     target.style.transition = prevTargetTransition || "";
+                    target.style.opacity = "";  // Clear inline opacity to allow Navbar classes to control it
                 } catch (err) {
                     // ignore
                 }
@@ -166,6 +167,21 @@ export default function Intro({ logoSrc, title = "Cliberduche Corporation", onFi
     const handleSkip = () => {
         skipRef.current = true;
         setSkipActive(true);
+
+        // Quickly fade overlay and allow interactions underneath so "Back to top" works immediately on mobile.
+        try {
+            const overlay = overlayRef.current;
+            if (overlay) {
+                overlay.style.transition = "opacity 200ms ease";
+                overlay.style.opacity = "0";
+                overlay.style.pointerEvents = "none";
+            }
+        } catch (err) {
+            // defensive ignore
+        }
+
+        // Signal parent to remove intro shortly after visual hide
+        setTimeout(() => onFinish?.(), 220);
     };
 
     return (

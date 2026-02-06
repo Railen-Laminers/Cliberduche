@@ -9,7 +9,4 @@ Frontend
 
 Tasks for frontend
 - Fix the states management avoid repeating the same task just create a reusable component that manage the states to lessen the codes
-- boring navbar
-- borng button
-- boring footer
-- boring project page
+- Fix About page

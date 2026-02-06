@@ -28,9 +28,10 @@ export default function useScrollAnimation(threshold = 0.1, enabled = true) {
 
         observerRef.current = new IntersectionObserver(
             ([entry]) => {
-                // Set visibility based on intersection
-                setIsVisible(entry.isIntersecting);
-                // allows multiple triggers
+                // Only trigger animation when entering, prevent toggle on exit
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
             },
             { threshold }
         );

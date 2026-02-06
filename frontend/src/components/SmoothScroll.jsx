@@ -7,13 +7,15 @@ import { useEffect } from "react";
  *
  * Props:
  *  - ease (number): smoothing factor, lower = smoother/slower (default 0.08)
+ *  - className (string): optional wrapper class so parent code can query the container
  */
-export default function SmoothScroll({ children, ease = 0.08 }) {
+export default function SmoothScroll({ children, ease = 0.08, className = "" }) {
     useEffect(() => {
         let target = window.scrollY || 0; // desired scroll position
         let current = window.scrollY || 0; // current (animated) scroll position
         let rafId = null;
         let lastScrollTime = 0; // track when manual scroll last happened
+        const wheelOptions = { passive: false };
 
         // clamp helper
         const clampTarget = () => {
@@ -60,8 +62,18 @@ export default function SmoothScroll({ children, ease = 0.08 }) {
         };
 
         // Start
-        window.addEventListener("wheel", onWheel, { passive: false });
+        window.addEventListener("wheel", onWheel, wheelOptions);
         window.addEventListener("scroll", onScroll, { passive: true });
+
+        // Allow other parts of the app to set the smooth target (eg. Back-to-top)
+        const onSetTarget = (e) => {
+            const v = Number(e?.detail ?? 0);
+            if (Number.isFinite(v)) {
+                target = v;
+                clampTarget();
+            }
+        };
+        window.addEventListener("smooth-scroll-set-target", onSetTarget);
 
         // Initialize values in case page wasn't at 0
         target = current = window.scrollY || 0;
@@ -75,12 +87,14 @@ export default function SmoothScroll({ children, ease = 0.08 }) {
 
         // Cleanup
         return () => {
-            window.removeEventListener("wheel", onWheel, { passive: false });
+            window.removeEventListener("wheel", onWheel, wheelOptions);
             window.removeEventListener("scroll", onScroll);
             window.removeEventListener("resize", onResize);
+            window.removeEventListener("smooth-scroll-set-target", onSetTarget);
             if (rafId) cancelAnimationFrame(rafId);
         };
     }, [ease]);
 
-    return <>{children}</>;
+    // Render wrapper so parent code can query it (Homepage was querying `.smooth-scroll`)
+    return <div className={className}>{children}</div>;
 }
