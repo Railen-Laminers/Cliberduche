@@ -29,7 +29,14 @@ export default function UserForm({ user, onClose, onSubmit }) {
         name: user.name || '',
         email: user.email || '',
         password: '',
-        roles: user.roles?.map(r => r.name) || [],
+        roles: user.roles?.map(r => (typeof r === 'string' ? r : r.name)) || [],
+      });
+    } else {
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        roles: [],
       });
     }
   }, [user]);
@@ -73,17 +80,21 @@ export default function UserForm({ user, onClose, onSubmit }) {
         return;
       }
 
+      // Call API and extract saved user robustly
+      let res;
       if (user) {
-        await updateUser(user.id, payload);
+        res = await updateUser(user.id, payload);
       } else {
-        await createUser(payload);
+        res = await createUser(payload);
       }
+      const savedUser = res?.data ?? res;
 
-      onSubmit();
+      // Pass saved user back to parent for local state update
+      onSubmit(savedUser);
     } catch (err) {
       setError(
-        err?.response?.data?.message || 
-        err?.message || 
+        err?.response?.data?.message ||
+        err?.message ||
         'An error occurred'
       );
     } finally {
@@ -206,13 +217,6 @@ export default function UserForm({ user, onClose, onSubmit }) {
             className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
             {isLoading ? 'Saving...' : (user ? 'Update User' : 'Create User')}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-          >
-            Cancel
           </button>
         </div>
       </form>

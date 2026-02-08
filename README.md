@@ -1,6 +1,10 @@
-Create a dynamic sidebar and header in frontend that is in private folder
-Next create the next component for admin
-permission is last
+Backend
+- permission is last
+Frontend
+- Create a dynamic sidebar and header in frontend that is in private folder
+- Create a reusable code for try catch and crud handling to lessen the api fetching codes 
+- Next create the next component for admin
+
 
 I am building a **database management system** using:
 
