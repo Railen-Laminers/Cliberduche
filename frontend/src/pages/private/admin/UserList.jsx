@@ -1,40 +1,39 @@
 import { useState } from 'react';
 import { FaEdit, FaTrash, FaBan } from 'react-icons/fa';
+import useMutation from '../../../hooks/useMutation';
 import { deleteUser, deactivateUser } from '../../../api/axios';
 
-export default function UserList({ users, isLoading, onEdit, onDelete, onUpdate }) {
-  const [confirmDelete, setConfirmDelete] = useState(null);
-  const [confirming, setConfirming] = useState(false);
+export default function UserList({ users = [], isLoading, onEdit, onDelete, onUpdate }) {
+  const [activeAction, setActiveAction] = useState({ type: null, id: null });
 
-  const handleDeleteClick = (userId) => {
-    setConfirmDelete(userId);
-  };
+  const deleteMutation = useMutation(deleteUser);
+  const deactivateMutation = useMutation(deactivateUser);
 
-  const handleConfirmDelete = async (userId) => {
-    setConfirming(true);
+  const handleDelete = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete this user?')) return;
+
+    setActiveAction({ type: 'delete', id: userId });
     try {
-      const res = await deleteUser(userId);
-      // Some API wrappers return response.data, others return the data directly.
-      // We only need to inform parent which id was deleted so it can update local state.
+      await deleteMutation.mutate(userId);
       onDelete?.(userId);
-      setConfirmDelete(null);
-    } catch (err) {
-      alert('Failed to delete user: ' + (err?.response?.data?.message || err.message));
+    } catch {
+      alert(deleteMutation.error || 'Failed to delete user');
     } finally {
-      setConfirming(false);
+      setActiveAction({ type: null, id: null });
     }
   };
 
   const handleDeactivate = async (userId) => {
     if (!window.confirm('Are you sure you want to deactivate this user?')) return;
 
+    setActiveAction({ type: 'deactivate', id: userId });
     try {
-      const res = await deactivateUser(userId);
-      const updatedUser = res?.data ?? res;
-      // inform parent to update the single user's data
+      const updatedUser = await deactivateMutation.mutate(userId);
       onUpdate?.(updatedUser);
-    } catch (err) {
-      alert('Failed to deactivate user: ' + (err?.response?.data?.message || err.message));
+    } catch {
+      alert(deactivateMutation.error || 'Failed to deactivate user');
+    } finally {
+      setActiveAction({ type: null, id: null });
     }
   };
 
@@ -42,7 +41,7 @@ export default function UserList({ users, isLoading, onEdit, onDelete, onUpdate 
     return <div className="text-center py-12">Loading users...</div>;
   }
 
-  if (users.length === 0) {
+  if (!users || users.length === 0) {
     return (
       <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
         <p className="text-gray-500">No users found</p>
@@ -63,88 +62,76 @@ export default function UserList({ users, isLoading, onEdit, onDelete, onUpdate 
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr key={user.id} className="border-b border-gray-200 hover:bg-gray-50">
-              <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
-              <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
-              <td className="px-6 py-4 text-sm">
-                {user.roles && user.roles.length > 0 ? (
-                  <div className="flex flex-wrap gap-1">
-                    {user.roles.map((role, idx) => (
-                      <span
-                        key={role.id ?? role.name ?? idx}
-                        className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded"
-                      >
-                        {role.name ?? role}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <span className="text-gray-400">No roles</span>
-                )}
-              </td>
-              <td className="px-6 py-4 text-sm">
-                <span
-                  className={`px-2 py-1 inline-block text-xs font-medium rounded ${user.active
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                    }`}
-                >
-                  {user.active ? 'Active' : 'Inactive'}
-                </span>
-              </td>
-              <td className="px-6 py-4 text-sm">
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => onEdit(user)}
-                    className="text-blue-600 hover:text-blue-800 transition-colors"
-                    title="Edit user"
-                  >
-                    <FaEdit className="w-4 h-4" />
-                  </button>
-                  {user.active && (
-                    <button
-                      onClick={() => handleDeactivate(user.id)}
-                      className="text-yellow-600 hover:text-yellow-800 transition-colors"
-                      title="Deactivate user"
-                    >
-                      <FaBan className="w-4 h-4" />
-                    </button>
+          {users.map((user) => {
+            const isDeleting = activeAction.type === 'delete' && activeAction.id === user.id && deleteMutation.isLoading;
+            const isDeactivating = activeAction.type === 'deactivate' && activeAction.id === user.id && deactivateMutation.isLoading;
+
+            return (
+              <tr key={user.id} className="border-b border-gray-200 hover:bg-gray-50">
+                <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
+                <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
+                <td className="px-6 py-4 text-sm">
+                  {user.roles && user.roles.length > 0 ? (
+                    <div className="flex flex-wrap gap-1">
+                      {user.roles.map((role, idx) => (
+                        <span
+                          key={role.id ?? role.name ?? idx}
+                          className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded"
+                        >
+                          {role.name ?? role}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-gray-400">No roles</span>
                   )}
-                  <div className="relative">
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <span
+                    className={`px-2 py-1 inline-block text-xs font-medium rounded ${user.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}
+                  >
+                    {user.active ? 'Active' : 'Inactive'}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <div className="flex items-center gap-3">
                     <button
-                      onClick={() => handleDeleteClick(user.id)}
-                      className="text-red-600 hover:text-red-800 transition-colors"
-                      title="Delete user"
+                      onClick={() => onEdit(user)}
+                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                      title="Edit user"
                     >
-                      <FaTrash className="w-4 h-4" />
+                      <FaEdit className="w-4 h-4" />
                     </button>
 
-                    {confirmDelete === user.id && (
-                      <div className="absolute top-full mt-2 right-0 bg-white border border-gray-300 rounded shadow-lg p-3 z-10 whitespace-nowrap">
-                        <p className="text-sm text-gray-700 mb-2">Delete this user?</p>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleConfirmDelete(user.id)}
-                            disabled={confirming}
-                            className="px-2 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 disabled:opacity-50"
-                          >
-                            {confirming ? 'Deleting...' : 'Delete'}
-                          </button>
-                          <button
-                            onClick={() => setConfirmDelete(null)}
-                            className="px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400"
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
+                    {user.active && (
+                      <button
+                        onClick={() => handleDeactivate(user.id)}
+                        disabled={isDeactivating || isDeleting}
+                        className="text-yellow-600 hover:text-yellow-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="Deactivate user"
+                      >
+                        {isDeactivating ? (
+                          <span className="text-xs">Deactivating...</span>
+                        ) : (
+                          <FaBan className="w-4 h-4" />
+                        )}
+                      </button>
                     )}
+
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      disabled={isDeleting || isDeactivating}
+                      className="text-red-600 hover:text-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Delete user"
+                    >
+                      {isDeleting ? <span className="text-xs">Deleting...</span> : <FaTrash className="w-4 h-4" />}
+                    </button>
                   </div>
-                </div>
-              </td>
-            </tr>
-          ))}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

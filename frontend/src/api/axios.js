@@ -7,6 +7,7 @@ const instance = axios.create({
   withCredentials: true,
 });
 
+// Auth
 export function setAuthToken(token) {
   if (token) {
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -38,3 +39,8 @@ export async function deleteUser(id) { return (await instance.delete(`/admin/use
 export async function deactivateUser(id) { return (await instance.post(`/admin/users/${id}/deactivate`)).data; }
 
 export default instance;
+
+// Helper for parsing API errors
+export function parseError(err) {
+  return err?.response?.data?.message || err?.message || 'An error occurred';
+}

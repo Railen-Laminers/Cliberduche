@@ -13,7 +13,9 @@ class EnsureUserIsActive
     public function handle(Request $request, Closure $next)
     {
         $user = $request->user();
-        if ($user && property_exists($user, 'active') && !$user->active) {
+
+        // Only block if the user's active flag is explicitly false.
+        if ($user && $user->active === false) {
             return response()->json(['message' => 'Account deactivated'], 403);
         }
 

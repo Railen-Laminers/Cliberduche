@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { createUser, updateUser } from '../../../api/axios';
 import { FaTimes } from 'react-icons/fa';
+import { createUser, updateUser } from '../../../api/axios';
+import useMutation from '../../../hooks/useMutation';
 
 const AVAILABLE_ROLES = [
   { name: 'admin', label: 'Administrator' },
@@ -19,34 +20,30 @@ export default function UserForm({ user, onClose, onSubmit }) {
     password: '',
     roles: [],
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [passwordShown, setPasswordShown] = useState(false);
 
+  // Single mutation for both create and update
+  const mutation = useMutation(async (payload) => {
+    if (user) return updateUser(user.id, payload);
+    return createUser(payload);
+  });
+
+  const { isLoading, error, mutate } = mutation;
+
+  // Populate form when editing a user
   useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        password: '',
-        roles: user.roles?.map(r => (typeof r === 'string' ? r : r.name)) || [],
-      });
-    } else {
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        roles: [],
-      });
-    }
+    mutation.reset();
+    setFormData({
+      name: user?.name || '',
+      email: user?.email || '',
+      password: '',
+      roles: user?.roles?.map(r => (typeof r === 'string' ? r : r.name)) || [],
+    });
   }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleRoleToggle = (roleName) => {
@@ -54,51 +51,30 @@ export default function UserForm({ user, onClose, onSubmit }) {
       ...prev,
       roles: prev.roles.includes(roleName)
         ? prev.roles.filter(r => r !== roleName)
-        : [...prev.roles, roleName]
+        : [...prev.roles, roleName],
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+
+    if (!user && !formData.password) {
+      alert('Password is required');
+      return;
+    }
+
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      roles: formData.roles,
+      ...(formData.password && { password: formData.password }),
+    };
 
     try {
-      const payload = {
-        name: formData.name,
-        email: formData.email,
-        roles: formData.roles,
-      };
-
-      // Only include password if provided
-      if (formData.password) {
-        payload.password = formData.password;
-      } else if (!user) {
-        // Password is required for new users
-        setError('Password is required');
-        setIsLoading(false);
-        return;
-      }
-
-      // Call API and extract saved user robustly
-      let res;
-      if (user) {
-        res = await updateUser(user.id, payload);
-      } else {
-        res = await createUser(payload);
-      }
-      const savedUser = res?.data ?? res;
-
-      // Pass saved user back to parent for local state update
+      const savedUser = await mutate(payload);
       onSubmit(savedUser);
-    } catch (err) {
-      setError(
-        err?.response?.data?.message ||
-        err?.message ||
-        'An error occurred'
-      );
-    } finally {
-      setIsLoading(false);
+    } catch {
+      // Error handled in mutation hook
     }
   };
 
@@ -108,10 +84,7 @@ export default function UserForm({ user, onClose, onSubmit }) {
         <h2 className="text-2xl font-bold text-gray-900">
           {user ? 'Edit User' : 'Create New User'}
         </h2>
-        <button
-          onClick={onClose}
-          className="text-gray-500 hover:text-gray-700 transition-colors"
-        >
+        <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
           <FaTimes className="w-5 h-5" />
         </button>
       </div>
@@ -125,9 +98,7 @@ export default function UserForm({ user, onClose, onSubmit }) {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-            Name
-          </label>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Name</label>
           <input
             type="text"
             id="name"
@@ -142,9 +113,7 @@ export default function UserForm({ user, onClose, onSubmit }) {
 
         {/* Email */}
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-            Email
-          </label>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
           <input
             type="email"
             id="email"
@@ -188,9 +157,7 @@ export default function UserForm({ user, onClose, onSubmit }) {
 
         {/* Roles */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
-            Assign Roles
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-3">Assign Roles</label>
           <div className="space-y-2">
             {AVAILABLE_ROLES.map(role => (
               <label key={role.name} className="flex items-center gap-3 cursor-pointer">

@@ -1,8 +1,11 @@
 Backend
-- permission is last
+- Validations
+- Permission is last
+
 Frontend
-- Create a dynamic sidebar and header in frontend that is in private folder
-- Create a reusable code for try catch and crud handling to lessen the api fetching codes 
+- Create a dynamic sidebar and header in frontend that is in private folder (done)
+- Create a reusable code for try catch and crud handling to lessen the api fetching codes  (done)
+- Prevent refetching the all datas every reload
 - Next create the next component for admin
 
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
@@ -18,18 +17,21 @@ class AuthController extends Controller
         ]);
 
         $user = User::where('email', $data['email'])->first();
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+
+        // Block deactivated users immediately
+        if ($user && $user->active === false) {
+            return response()->json(['message' => 'Account deactivated'], 403);
         }
 
-        if (property_exists($user, 'active') && !$user->active) {
-            return response()->json(['message' => 'Account deactivated'], 403);
+        // Validate credentials
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
-            'user' => $user->load('roles','department'),
+            'user' => $user->load('roles', 'department'),
             'token' => $token,
         ]);
     }
@@ -46,6 +48,6 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return response()->json($request->user()->load('roles','department'));
+        return response()->json($request->user()->load('roles', 'department'));
     }
 }

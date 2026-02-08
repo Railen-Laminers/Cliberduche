@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Hash;
 
 class UserManagementController extends Controller
 {
+    /**
+     * Ensure the requesting user is an admin.
+     */
     protected function authorizeAdmin(Request $request)
     {
         $user = $request->user();
@@ -18,12 +21,25 @@ class UserManagementController extends Controller
         }
     }
 
+    /**
+     * List all users with roles and department, excluding the current user.
+     */
     public function index(Request $request)
     {
         $this->authorizeAdmin($request);
-        return response()->json(User::with('roles','department')->get());
+
+        $currentUserId = $request->user()->id;
+
+        $users = User::with('roles', 'department')
+            ->where('id', '<>', $currentUserId)
+            ->get();
+
+        return response()->json($users);
     }
 
+    /**
+     * Create a new user.
+     */
     public function store(Request $request)
     {
         $this->authorizeAdmin($request);
@@ -49,9 +65,12 @@ class UserManagementController extends Controller
             $user->roles()->sync($roleIds);
         }
 
-        return response()->json($user->load('roles','department'), 201);
+        return response()->json($user->load('roles', 'department'), 201);
     }
 
+    /**
+     * Update an existing user.
+     */
     public function update(Request $request, $id)
     {
         $this->authorizeAdmin($request);
@@ -80,23 +99,48 @@ class UserManagementController extends Controller
             $user->roles()->sync($roleIds);
         }
 
-        return response()->json($user->load('roles','department'));
+        return response()->json($user->load('roles', 'department'));
     }
 
+    /**
+     * Delete a user only if deactivated.
+     */
     public function destroy(Request $request, $id)
     {
         $this->authorizeAdmin($request);
+
         $user = User::findOrFail($id);
+
+        if ($user->active) {
+            return response()->json([
+                'message' => 'Cannot delete an active user. Please deactivate the user first.'
+            ], 403);
+        }
+
         $user->delete();
-        return response()->json(['message' => 'User deleted']);
+
+        return response()->json(['message' => 'User deleted successfully.']);
     }
 
+    /**
+     * Deactivate a user and revoke tokens.
+     */
     public function deactivate(Request $request, $id)
     {
         $this->authorizeAdmin($request);
+
         $user = User::findOrFail($id);
+
+        if ($user->active === false) {
+            return response()->json(['message' => 'User is already deactivated.'], 200);
+        }
+
         $user->active = false;
         $user->save();
-        return response()->json(['message' => 'User deactivated']);
+
+        // Revoke all tokens
+        $user->tokens()->delete();
+
+        return response()->json(['message' => 'User deactivated successfully.']);
     }
 }
