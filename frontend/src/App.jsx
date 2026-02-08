@@ -4,9 +4,10 @@ import { useEffect } from "react";
 import Homepage from "./pages/public/Homepage";
 import Login from "./pages/auth/Login";
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
-import PublicRoute from './components/PublicRoute';
+import ProtectedRoute from './components/routes/ProtectedRoute';
+import PublicRoute from './components/routes/PublicRoute';
 import Dashboard from './pages/private/Dashboard';
+import UserManagement from './pages/private/admin/UserManagement';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -28,6 +29,9 @@ function AppRoutes() {
       {/* single protected dashboard that renders content based on roles */}
       <Route path="/private/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+
+      {/* Admin Routes */}
+      <Route path="/admin/users" element={<ProtectedRoute requiredRole="admin"><UserManagement /></ProtectedRoute>} />
 
       <Route path="/*" element={<Homepage />} />
     </Routes>
