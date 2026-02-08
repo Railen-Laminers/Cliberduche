@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import useScrollAnimation from '../../hooks/useScrollAnimation';
 import logo from '/logo/cliberduche_logo.png';
 import PerspectiveCard from '../../components/PerspectiveCard';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -21,9 +22,17 @@ export default function Login() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert('This is UI only, no login functionality yet.');
+        try {
+            const u = await login(formData.email, formData.password);
+            navigate('/private/dashboard');
+        } catch (err) {
+            alert(err?.response?.data?.message || 'Login failed');
+        }
     };
 
     return (
