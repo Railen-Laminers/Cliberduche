@@ -1,17 +1,27 @@
 import { useState, useEffect } from 'react';
-import { FaTimes } from 'react-icons/fa';
-import { createUser, updateUser } from '../../../api/axios';
+import { FaTimes, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { createUser, updateUser, getDepartments } from '../../../api/axios';
 import useMutation from '../../../hooks/useMutation';
 
+// NOTE: apiName = the role name expected by the backend; name = the frontend/local id used in the UI
 const AVAILABLE_ROLES = [
-  { name: 'admin', label: 'Administrator' },
-  { name: 'department_head', label: 'Department Head / VP' },
-  { name: 'hr_officer', label: 'HR Officer' },
-  { name: 'finance_officer', label: 'Finance Officer' },
-  { name: 'procurement_staff', label: 'Procurement Staff' },
-  { name: 'safety_staff', label: 'Safety/Warehouse Staff' },
-  { name: 'engineering_staff', label: 'Engineering Staff' },
+  { name: 'admin', apiName: 'admin', label: 'Administrator' },
+  { name: 'department_head', apiName: 'department_head', label: 'Department Head / VP' },
+  { name: 'hr_officer', apiName: 'hr_officer', label: 'HR Officer' },
+  { name: 'finance_officer', apiName: 'finance_officer', label: 'Finance Officer' },
+  { name: 'procurement_staff', apiName: 'procurement_staff', label: 'Procurement Staff' },
+  { name: 'safety_staff', apiName: 'safety_staff', label: 'Safety/Warehouse Staff' },
+  { name: 'engineering_staff', apiName: 'engineering_staff', label: 'Engineering Staff' },
 ];
+
+// Department code → allowed roles
+const DEPARTMENT_ROLES = {
+  HR: ['hr_officer', 'department_head'],
+  FIN: ['finance_officer', 'department_head'],
+  PRC: ['procurement_staff', 'department_head'],
+  SFW: ['safety_staff', 'department_head'],
+  ENG: ['engineering_staff', 'department_head'],
+};
 
 export default function UserForm({ user, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
@@ -19,8 +29,12 @@ export default function UserForm({ user, onClose, onSubmit }) {
     email: '',
     password: '',
     roles: [],
+    department_id: null,
   });
   const [passwordShown, setPasswordShown] = useState(false);
+  const [departments, setDepartments] = useState([]);
+  const [deptLoading, setDeptLoading] = useState(false);
+  const [deptError, setDeptError] = useState(null);
 
   // Single mutation for both create and update
   const mutation = useMutation(async (payload) => {
@@ -30,20 +44,61 @@ export default function UserForm({ user, onClose, onSubmit }) {
 
   const { isLoading, error, mutate } = mutation;
 
-  // Populate form when editing a user
+  // Fetch departments
+  useEffect(() => {
+    let mounted = true;
+    setDeptLoading(true);
+    setDeptError(null);
+    getDepartments()
+      .then((data) => {
+        if (!mounted) return;
+        setDepartments(data || []);
+      })
+      .catch(() => {
+        if (!mounted) return;
+        setDeptError('Failed to load departments');
+      })
+      .finally(() => mounted && setDeptLoading(false));
+
+    return () => { mounted = false; };
+  }, []);
+
+  // Populate form when editing
   useEffect(() => {
     mutation.reset();
+
+    const mappedRoles = (user?.roles || []).map((r) => {
+      const roleName = typeof r === 'string' ? r : r.name;
+      const found = AVAILABLE_ROLES.find(x => x.apiName === roleName || x.name === roleName);
+      return found ? found.name : roleName;
+    });
+
     setFormData({
       name: user?.name || '',
       email: user?.email || '',
       password: '',
-      roles: user?.roles?.map(r => (typeof r === 'string' ? r : r.name)) || [],
+      roles: mappedRoles,
+      department_id: user?.department?.id ?? null,
     });
   }, [user]);
 
+  // Clean up roles when department changes
+  useEffect(() => {
+    if (!formData.department_id) return;
+    const dept = departments.find(d => d.id === formData.department_id);
+    if (!dept) return;
+    const allowedRoles = DEPARTMENT_ROLES[dept.code] || [];
+    setFormData(prev => ({
+      ...prev,
+      roles: prev.roles.filter(r => allowedRoles.includes(r) || r === 'admin')
+    }));
+  }, [formData.department_id, departments]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // Convert department_id to number, keep others as-is
+    const finalValue = name === 'department_id' ? (value ? Number(value) : null) : value;
+    setFormData(prev => ({ ...prev, [name]: finalValue }));
   };
 
   const handleRoleToggle = (roleName) => {
@@ -63,10 +118,21 @@ export default function UserForm({ user, onClose, onSubmit }) {
       return;
     }
 
+    if (formData.roles.includes('department_head') && !formData.department_id) {
+      alert('Please select a department when assigning the Department Head role.');
+      return;
+    }
+
+    const payloadRoles = formData.roles.map((rn) => {
+      const found = AVAILABLE_ROLES.find(x => x.name === rn);
+      return found ? found.apiName : rn;
+    });
+
     const payload = {
       name: formData.name,
       email: formData.email,
-      roles: formData.roles,
+      roles: payloadRoles,
+      department_id: formData.department_id || null,
       ...(formData.password && { password: formData.password }),
     };
 
@@ -74,7 +140,7 @@ export default function UserForm({ user, onClose, onSubmit }) {
       const savedUser = await mutate(payload);
       onSubmit(savedUser);
     } catch {
-      // Error handled in mutation hook
+      // handled by mutation hook
     }
   };
 
@@ -91,7 +157,7 @@ export default function UserForm({ user, onClose, onSubmit }) {
 
       {error && (
         <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
+          {typeof error === 'string' ? error : JSON.stringify(error)}
         </div>
       )}
 
@@ -126,6 +192,33 @@ export default function UserForm({ user, onClose, onSubmit }) {
           />
         </div>
 
+        {/* Department select */}
+        <div>
+          <label htmlFor="department_id" className="block text-sm font-medium text-gray-700 mb-2">Department</label>
+
+          {deptLoading ? (
+            <div className="text-sm text-gray-500">Loading departments...</div>
+          ) : deptError ? (
+            <div className="text-sm text-red-600">{deptError}</div>
+          ) : (
+            <select
+              id="department_id"
+              name="department_id"
+              value={formData.department_id ?? ''}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+            >
+              <option value="">— No department —</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.id}>{d.name}{d.code ? ` (${d.code})` : ''}</option>
+              ))}
+            </select>
+          )}
+          <p className="text-xs text-gray-500 mt-1">
+            Assign a department to the user. Required when assigning Department Head.
+          </p>
+        </div>
+
         {/* Password */}
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
@@ -147,7 +240,7 @@ export default function UserForm({ user, onClose, onSubmit }) {
               onClick={() => setPasswordShown(!passwordShown)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
             >
-              {passwordShown ? '✕' : '◉'}
+              {passwordShown ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
           <p className="text-xs text-gray-500 mt-1">
@@ -158,8 +251,21 @@ export default function UserForm({ user, onClose, onSubmit }) {
         {/* Roles */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Assign Roles</label>
+          {!formData.department_id && (
+            <p className="text-sm text-gray-500 mb-3">Select a department above to assign roles.</p>
+          )}
           <div className="space-y-2">
-            {AVAILABLE_ROLES.map(role => (
+            {AVAILABLE_ROLES.filter(role => {
+              if (role.name === 'admin') return true; // admin always selectable
+
+              if (!formData.department_id) return false; // no department => hide non-admin roles
+
+              const dept = departments.find(d => d.id === formData.department_id);
+              if (!dept) return false;
+
+              const allowedRoles = DEPARTMENT_ROLES[dept.code] || [];
+              return allowedRoles.includes(role.name);
+            }).map((role) => (
               <label key={role.name} className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"

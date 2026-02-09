@@ -38,9 +38,16 @@ export async function updateUser(id, payload) { return (await instance.put(`/adm
 export async function deleteUser(id) { return (await instance.delete(`/admin/users/${id}`)).data; }
 export async function deactivateUser(id) { return (await instance.post(`/admin/users/${id}/deactivate`)).data; }
 
+// Department endpoints
+export async function getDepartments() { return (await instance.get('/admin/departments')).data; }
+export async function createDepartment(payload) { return (await instance.post('/admin/departments', payload)).data; }
+export async function updateDepartment(id, payload) { return (await instance.put(`/admin/departments/${id}`, payload)).data; }
+export async function deleteDepartment(id) { return (await instance.delete(`/admin/departments/${id}`)).data; }
+
 export default instance;
 
 // Helper for parsing API errors
 export function parseError(err) {
-  return err?.response?.data?.message || err?.message || 'An error occurred';
+  // backend generally returns { message: '...' } for validation/errors
+  return err?.response?.data?.message || err?.response?.data?.errors || err?.message || 'An error occurred';
 }
