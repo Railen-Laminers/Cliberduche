@@ -4,7 +4,7 @@ import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { useNavigate } from "react-router-dom";
 import office from "/office.jpg";
 
-export default function Hero({ introDone = true }) {
+export default function Home({ introDone = true }) {
     const navigate = useNavigate();
 
     // Scroll animations
@@ -37,20 +37,20 @@ export default function Hero({ introDone = true }) {
                 minHeight: "calc(var(--vh, 1vh) * 100)",
             }}
         >
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#0b2545]/80 via-[#1f7a8c]/70 to-[#0b2545]/80" />
+            {/* Very subtle dark overlay for text readability (keeps image visible) */}
+            <div className="absolute inset-0 bg-black/20" />
 
             <div className="max-w-7xl mx-auto relative z-10 text-center md:text-left pt-24 md:pt-28">
                 <h1
                     ref={headingRef}
-                    className={`text-4xl md:text-6xl font-bold max-w-3xl leading-tight mb-6 ${headingAnim}`}
+                    className={`text-4xl md:text-6xl font-bold max-w-3xl leading-tight mb-6 drop-shadow-md ${headingAnim}`}
                 >
                     Building Excellence, Delivering Trust
                 </h1>
 
                 <p
                     ref={subheadingRef}
-                    className={`mt-4 text-lg md:text-xl text-green-100 max-w-2xl leading-relaxed ${subheadingAnim}`}
+                    className={`mt-4 text-lg md:text-xl text-gray-100 max-w-2xl leading-relaxed ${subheadingAnim}`}
                 >
                     <strong>CLIBERDUCHE CORPORATION</strong> delivers reliable backfilling,
                     land development, and construction solutions across CALABARZON and

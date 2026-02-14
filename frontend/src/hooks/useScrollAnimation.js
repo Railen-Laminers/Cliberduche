@@ -1,13 +1,12 @@
 // useScrollAnimation.js
 import { useEffect, useRef, useState } from 'react';
 
-export default function useScrollAnimation(threshold = 0.1, enabled = true) {
+export default function useScrollAnimation(threshold = 0.1, enabled = true, delay = 100) {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
     const observerRef = useRef(null);
 
     useEffect(() => {
-        // If animation system is disabled, reset visibility and skip observing.
         if (!enabled) {
             setIsVisible(false);
             if (observerRef.current) {
@@ -20,17 +19,19 @@ export default function useScrollAnimation(threshold = 0.1, enabled = true) {
         const node = ref.current;
         if (!node) return;
 
-        // Disconnect any previous observer
         if (observerRef.current) {
             observerRef.current.disconnect();
-            observerRef.current = null;
         }
 
         observerRef.current = new IntersectionObserver(
             ([entry]) => {
-                // Only trigger animation when entering, prevent toggle on exit
                 if (entry.isIntersecting) {
-                    setIsVisible(true);
+                    // Smooth trigger using requestAnimationFrame with optional delay
+                    const handle = requestAnimationFrame(() => {
+                        setTimeout(() => setIsVisible(true), delay);
+                    });
+
+                    return () => cancelAnimationFrame(handle);
                 }
             },
             { threshold }
@@ -38,20 +39,20 @@ export default function useScrollAnimation(threshold = 0.1, enabled = true) {
 
         observerRef.current.observe(node);
 
-        // Cleanup on unmount
         return () => {
             if (observerRef.current) {
                 observerRef.current.disconnect();
                 observerRef.current = null;
             }
         };
-    }, [threshold, enabled]);
+    }, [threshold, enabled, delay]);
 
     const className = `
-        transition-all duration-700 ease-out
+        transition-opacity transition-transform transition-filter
+        duration-1000 ease-out
         ${isVisible
             ? 'opacity-100 translate-y-0 scale-100 blur-0'
-            : 'opacity-0 translate-y-10 scale-95 blur-sm'
+            : 'opacity-0 translate-y-6 scale-95 blur-sm'
         }
     `;
 

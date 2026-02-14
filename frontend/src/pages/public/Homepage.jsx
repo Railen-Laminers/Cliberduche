@@ -1,3 +1,4 @@
+// src/pages/homepage/Homepage.jsx
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -14,29 +15,32 @@ import BackToTopButton from "../../components/BackToTopButton";
 import SmoothScroll from "../../components/SmoothScroll";
 import "./Homepage.css";
 
-// Scroll to top on route change
+/**
+ * ScrollToTop
+ * - On route change, tell SmoothScroll to set target = 0 (or use native scroll for touch devices)
+ * - We dispatch a custom event so SmoothScroll can handle the animation and internal state.
+ */
 function ScrollToTop() {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        // Detect if touch device
+        // Detect touch device
         const isTouchDevice =
-            'ontouchstart' in window ||
+            "ontouchstart" in window ||
             navigator.maxTouchPoints > 0 ||
             navigator.msMaxTouchPoints > 0;
 
-        if (isTouchDevice) {
-            // Mobile: use native scroll
-            window.scrollTo({
-                top: 0,
-                behavior: 'auto' // instant on route change
-            });
-        } else {
-            // Desktop: use custom smooth scroll
-            window.scrollTo(0, 0);
-            const scrollContainer = document.querySelector(".smooth-scroll");
-            if (scrollContainer) scrollContainer.scrollTop = 0;
-        }
+        // Use a rAF so DOM for the new route has a frame to render before we sync
+        requestAnimationFrame(() => {
+            if (isTouchDevice) {
+                // On touch devices, use native (instant) scroll-to-top to avoid confusing UX
+                window.scrollTo({ top: 0, behavior: "auto" });
+            } else {
+                // Ask SmoothScroll to set its internal target to 0
+                // SmoothScroll listens for "smooth-scroll-set-target"
+                window.dispatchEvent(new CustomEvent("smooth-scroll-set-target", { detail: 0 }));
+            }
+        });
     }, [pathname]);
 
     return null;
@@ -48,15 +52,14 @@ export default function Homepage() {
     const { pathname } = useLocation();
 
     const isHome = pathname === "/";
-    const noTopPadding = isHome || pathname === "/projects";
+    const noTopPadding = isHome || pathname === "/projects" || pathname === "/about" || pathname === "/services";
 
     return (
         <div className="font-sans bg-[#f4faf7] text-[#0b2545] min-h-screen bg-white">
-            {/* Navbar always mounted, won't reanimate on route change */}
             <Navbar introDone={introDone} />
 
             <SmoothScroll ease={0.08} className="smooth-scroll">
-                <ScrollToTop /> {/* resets scroll on route change */}
+                <ScrollToTop />
 
                 {introPlaying && (
                     <Intro
@@ -79,7 +82,6 @@ export default function Homepage() {
 
                 <Footer introDone={introDone} />
 
-                {/* Back to top button - only after intro completes */}
                 {introDone && <BackToTopButton />}
             </SmoothScroll>
         </div>

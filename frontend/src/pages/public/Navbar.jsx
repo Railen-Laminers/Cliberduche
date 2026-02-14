@@ -116,9 +116,9 @@ export default function Navbar({ introDone = false }) {
         {/* Mobile menu button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden relative z-50 text-green-500 text-2xl p-2 rounded-full border-2 border-green-500 
-                     bg-slate-900/70 backdrop-blur-md hover:bg-green-500/20 
-                     transition-all duration-300 ease-in-out"
+          className="md:hidden relative z-50 text-white text-2xl p-3 rounded-xl bg-green-500 
+             shadow-lg hover:bg-green-600 hover:scale-105 
+             transition-all duration-300 ease-in-out"
         >
           {isOpen ? <FaTimes /> : <FaBars />}
         </button>
