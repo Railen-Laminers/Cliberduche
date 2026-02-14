@@ -61,7 +61,11 @@ export default function Home({ introDone = true }) {
                     ref={buttonsRef}
                     className={`mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start ${buttonsAnim}`}
                 >
-                    <button className="bg-green-400 hover:bg-green-500 text-[#0b2545] px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300">
+                    {/* navigates to contact page */}
+                    <button
+                        onClick={() => navigate("/contact")}
+                        className="bg-green-400 hover:bg-green-500 text-[#0b2545] px-8 py-3 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300"
+                    >
                         Request a Quote
                     </button>
 

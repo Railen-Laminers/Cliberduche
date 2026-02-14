@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // 👈 added for navigation
 import {
     FaTruckLoading,
     FaMountain,
@@ -12,7 +13,7 @@ import {
     FaLeaf,
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
-import PerspectiveCard from "../../components/PerspectiveCard"; // Import PerspectiveCard
+import PerspectiveCard from "../../components/PerspectiveCard";
 
 export default function Services({ introDone = true }) {
     const [heroRef, heroAnim] = useScrollAnimation(0.1, introDone);
@@ -209,7 +210,7 @@ export default function Services({ introDone = true }) {
                 </div>
             </section>
 
-            {/* ========== CALL TO ACTION – CENTERED ========== */}
+            {/* ========== CALL TO ACTION – CENTERED (with React Router Link) ========== */}
             <section className="px-6 md:px-16 lg:px-24 py-16 md:py-20 bg-[#0b2545] text-white">
                 <div
                     ref={ctaContentRef}
@@ -221,13 +222,13 @@ export default function Services({ introDone = true }) {
                     <p className="text-xl text-gray-200 mb-8">
                         Let’s discuss how our services can bring your vision to life.
                     </p>
-                    <a
-                        href="/contact"
+                    <Link
+                        to="/contact"
                         className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-colors duration-300"
                     >
                         <FaPhoneAlt className="w-5 h-5" />
                         Contact Us Today
-                    </a>
+                    </Link>
                 </div>
             </section>
         </>
