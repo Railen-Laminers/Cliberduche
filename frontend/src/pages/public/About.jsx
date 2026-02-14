@@ -21,7 +21,7 @@ export default function About({ introDone = true }) {
   const [valuesRef, valuesAnim] = useScrollAnimation(0.1, introDone);
   const [leadershipRef, leadershipAnim] = useScrollAnimation(0.1, introDone);
 
-  // State for team card hover effect
+  // State for team card hover effect (desktop only)
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
   return (
@@ -315,8 +315,23 @@ export default function About({ introDone = true }) {
           </div>
         </div>
 
-        {/* Team Cards   */}
-        <div className="mt-12 max-w-6xl mx-auto">
+        {/* ----- MOBILE LAYOUT (stacked grid) ----- */}
+        <div className="mt-12 max-w-6xl mx-auto block md:hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0"> {/* ← gap-0 removes all gaps */}
+            {teamMembers.map((member, index) => (
+              <TeamCard
+                key={index}
+                name={member.name}
+                title={member.title}
+                brief={member.brief}
+                imageUrl={member.imageUrl}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* ----- DESKTOP LAYOUT (horizontal hover effect) ----- */}
+        <div className="mt-12 max-w-6xl mx-auto hidden md:block">
           <div className="flex flex-nowrap gap-0">
             {teamMembers.map((member, index) => (
               <div
