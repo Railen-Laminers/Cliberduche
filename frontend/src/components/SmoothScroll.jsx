@@ -2,20 +2,54 @@ import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 /**
+ * Determines if an element or any of its parents can scroll vertically.
+ * Returns the first scrollable element found, or null.
+ */
+function getScrollableParent(el, direction = "vertical") {
+    const isY = direction === "vertical";
+    while (el && el !== document.body) {
+        const style = window.getComputedStyle(el);
+        const overflow = isY ? style.overflowY : style.overflowX;
+        const canScroll = (overflow === "auto" || overflow === "scroll") &&
+            (isY ? el.scrollHeight > el.clientHeight : el.scrollWidth > el.clientWidth);
+        if (canScroll) return el;
+        el = el.parentElement;
+    }
+    return null;
+}
+
+/**
+ * Checks if the given element is a text input / contenteditable.
+ */
+function isTypingElement(el) {
+    if (!el) return false;
+    const tag = el.tagName;
+    const typingTags = ["INPUT", "TEXTAREA", "SELECT"];
+    if (typingTags.includes(tag)) return true;
+    if (el.isContentEditable) return true;
+    return el.getAttribute?.("role") === "textbox";
+}
+
+/**
  * SmoothScroll
- * - Desktop: custom smooth scrolling (wheel + keyboard)
- * - Touch devices: uses native smooth scrolling
+ * - Desktop with mouse/trackpad: custom smooth scrolling
+ * - Touch devices: native smooth scrolling (via CSS)
+ * - Respects nested scrollable areas (modals, sidebars, etc.)
  * - Listens for custom event "smooth-scroll-set-target" to programmatically set target
  *
  * Props:
- *  - ease (number) smoothing factor
+ *  - ease (number) smoothing factor (default 0.08)
  *  - className (string)
  */
 export default function SmoothScroll({ children, ease = 0.08, className = "" }) {
     const { pathname } = useLocation();
-    const isTouchDevice = useRef(false);
 
-    // Refs for mutable values used by RAF loop & handlers
+    // Use a media query to detect fine pointer (mouse/trackpad) vs coarse (touch)
+    const isFinePointer = useRef(
+        window.matchMedia?.("(pointer:fine)").matches ?? !("ontouchstart" in window)
+    );
+
+    // Refs for animation
     const targetRef = useRef(0);
     const currentRef = useRef(0);
     const rafRef = useRef(null);
@@ -23,71 +57,39 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
     const isUserScrollingRef = useRef(false);
     const resizeObserverRef = useRef(null);
 
-    // Pointer/scrollbar detection refs
+    // Scrollbar drag detection
     const pointerDownRef = useRef(false);
-    const pointerMovedSinceDownRef = useRef(false);
-    const pointerStartXRef = useRef(0);
     const pointerStartYRef = useRef(0);
 
-    // helpers
+    // Helpers
     const getMaxScroll = () =>
-        Math.max(
-            0,
-            Math.max(
-                document.documentElement.scrollHeight,
-                document.body.scrollHeight
-            ) - window.innerHeight
-        );
+        Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
 
     const clampTarget = () => {
         const max = getMaxScroll();
         targetRef.current = Math.max(0, Math.min(targetRef.current, max));
     };
 
-    const isElementTyping = (el) => {
-        if (!el) return false;
-        const tag = el.tagName;
-        if (!tag) return false;
-        const typingTags = ["INPUT", "TEXTAREA", "SELECT"];
-        if (typingTags.includes(tag)) return true;
-        if (el.isContentEditable) return true;
-        // some UI frameworks use role=textbox
-        const role = el.getAttribute && el.getAttribute("role");
-        if (role === "textbox") return true;
-        return false;
-    };
-
+    // On coarse pointer devices, just enable native smooth scroll and bail out
     useEffect(() => {
-        // detect once
-        isTouchDevice.current =
-            "ontouchstart" in window ||
-            navigator.maxTouchPoints > 0 ||
-            navigator.msMaxTouchPoints > 0;
-
-        if (isTouchDevice.current) {
-            // Enable native smooth behavior for touch devices
-            const prev = document.documentElement.style.scrollBehavior;
+        if (!isFinePointer.current) {
+            const originalBehavior = document.documentElement.style.scrollBehavior;
             document.documentElement.style.scrollBehavior = "smooth";
             return () => {
-                document.documentElement.style.scrollBehavior = prev || "";
+                document.documentElement.style.scrollBehavior = originalBehavior || "";
             };
         }
 
-        // Desktop: custom smooth scroll
-        let easeLocal = ease;
+        // ----- Fine pointer: custom smooth scroll -----
+        const easeLocal = ease;
 
-        // initialize target/current from current window scroll
         const syncInitial = () => {
-            const pos = window.scrollY || window.pageYOffset || 0;
+            const pos = window.scrollY;
             targetRef.current = pos;
             currentRef.current = pos;
-            clampTarget();
         };
 
-        // Make sure we sync after DOM updates
-        requestAnimationFrame(syncInitial);
-
-        // RAF animate loop
+        // RAF loop
         const animate = () => {
             const target = targetRef.current;
             let current = currentRef.current;
@@ -96,26 +98,20 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             if (Math.abs(diff) > 0.1) {
                 current += diff * easeLocal;
                 currentRef.current = current;
-                // write to native scroll
                 window.scrollTo(0, current);
-            } else {
-                // minimal difference: set to exact
-                if (currentRef.current !== target) {
-                    currentRef.current = target;
-                    window.scrollTo(0, target);
-                }
+            } else if (currentRef.current !== target) {
+                currentRef.current = target;
+                window.scrollTo(0, target);
             }
 
             rafRef.current = requestAnimationFrame(animate);
         };
-
         rafRef.current = requestAnimationFrame(animate);
 
-        // ========== IMPROVED onScroll HANDLER ==========
+        // ----- Scroll handler (syncs with native scroll changes) -----
         const onScroll = () => {
-            const actual = window.scrollY || window.pageYOffset || 0;
+            const actual = window.scrollY;
 
-            // Helper to snap internal state to the actual scroll position
             const snapToActual = () => {
                 targetRef.current = actual;
                 currentRef.current = actual;
@@ -123,7 +119,6 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
                 markUserScroll();
             };
 
-            // Helper to mark that the user is actively scrolling
             const markUserScroll = () => {
                 isUserScrollingRef.current = true;
                 clearTimeout(userScrollTimeoutRef.current);
@@ -132,31 +127,34 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
                 }, 120);
             };
 
-            // ----- Pointer‑driven scroll (thumb drag, track click, button click) -----
             if (pointerDownRef.current) {
-                // Snap for both drag and click – eliminates bounce‑back
                 snapToActual();
                 return;
             }
 
-            // ----- Other scrolls (e.g. programmatic, browser's own after pointer up) -----
             if (Math.abs(actual - currentRef.current) > 2) {
-                // Native scroll diverged from our smooth position – animate toward it
                 targetRef.current = actual;
                 clampTarget();
                 markUserScroll();
             }
         };
-        // ================================================
 
-        // Wheel handler
+        // ----- Wheel handler with nested scrollable detection -----
         const onWheel = (e) => {
-            // only handle primary button / normal wheel
-            // preventDefault so native scroll doesn't jump
+            // Find the nearest scrollable parent under the cursor
+            const targetEl = e.target;
+            const scrollableParent = getScrollableParent(targetEl, "vertical");
+
+            if (scrollableParent) {
+                // Let the nested element handle the wheel natively
+                return;
+            }
+
+            // No scrollable parent – scroll the page
             e.preventDefault();
 
             let delta = e.deltaY;
-            if (e.deltaMode === 1) delta *= 16; // line
+            if (e.deltaMode === 1) delta *= 16;          // line
             else if (e.deltaMode === 2) delta *= window.innerHeight; // page
 
             targetRef.current += delta;
@@ -169,13 +167,14 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             }, 120);
         };
 
-        // Keyboard handler
+        // ----- Keyboard handler -----
         const onKeyDown = (e) => {
-            // ignore if modifier keys (except we allow Shift for Space)
             if (e.ctrlKey || e.altKey || e.metaKey) return;
+            if (isTypingElement(document.activeElement)) return;
 
-            // ignore when focusing inputs / typing
-            if (isElementTyping(document.activeElement)) return;
+            // If focus is inside a scrollable container, do not interfere
+            const scrollableParent = getScrollableParent(document.activeElement, "vertical");
+            if (scrollableParent) return;
 
             const pageHeight = window.innerHeight;
             const lineHeight = 40;
@@ -202,7 +201,7 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
                     targetRef.current = getMaxScroll();
                     break;
                 case " ":
-                case "Spacebar": // older browsers
+                case "Spacebar":
                     delta = e.shiftKey ? -pageHeight : pageHeight;
                     break;
                 default:
@@ -210,15 +209,11 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             }
 
             if (!handled) return;
-
             e.preventDefault();
 
-            if (delta !== 0) {
-                targetRef.current += delta;
-            }
+            if (delta !== 0) targetRef.current += delta;
             clampTarget();
 
-            // mark user scrolling briefly
             isUserScrollingRef.current = true;
             clearTimeout(userScrollTimeoutRef.current);
             userScrollTimeoutRef.current = setTimeout(() => {
@@ -226,76 +221,56 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             }, 120);
         };
 
-        // Custom event listener to set target programmatically
+        // ----- Custom event for programmatic scrolling -----
         const onSetTarget = (ev) => {
-            // ev.detail might be a number or an object like { value: 123 }
             const raw = ev?.detail;
-            let v = NaN;
-            if (typeof raw === "number") v = raw;
-            else if (raw && typeof raw === "object" && typeof raw.value === "number") v = raw.value;
-            else v = Number(raw);
-            if (Number.isFinite(v)) {
+            let v = typeof raw === "number" ? raw : raw?.value;
+            if (typeof v === "number" && !isNaN(v)) {
                 targetRef.current = v;
                 clampTarget();
             }
         };
 
-        // Resize handling & content changes — keep target valid
-        const onResize = () => {
-            clampTarget();
-        };
+        // ----- Resize / content changes -----
+        const onResize = () => clampTarget();
 
-        // Pointer handlers to detect drag vs click.
+        // ----- Pointer events for scrollbar detection -----
         const onPointerDown = (ev) => {
             pointerDownRef.current = true;
-            pointerMovedSinceDownRef.current = false;
-            pointerStartXRef.current = ev.clientX ?? 0;
-            pointerStartYRef.current = ev.clientY ?? 0;
+            pointerStartYRef.current = ev.clientY;
         };
         const onPointerMove = (ev) => {
             if (!pointerDownRef.current) return;
-            const dx = Math.abs((ev.clientX ?? 0) - pointerStartXRef.current);
-            const dy = Math.abs((ev.clientY ?? 0) - pointerStartYRef.current);
-            // small threshold (4px) to differentiate click vs drag
-            if (dx > 4 || dy > 4) {
-                pointerMovedSinceDownRef.current = true;
+            // If moved more than a few px, treat as drag
+            if (Math.abs(ev.clientY - pointerStartYRef.current) > 4) {
+                // no need to set a flag; just keep pointerDown true
             }
         };
         const onPointerUp = () => {
-            // reset pointer flags after a tick to allow onScroll to run first (if it hasn't)
             pointerDownRef.current = false;
-            pointerMovedSinceDownRef.current = false;
         };
 
-        // ResizeObserver to catch layout/content changes (images, async content)
-        // Observe the documentElement or body to detect height changes.
+        // ----- Visibility change -----
+        const onVisibility = () => {
+            if (!document.hidden) requestAnimationFrame(syncInitial);
+        };
+
+        // Set up ResizeObserver
         try {
-            resizeObserverRef.current = new ResizeObserver(() => {
-                clampTarget();
-            });
+            resizeObserverRef.current = new ResizeObserver(onResize);
             resizeObserverRef.current.observe(document.documentElement);
             resizeObserverRef.current.observe(document.body);
-        } catch (err) {
-            // ResizeObserver not supported: fallback to window resize
+        } catch {
             window.addEventListener("resize", onResize, { passive: true });
         }
 
-        // Visibility change: when tab becomes visible, resync
-        const onVisibility = () => {
-            if (!document.hidden) {
-                requestAnimationFrame(syncInitial);
-            }
-        };
-
-        // Attach listeners
+        // Attach all listeners
         window.addEventListener("wheel", onWheel, { passive: false });
         window.addEventListener("scroll", onScroll, { passive: true });
         window.addEventListener("keydown", onKeyDown, { passive: false });
         window.addEventListener("smooth-scroll-set-target", onSetTarget);
         document.addEventListener("visibilitychange", onVisibility);
 
-        // Pointer events on document to detect scrollbar interactions
-        // Use pointer events when available, fall back to mouse events
         const supportsPointer = !!window.PointerEvent;
         if (supportsPointer) {
             document.addEventListener("pointerdown", onPointerDown, { passive: true });
@@ -307,10 +282,10 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             document.addEventListener("mouseup", onPointerUp, { passive: true });
         }
 
-        // Ensure target/current are set after route changes (allow DOM to render)
+        // Initial sync after mount / route change
         requestAnimationFrame(syncInitial);
 
-        // cleanup
+        // Cleanup
         return () => {
             window.removeEventListener("wheel", onWheel);
             window.removeEventListener("scroll", onScroll);
@@ -328,11 +303,12 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
                 document.removeEventListener("mouseup", onPointerUp);
             }
 
-            if (resizeObserverRef.current && resizeObserverRef.current.disconnect) {
+            if (resizeObserverRef.current) {
                 resizeObserverRef.current.disconnect();
             } else {
                 window.removeEventListener("resize", onResize);
             }
+
             clearTimeout(userScrollTimeoutRef.current);
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
