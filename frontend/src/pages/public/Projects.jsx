@@ -1,4 +1,3 @@
-// Projects.jsx – redesigned but with original ongoing project layout
 import React, { useState, useEffect, useRef } from "react";
 import {
   FaTimes,
@@ -9,12 +8,105 @@ import {
   FaMapMarkerAlt,
   FaInfinity,
   FaHardHat,
-  FaCheck
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import PerspectiveCard from "../../components/PerspectiveCard";
 import { projects } from "./projectsData";
 import heroImage from "/projects/northport_ongoing/northport_img_5.jpg";
+
+// ========== BLOCK REVEAL COMPONENT ==========
+const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
+  return (
+    <div
+      className="absolute inset-0 grid pointer-events-none"
+      style={{
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gridTemplateRows: `repeat(${rows}, 1fr)`,
+      }}
+    >
+      {Array.from({ length: rows * cols }).map((_, i) => {
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        const delay = active ? `${row * 0.1 + col * 0.02}s` : "0s";
+        return (
+          <div
+            key={i}
+            className="w-full h-full bg-white transition-opacity duration-700 ease-out"
+            style={{
+              opacity: active ? 0 : 1,
+              transitionDelay: delay,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+// ========== LETTER REVEAL COMPONENT ==========
+const LetterReveal = ({ active, lines, letterDelay = 0.05 }) => {
+  const letters = [];
+  lines.forEach((line, lineIdx) => {
+    const words = line.split(" ");
+    words.forEach((word, wordIdx) => {
+      for (let i = 0; i < word.length; i++) {
+        letters.push({
+          char: word[i],
+          line: lineIdx,
+          word: wordIdx,
+          pos: letters.length,
+        });
+      }
+      if (wordIdx < words.length - 1) {
+        letters.push({
+          char: " ",
+          line: lineIdx,
+          word: wordIdx,
+          pos: letters.length,
+          isSpace: true,
+        });
+      }
+    });
+  });
+
+  return (
+    <div className="inline-block">
+      {lines.map((line, lineIdx) => (
+        <div key={lineIdx} className="whitespace-nowrap">
+          {line.split(" ").map((word, wordIdx) => (
+            <React.Fragment key={wordIdx}>
+              {word.split("").map((char, charIdx) => {
+                const globalIndex = letters.findIndex(
+                  (l) =>
+                    l.line === lineIdx &&
+                    l.word === wordIdx &&
+                    l.char === char &&
+                    !l.isSpace
+                );
+                const delay = active ? `${globalIndex * letterDelay}s` : "0s";
+                return (
+                  <span
+                    key={charIdx}
+                    className="inline-block transition-opacity duration-700 ease-out"
+                    style={{
+                      opacity: active ? 1 : 0,
+                      transitionDelay: delay,
+                    }}
+                  >
+                    {char}
+                  </span>
+                );
+              })}
+              {wordIdx < line.split(" ").length - 1 && (
+                <span className="whitespace-pre"> </span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Scroll‑animated wrapper
 const ScrollAnimatedItem = ({ children, threshold = 0.15, introDone = true, className = "" }) => {
@@ -174,6 +266,22 @@ export default function Projects({ introDone = true }) {
   const modalRef = useRef(null);
   const thumbnailRef = useRef(null);
 
+  // State for hero animations
+  const [heroRevealed, setHeroRevealed] = useState(false);
+  const [textRevealed, setTextRevealed] = useState(false);
+
+  // Trigger animations when intro is done
+  useEffect(() => {
+    if (introDone) {
+      const blockTimer = setTimeout(() => setHeroRevealed(true), 100);
+      const textTimer = setTimeout(() => setTextRevealed(true), 200);
+      return () => {
+        clearTimeout(blockTimer);
+        clearTimeout(textTimer);
+      };
+    }
+  }, [introDone]);
+
   // Scroll animation refs
   const [heroRef, heroAnim] = useScrollAnimation(0.1, introDone);
   const [ongoingRef, ongoingAnim] = useScrollAnimation(0.1, introDone);
@@ -265,22 +373,50 @@ export default function Projects({ introDone = true }) {
 
   return (
     <div className="bg-white text-[#0b2545] overflow-x-hidden">
-      {/* ========== HERO – MOBILE: TEXT ABOVE IMAGE (PARALLAX) | DESKTOP: SPLIT SCREEN ========== */}
-      <div className="flex flex-col md:flex-row min-h-screen md:h-screen">
-        {/* Image – on mobile: below text (order-2), on desktop: left side (order-1) */}
+      {/* ========== MOBILE/TABLET HERO (below lg) ========== */}
+      <div className="relative min-h-screen overflow-hidden lg:hidden">
+        {/* Background image with parallax */}
         <div
-          className="w-full md:w-1/2 h-96 md:h-full bg-cover bg-center bg-fixed order-2 md:order-1"
+          className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
             backgroundImage: `url(${heroImage})`,
-            backgroundPosition: "center",
           }}
-        />
+        >
+          <BlockReveal active={heroRevealed} rows={8} cols={12} />
+        </div>
 
-        {/* Text content – on mobile: above image (order-1), on desktop: right side (order-2) */}
+        {/* Text overlay with semi‑transparent background */}
+        <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-black/30">
+          <div className="text-sm tracking-[0.3em] uppercase text-white/80 mb-3">
+            Projects
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            <LetterReveal
+              active={textRevealed}
+              lines={["Building Progress,", "Delivering", "Excellence"]}
+              letterDelay={0.05}
+            />
+          </h1>
+        </div>
+      </div>
+
+      {/* ========== DESKTOP HERO (lg and up) – split screen ========== */}
+      <div className="hidden lg:flex flex-col md:flex-row min-h-screen md:h-screen">
+        {/* Image side with block reveal */}
+        <div className="relative w-full md:w-1/2 h-96 md:h-full order-2 md:order-1 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${heroImage})`,
+              backgroundPosition: "center",
+            }}
+          />
+          <BlockReveal active={heroRevealed} rows={8} cols={12} />
+        </div>
+
+        {/* Text side */}
         <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2">
-          {/* Top spacer – only on desktop */}
           <div className="hidden md:block flex-1" />
-
           <div
             ref={heroRef}
             className={`pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12 ${heroAnim}`}
@@ -289,13 +425,13 @@ export default function Projects({ introDone = true }) {
               Projects
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0b2545] leading-tight">
-              Building Progress,
-              <br />
-              Delivering Excellence
+              <LetterReveal
+                active={textRevealed}
+                lines={["Building Progress, ", "Delivering", "Excellence"]}
+                letterDelay={0.05}
+              />
             </h1>
           </div>
-
-          {/* Bottom spacer – only on desktop */}
           <div className="hidden md:block flex-1" />
         </div>
       </div>
@@ -363,7 +499,7 @@ export default function Projects({ introDone = true }) {
         </div>
       </section>
 
-      {/* ========== MODAL (, full gallery) ========== */}
+      {/* ========== MODAL (full gallery) ========== */}
       {isOpen && activeProject && (
         <div
           className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"

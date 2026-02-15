@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PerspectiveCard from "../../components/PerspectiveCard";
 import {
   FaBolt,
@@ -10,9 +10,109 @@ import {
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 
+// Block reveal component – covers image with grid cells that fade out sequentially
+const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
+  return (
+    <div
+      className="absolute inset-0 grid pointer-events-none"
+      style={{
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gridTemplateRows: `repeat(${rows}, 1fr)`,
+      }}
+    >
+      {Array.from({ length: rows * cols }).map((_, i) => {
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+        // Delay increases with row (top to bottom) and slightly with column
+        const delay = active ? `${row * 0.1 + col * 0.02}s` : "0s";
+        return (
+          <div
+            key={i}
+            className="w-full h-full bg-white transition-opacity duration-700 ease-out"
+            style={{
+              opacity: active ? 0 : 1,
+              transitionDelay: delay,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+// Letter reveal component – animates each letter from top to bottom
+const LetterReveal = ({ active, lines, letterDelay = 0.05 }) => {
+  // Flatten all letters across lines and words with their positions
+  const letters = [];
+  lines.forEach((line, lineIdx) => {
+    const words = line.split(" ");
+    words.forEach((word, wordIdx) => {
+      // Add each character of the word
+      for (let i = 0; i < word.length; i++) {
+        letters.push({
+          char: word[i],
+          line: lineIdx,
+          word: wordIdx,
+          pos: letters.length, // global position
+        });
+      }
+      // Add a space after each word except the last in line
+      if (wordIdx < words.length - 1) {
+        letters.push({
+          char: " ",
+          line: lineIdx,
+          word: wordIdx,
+          pos: letters.length,
+          isSpace: true,
+        });
+      }
+    });
+    // No extra space at end of line
+  });
+
+  return (
+    <div className="inline-block">
+      {lines.map((line, lineIdx) => (
+        <div key={lineIdx} className="whitespace-nowrap">
+          {line.split(" ").map((word, wordIdx) => (
+            <React.Fragment key={wordIdx}>
+              {word.split("").map((char, charIdx) => {
+                // Find this character's global index
+                const globalIndex = letters.findIndex(
+                  (l) =>
+                    l.line === lineIdx &&
+                    l.word === wordIdx &&
+                    l.char === char &&
+                    !l.isSpace
+                );
+                const delay = active ? `${globalIndex * letterDelay}s` : "0s";
+                return (
+                  <span
+                    key={charIdx}
+                    className="inline-block transition-opacity duration-700 ease-out"
+                    style={{
+                      opacity: active ? 1 : 0,
+                      transitionDelay: delay,
+                    }}
+                  >
+                    {char}
+                  </span>
+                );
+              })}
+              {/* Add a space after each word except the last */}
+              {wordIdx < line.split(" ").length - 1 && (
+                <span className="whitespace-pre"> </span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 export default function About({ introDone = true }) {
-  // Scroll animations for each section
-  const [heroRef, heroAnim] = useScrollAnimation(0.1, introDone);
+  // Scroll animations for each section (hero removed)
   const [companyRef, companyAnim] = useScrollAnimation(0.1, introDone);
   const [projectsRef, projectsAnim] = useScrollAnimation(0.1, introDone);
   const [mvHeadingRef, mvHeadingAnim] = useScrollAnimation(0.1, introDone);
@@ -21,36 +121,83 @@ export default function About({ introDone = true }) {
   const [valuesRef, valuesAnim] = useScrollAnimation(0.1, introDone);
   const [leadershipRef, leadershipAnim] = useScrollAnimation(0.1, introDone);
 
-  // State for team card hover effect (desktop only)
-  const [hoveredIndex, setHoveredIndex] = useState(null);
+  // State for hero animations
+  const [heroRevealed, setHeroRevealed] = useState(false);
+  const [textRevealed, setTextRevealed] = useState(false);
+
+  // Trigger the animations when intro is done
+  useEffect(() => {
+    if (introDone) {
+      const blockTimer = setTimeout(() => setHeroRevealed(true), 100);
+      const textTimer = setTimeout(() => setTextRevealed(true), 200); // text starts a bit later
+      return () => {
+        clearTimeout(blockTimer);
+        clearTimeout(textTimer);
+      };
+    }
+  }, [introDone]);
 
   return (
     <>
-      {/* ========== HERO – MOBILE: TEXT ABOVE IMAGE (PARALLAX) | DESKTOP: SPLIT SCREEN ========== */}
-      <div className="flex flex-col md:flex-row min-h-screen md:h-screen">
-        {/* Image – on mobile: below text (order-2), on desktop: left side (order-1) */}
+      {/* ========== MOBILE/TABLET HERO (below lg) ========== */}
+      <div className="relative min-h-screen overflow-hidden lg:hidden">
+        {/* Background image with parallax */}
         <div
-          className="w-full md:w-1/2 h-96 md:h-full bg-cover bg-center bg-fixed order-2 md:order-1"
+          className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
             backgroundImage: `url('https://plus.unsplash.com/premium_photo-1661340695541-ee1ca7efedd0?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YnVpbGRpbmd8ZW58MHx8MHx8fDA%3D')`,
-            backgroundPosition: 'left center',
           }}
-        />
+        >
+          {/* Block overlay – fades out to reveal image */}
+          <BlockReveal active={heroRevealed} rows={8} cols={12} />
+        </div>
+
+        {/* Text overlay with semi-transparent background for readability */}
+        <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-black/30">
+          <div className="text-sm tracking-[0.3em] uppercase text-white/80 mb-3">
+            About
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            <LetterReveal
+              active={textRevealed}
+              lines={["CLIBERDUCHE", "CORPORATION"]}
+              letterDelay={0.05}
+            />
+          </h1>
+        </div>
+      </div>
+
+      {/* ========== DESKTOP HERO (lg and up) – split screen ========== */}
+      <div className="hidden lg:flex flex-col md:flex-row min-h-screen md:h-screen">
+        {/* Image – with block reveal overlay */}
+        <div className="relative w-full md:w-1/2 h-96 md:h-full order-2 md:order-1 overflow-hidden">
+          {/* Background image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('https://plus.unsplash.com/premium_photo-1661340695541-ee1ca7efedd0?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YnVpbGRpbmd8ZW58MHx8MHx8fDA%3D')`,
+              backgroundPosition: 'left center',
+            }}
+          />
+          {/* Block overlay – fades out from top to bottom when heroRevealed = true */}
+          <BlockReveal active={heroRevealed} rows={8} cols={12} />
+        </div>
 
         {/* Text content – on mobile: above image (order-1), on desktop: right side (order-2) */}
         <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2">
           {/* Top spacer – only on desktop */}
           <div className="hidden md:block flex-1" />
 
-          <div
-            ref={heroRef}
-            className={`pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12 ${heroAnim}`}
-          >
+          <div className="pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12">
             <div className="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">
               About
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0b2545] leading-tight">
-              CLIBERDUCHE<br />CORPORATION
+              <LetterReveal
+                active={textRevealed}
+                lines={["CLIBERDUCHE", "CORPORATION"]}
+                letterDelay={0.05}
+              />
             </h1>
           </div>
 
@@ -315,9 +462,9 @@ export default function About({ introDone = true }) {
           </div>
         </div>
 
-        {/* ----- MOBILE LAYOUT (stacked grid) ----- */}
-        <div className="mt-12 max-w-6xl mx-auto block md:hidden">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-0"> {/* ← gap-0 removes all gaps */}
+        {/* Responsive grid – wraps automatically when many team members */}
+        <div className="mt-12 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-0">
             {teamMembers.map((member, index) => (
               <TeamCard
                 key={index}
@@ -329,40 +476,12 @@ export default function About({ introDone = true }) {
             ))}
           </div>
         </div>
-
-        {/* ----- DESKTOP LAYOUT (horizontal hover effect) ----- */}
-        <div className="mt-12 max-w-6xl mx-auto hidden md:block">
-          <div className="flex flex-nowrap gap-0">
-            {teamMembers.map((member, index) => (
-              <div
-                key={index}
-                className="transition-all duration-300 ease-in-out"
-                style={{
-                  width: hoveredIndex === null
-                    ? `${100 / teamMembers.length}%`
-                    : hoveredIndex === index
-                      ? '40%'
-                      : `${60 / (teamMembers.length - 1)}%`,
-                }}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                <TeamCard
-                  name={member.name}
-                  title={member.title}
-                  brief={member.brief}
-                  imageUrl={member.imageUrl}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
     </>
   );
 }
 
-// Team member data
+// Team member data – add more items to test wrapping
 const teamMembers = [
   {
     name: "John Climaco",
@@ -387,10 +506,29 @@ const teamMembers = [
     title: "Project Manager",
     brief: "Coordinates large-scale developments. Certified in environmental compliance.",
     imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  // Additional members to demonstrate wrapping
+  {
+    name: "Carlos Reyes",
+    title: "Site Supervisor",
+    brief: "Ensures daily operations run smoothly and safely.",
+    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Luisa Gomez",
+    title: "Environmental Officer",
+    brief: "Monitors compliance with DENR regulations.",
+    imageUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Luisa Gomez",
+    title: "Environmental Officer",
+    brief: "Monitors compliance with DENR regulations.",
+    imageUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
   }
 ];
 
-// Enhanced Core value card (background image removed)
+// Enhanced Core value card
 function ValueCardEnhanced({ icon, title, description }) {
   return (
     <PerspectiveCard
@@ -404,8 +542,6 @@ function ValueCardEnhanced({ icon, title, description }) {
         className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
         style={{ height: '320px' }}
       >
-        {/* Background image removed — no background image div here */}
-
         <div className="absolute inset-0 rounded-2xl p-[1px] bg-gradient-to-br from-green-400 to-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
           <div className="absolute inset-0 bg-white rounded-2xl" />
         </div>
@@ -426,31 +562,44 @@ function ValueCardEnhanced({ icon, title, description }) {
   );
 }
 
-// Team Card
+// TeamCard – now uses a fixed width (grid cell) and overlay on hover
 function TeamCard({ name, title, brief, imageUrl }) {
   return (
-    <div className="relative group overflow-hidden h-72 w-full 
-                    transition-transform duration-300 ease-in-out 
-                    hover:scale-95">
+    <div
+      className="
+        relative group overflow-hidden
+        h-[500px] w-full
+        transition-all duration-500 ease-in-out
+      "
+    >
       <img
         src={imageUrl}
         alt={name}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover object-center"
       />
-      <div className="absolute inset-0 bg-black/70 flex flex-col 
-                      items-center justify-center p-4 text-center 
-                      opacity-0 group-hover:opacity-100 
-                      transition-opacity duration-300">
-        <h4 className="text-white font-semibold text-lg mb-1">
+
+      {/* Overlay – appears on hover */}
+      <div
+        className="
+          absolute inset-0 bg-black/70 flex flex-col
+          items-center justify-center p-6 text-center
+          opacity-0 group-hover:opacity-100
+          transition-opacity duration-300
+        "
+      >
+        <h4 className="text-white font-semibold text-xl mb-2">
           {name}
         </h4>
-        <p className="text-gray-200 text-sm mb-2">
+        <p className="text-gray-200 text-base mb-3">
           {title}
         </p>
-        <p className="text-gray-300 text-xs">
+        <p className="text-gray-300 text-sm">
           {brief}
         </p>
       </div>
+
+      {/* Optional: subtle scale on hover for extra feedback */}
+      <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-105 pointer-events-none" />
     </div>
   );
 }

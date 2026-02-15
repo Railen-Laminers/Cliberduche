@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom"; // 👈 added for navigation
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
     FaTruckLoading,
     FaMountain,
@@ -15,12 +15,122 @@ import {
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import PerspectiveCard from "../../components/PerspectiveCard";
 
+// ========== BLOCK REVEAL COMPONENT ==========
+const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
+    return (
+        <div
+            className="absolute inset-0 grid pointer-events-none"
+            style={{
+                gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                gridTemplateRows: `repeat(${rows}, 1fr)`,
+            }}
+        >
+            {Array.from({ length: rows * cols }).map((_, i) => {
+                const row = Math.floor(i / cols);
+                const col = i % cols;
+                const delay = active ? `${row * 0.1 + col * 0.02}s` : "0s";
+                return (
+                    <div
+                        key={i}
+                        className="w-full h-full bg-white transition-opacity duration-700 ease-out"
+                        style={{
+                            opacity: active ? 0 : 1,
+                            transitionDelay: delay,
+                        }}
+                    />
+                );
+            })}
+        </div>
+    );
+};
+
+// ========== LETTER REVEAL COMPONENT ==========
+const LetterReveal = ({ active, lines, letterDelay = 0.05 }) => {
+    const letters = [];
+    lines.forEach((line, lineIdx) => {
+        const words = line.split(" ");
+        words.forEach((word, wordIdx) => {
+            for (let i = 0; i < word.length; i++) {
+                letters.push({
+                    char: word[i],
+                    line: lineIdx,
+                    word: wordIdx,
+                    pos: letters.length,
+                });
+            }
+            if (wordIdx < words.length - 1) {
+                letters.push({
+                    char: " ",
+                    line: lineIdx,
+                    word: wordIdx,
+                    pos: letters.length,
+                    isSpace: true,
+                });
+            }
+        });
+    });
+
+    return (
+        <div className="inline-block">
+            {lines.map((line, lineIdx) => (
+                <div key={lineIdx} className="whitespace-nowrap">
+                    {line.split(" ").map((word, wordIdx) => (
+                        <React.Fragment key={wordIdx}>
+                            {word.split("").map((char, charIdx) => {
+                                const globalIndex = letters.findIndex(
+                                    (l) =>
+                                        l.line === lineIdx &&
+                                        l.word === wordIdx &&
+                                        l.char === char &&
+                                        !l.isSpace
+                                );
+                                const delay = active ? `${globalIndex * letterDelay}s` : "0s";
+                                return (
+                                    <span
+                                        key={charIdx}
+                                        className="inline-block transition-opacity duration-700 ease-out"
+                                        style={{
+                                            opacity: active ? 1 : 0,
+                                            transitionDelay: delay,
+                                        }}
+                                    >
+                                        {char}
+                                    </span>
+                                );
+                            })}
+                            {wordIdx < line.split(" ").length - 1 && (
+                                <span className="whitespace-pre"> </span>
+                            )}
+                        </React.Fragment>
+                    ))}
+                </div>
+            ))}
+        </div>
+    );
+};
+
 export default function Services({ introDone = true }) {
     const [heroRef, heroAnim] = useScrollAnimation(0.1, introDone);
     const [primaryRef, primaryAnim] = useScrollAnimation(0.1, introDone);
     const [secondaryRef, secondaryAnim] = useScrollAnimation(0.1, introDone);
     const [whyRef, whyAnim] = useScrollAnimation(0.1, introDone);
     const [ctaContentRef, ctaContentAnim] = useScrollAnimation(0.1, introDone);
+
+    // State for hero animations
+    const [heroRevealed, setHeroRevealed] = useState(false);
+    const [textRevealed, setTextRevealed] = useState(false);
+
+    // Trigger animations when intro is done
+    useEffect(() => {
+        if (introDone) {
+            const blockTimer = setTimeout(() => setHeroRevealed(true), 100);
+            const textTimer = setTimeout(() => setTextRevealed(true), 200);
+            return () => {
+                clearTimeout(blockTimer);
+                clearTimeout(textTimer);
+            };
+        }
+    }, [introDone]);
 
     const services = [
         {
@@ -75,28 +185,60 @@ export default function Services({ introDone = true }) {
 
     return (
         <>
-            {/* ========== HERO – MOBILE: TEXT ABOVE IMAGE (PARALLAX) | DESKTOP: SPLIT SCREEN ========== */}
-            <div className="flex flex-col md:flex-row min-h-screen md:h-screen">
+            {/* ========== MOBILE/TABLET HERO (below lg) ========== */}
+            <div className="relative min-h-screen overflow-hidden lg:hidden">
+                {/* Background image with parallax */}
                 <div
-                    className="w-full md:w-1/2 h-96 md:h-full bg-cover bg-center bg-fixed order-2 md:order-1"
+                    className="absolute inset-0 bg-cover bg-center bg-fixed"
                     style={{
                         backgroundImage: `url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80')`,
-                        backgroundPosition: 'left center',
                     }}
-                />
+                >
+                    <BlockReveal active={heroRevealed} rows={8} cols={12} />
+                </div>
+
+                {/* Text overlay with semi‑transparent background */}
+                <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-black/30">
+                    <div className="text-sm tracking-[0.3em] uppercase text-white/80 mb-3">
+                        Services
+                    </div>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+                        <LetterReveal
+                            active={textRevealed}
+                            lines={["Comprehensive", "Construction", "& Land", "Development"]}
+                            letterDelay={0.05}
+                        />
+                    </h1>
+                </div>
+            </div>
+
+            {/* ========== DESKTOP HERO (lg and up) – split screen ========== */}
+            <div className="hidden lg:flex flex-col md:flex-row min-h-screen md:h-screen">
+                {/* Image side with block reveal */}
+                <div className="relative w-full md:w-1/2 h-96 md:h-full order-2 md:order-1 overflow-hidden">
+                    <div
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{
+                            backgroundImage: `url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80')`,
+                            backgroundPosition: "left center",
+                        }}
+                    />
+                    <BlockReveal active={heroRevealed} rows={8} cols={12} />
+                </div>
+
+                {/* Text side */}
                 <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2">
                     <div className="hidden md:block flex-1" />
-                    <div
-                        ref={heroRef}
-                        className={`pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12 ${heroAnim}`}
-                    >
+                    <div className="pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12">
                         <div className="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">
                             Services
                         </div>
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0b2545] leading-tight">
-                            Comprehensive Construction
-                            <br className="hidden md:block" />
-                            & Land Development
+                            <LetterReveal
+                                active={textRevealed}
+                                lines={["Comprehensive", "Construction", "& Land", "Development"]}
+                                letterDelay={0.05}
+                            />
                         </h1>
                     </div>
                     <div className="hidden md:block flex-1" />
@@ -210,7 +352,7 @@ export default function Services({ introDone = true }) {
                 </div>
             </section>
 
-            {/* ========== CALL TO ACTION – CENTERED (with React Router Link) ========== */}
+            {/* ========== CALL TO ACTION – CENTERED ========== */}
             <section className="px-6 md:px-16 lg:px-24 py-16 md:py-20 bg-[#0b2545] text-white">
                 <div
                     ref={ctaContentRef}
