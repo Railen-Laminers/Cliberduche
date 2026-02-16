@@ -169,11 +169,11 @@ export default function About({ introDone = true }) {
 
       {/* ========== DESKTOP HERO (lg and up) – split screen ========== */}
       <div className="hidden lg:flex flex-col md:flex-row min-h-screen md:h-screen">
-        {/* Image – with block reveal overlay */}
+        {/* Image – with block reveal overlay and fixed background */}
         <div className="relative w-full md:w-1/2 h-96 md:h-full order-2 md:order-1 overflow-hidden">
-          {/* Background image */}
+          {/* Background image with bg-fixed for parallax effect */}
           <div
-            className="absolute inset-0 bg-cover bg-center"
+            className="absolute inset-0 bg-cover bg-center bg-fixed"
             style={{
               backgroundImage: `url('https://plus.unsplash.com/premium_photo-1661340695541-ee1ca7efedd0?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YnVpbGRpbmd8ZW58MHx8MHx8fDA%3D')`,
               backgroundPosition: 'left center',

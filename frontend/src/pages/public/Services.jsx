@@ -214,10 +214,10 @@ export default function Services({ introDone = true }) {
 
             {/* ========== DESKTOP HERO (lg and up) – split screen ========== */}
             <div className="hidden lg:flex flex-col md:flex-row min-h-screen md:h-screen">
-                {/* Image side with block reveal */}
+                {/* Image side with block reveal AND fixed background for parallax */}
                 <div className="relative w-full md:w-1/2 h-96 md:h-full order-2 md:order-1 overflow-hidden">
                     <div
-                        className="absolute inset-0 bg-cover bg-center"
+                        className="absolute inset-0 bg-cover bg-center bg-fixed"
                         style={{
                             backgroundImage: `url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80')`,
                             backgroundPosition: "left center",

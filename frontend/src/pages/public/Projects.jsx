@@ -400,12 +400,12 @@ export default function Projects({ introDone = true }) {
         </div>
       </div>
 
-      {/* ========== DESKTOP HERO (lg and up) – split screen ========== */}
+      {/* ========== DESKTOP HERO (lg and up) – split screen with fixed background ========== */}
       <div className="hidden lg:flex flex-col md:flex-row min-h-screen md:h-screen">
-        {/* Image side with block reveal */}
+        {/* Image side with block reveal and fixed background */}
         <div className="relative w-full md:w-1/2 h-96 md:h-full order-2 md:order-1 overflow-hidden">
           <div
-            className="absolute inset-0 bg-cover bg-center"
+            className="absolute inset-0 bg-cover bg-center bg-fixed"
             style={{
               backgroundImage: `url(${heroImage})`,
               backgroundPosition: "center",
