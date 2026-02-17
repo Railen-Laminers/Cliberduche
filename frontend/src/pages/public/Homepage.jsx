@@ -45,7 +45,7 @@ export default function Homepage() {
         pathname === "/services";
 
     return (
-        <div className="font-sans bg-[#f4faf7] text-[#0b2545] min-h-screen bg-white">
+        <div className="bg-[#f4faf7] text-[#0b2545] min-h-screen bg-white">
             <Navbar introDone={introDone} />
 
             <SmoothScroll ease={0.08} className="smooth-scroll">

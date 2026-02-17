@@ -2,6 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Apply the font tokens globally and set headings to use the display font */
+@layer base {
+
+    /* Use Inter for body and small text by default */
+    body {
+        @apply font-body;
+        /* you can keep your base colors here if you want as well */
+    }
+
+    /* Use Libre Caslon Display for headings */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-heading;
+        /* adjust letter-spacing for display headings if needed */
+    }
+
+    /* Optional: scale down font-size for small elements if you want consistent rendering */
+    small,
+    .text-xs {
+        @apply text-sm;
+    }
+}
+
 /* Scrollbar width */
 ::-webkit-scrollbar {
     width: 12px;

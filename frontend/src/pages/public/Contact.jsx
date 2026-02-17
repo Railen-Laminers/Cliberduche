@@ -33,9 +33,15 @@ export default function Contact({ introDone = true }) {
     return (
         <section
             id="contact"
-            className="px-6 md:px-10 py-16 md:py-20 bg-white"
+            className="relative px-6 md:px-10 py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden"
         >
-            <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-16 items-start">
+            {/* Subtle decorative dots pattern */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+                <div className="absolute top-0 left-0 w-64 h-64 bg-[radial-gradient(circle,_#0b2545_1px,_transparent_1px)] bg-[length:20px_20px]"></div>
+                <div className="absolute bottom-0 right-0 w-96 h-96 bg-[radial-gradient(circle,_#1f7a8c_1px,_transparent_1px)] bg-[length:30px_30px]"></div>
+            </div>
+
+            <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-16 items-start relative z-10">
 
                 {/* ================= COMPANY INFO ================= */}
                 <div
@@ -44,9 +50,9 @@ export default function Contact({ introDone = true }) {
                 >
                     <h3
                         ref={headingRef}
-                        className={`text-3xl md:text-4xl font-bold mb-4 ${headingAnim}`}
+                        className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight ${headingAnim}`}
                     >
-                        Contact CLIBERDUCHE CORPORATION
+                        Contact <span className="text-green-600">CLIBERDUCHE</span>
                     </h3>
 
                     <p className="text-gray-600 text-lg leading-relaxed mb-6">
@@ -56,41 +62,55 @@ export default function Contact({ introDone = true }) {
                     </p>
 
                     <p className="text-gray-600 mb-8 leading-relaxed">
-                        We proudly serve clients across the <strong>CALABARZON region and beyond</strong>, delivering reliable,
+                        We proudly serve clients across the <strong className="text-[#0b2545]">CALABARZON region and beyond</strong>, delivering reliable,
                         sustainable, and cost-effective solutions for commercial and
                         industrial projects.
                     </p>
 
-                    <div className="space-y-4">
-                        <div className="mt-6">
-                            <h5 className="text-lg font-semibold text-[#0b2545] mb-3">
-                                Office Location
-                            </h5>
+                    {/* Office Location with Map */}
+                    <div className="mb-8">
+                        <h5 className="text-lg font-semibold text-[#0b2545] mb-4 flex items-center">
+                            <span className="w-1 h-6 bg-green-500 rounded-full mr-3"></span>
+                            Office Location
+                        </h5>
+                        <div className="rounded-2xl overflow-hidden shadow-lg border border-gray-200">
                             <Map />
                         </div>
+                    </div>
 
-                        <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    {/* Contact Details as Cards */}
+                    <div className="space-y-4">
+                        <div className="flex items-start space-x-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                                 <FaMapMarkerAlt className="w-5 h-5 text-green-600" />
                             </div>
-                            <span className="text-gray-700">
-                                3rd floor CBD Building, Brgy. Pulo, National Highway,
-                                Cabuyao City, Laguna 4025
-                            </span>
+                            <div>
+                                <p className="font-medium text-[#0b2545]">Visit Us</p>
+                                <p className="text-gray-600">
+                                    3rd floor CBD Building, Brgy. Pulo, National Highway,
+                                    Cabuyao City, Laguna 4025
+                                </p>
+                            </div>
                         </div>
 
-                        <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <div className="flex items-start space-x-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                                 <FaPhone className="w-5 h-5 text-green-600" />
                             </div>
-                            <span className="text-gray-700">(+63) 9XX-XXX-XXXX</span>
+                            <div>
+                                <p className="font-medium text-[#0b2545]">Call Us</p>
+                                <p className="text-gray-600">(+63) 9XX-XXX-XXXX</p>
+                            </div>
                         </div>
 
-                        <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <div className="flex items-start space-x-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100">
+                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                                 <FaEnvelope className="w-5 h-5 text-green-600" />
                             </div>
-                            <span className="text-gray-700">info@cliberduche.com</span>
+                            <div>
+                                <p className="font-medium text-[#0b2545]">Email Us</p>
+                                <p className="text-gray-600">info@cliberduche.com</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -104,27 +124,35 @@ export default function Contact({ introDone = true }) {
                     <form
                         ref={formRef}
                         onSubmit={handleSubmit}
-                        className="relative bg-white rounded-2xl p-6 pt-14 shadow-lg border border-gray-100 space-y-4 max-w-md w-full mx-auto"
+                        className="relative bg-white rounded-2xl p-6 pt-14 shadow-xl border border-gray-200 space-y-5 max-w-md w-full mx-auto"
+                        style={{
+                            boxShadow: "0 20px 40px -15px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,128,0,0.05) inset",
+                        }}
                     >
-                        {/* Floating Logo */}
+                        {/* Floating Logo with gradient ring */}
                         <div className="absolute -top-9 left-1/2 -translate-x-1/2">
-                            <div className="bg-white rounded-full p-2 shadow border border-gray-100">
-                                <img
-                                    src={logo}
-                                    alt="Cliberduche Logo"
-                                    className="w-14 h-auto"
-                                />
+                            <div className="bg-gradient-to-br from-green-400 to-teal-500 rounded-full p-1 shadow-lg">
+                                <div className="bg-white rounded-full p-2">
+                                    <img
+                                        src={logo}
+                                        alt="Cliberduche Logo"
+                                        className="w-14 h-auto"
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         {/* Header */}
-                        <div className="text-center mb-6">
+                        <div className="text-center mb-4">
                             <h4 className="text-2xl font-bold text-[#0b2545]">
                                 Request a Consultation
                             </h4>
+                            <p className="text-gray-500 text-sm mt-1">
+                                We'll get back to you within 24 hours
+                            </p>
                         </div>
 
-                        {/* Name */}
+                        {/* Name Field */}
                         <div className="relative">
                             <input
                                 type="text"
@@ -133,22 +161,22 @@ export default function Contact({ introDone = true }) {
                                 value={formData.name}
                                 onChange={handleChange}
                                 required
-                                placeholder=""
-                                className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all duration-300"
+                                placeholder=" "
+                                className="peer w-full px-4 pt-6 pb-2 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all duration-300"
                             />
                             <label
                                 htmlFor="name"
-                                className={`absolute left-4 transition-all duration-300
+                                className={`absolute left-4 transition-all duration-300 pointer-events-none
                                     ${formData.name
-                                        ? "top-0 text-green-600 text-sm"
-                                        : "top-3 text-gray-500 text-base peer-focus:top-0 peer-focus:text-green-600 peer-focus:text-sm"
+                                        ? "top-1 text-green-600 text-xs"
+                                        : "top-4 text-gray-500 text-base peer-focus:top-1 peer-focus:text-green-600 peer-focus:text-xs"
                                     }`}
                             >
-                                Full Name
+                                Full Name *
                             </label>
                         </div>
 
-                        {/* Email */}
+                        {/* Email Field */}
                         <div className="relative">
                             <input
                                 type="email"
@@ -157,22 +185,22 @@ export default function Contact({ introDone = true }) {
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
-                                placeholder=""
-                                className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all duration-300"
+                                placeholder=" "
+                                className="peer w-full px-4 pt-6 pb-2 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all duration-300"
                             />
                             <label
                                 htmlFor="email"
-                                className={`absolute left-4 transition-all duration-300
+                                className={`absolute left-4 transition-all duration-300 pointer-events-none
                                     ${formData.email
-                                        ? "top-0 text-green-600 text-sm"
-                                        : "top-3 text-gray-500 text-base peer-focus:top-0 peer-focus:text-green-600 peer-focus:text-sm"
+                                        ? "top-1 text-green-600 text-xs"
+                                        : "top-4 text-gray-500 text-base peer-focus:top-1 peer-focus:text-green-600 peer-focus:text-xs"
                                     }`}
                             >
-                                Email Address
+                                Email Address *
                             </label>
                         </div>
 
-                        {/* Details */}
+                        {/* Details Field */}
                         <div className="relative">
                             <textarea
                                 id="details"
@@ -181,28 +209,33 @@ export default function Contact({ introDone = true }) {
                                 onChange={handleChange}
                                 required
                                 rows={4}
-                                placeholder=""
-                                className="peer w-full px-4 pt-5 pb-2 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 resize-none focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all duration-300"
+                                placeholder=" "
+                                className="peer w-full px-4 pt-6 pb-2 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 resize-none focus:border-green-400 focus:ring-2 focus:ring-green-100 outline-none transition-all duration-300"
                             />
                             <label
                                 htmlFor="details"
-                                className={`absolute left-4 transition-all duration-300
+                                className={`absolute left-4 transition-all duration-300 pointer-events-none
                                     ${formData.details
-                                        ? "top-0 text-green-600 text-sm"
-                                        : "top-3 text-gray-500 text-base peer-focus:top-0 peer-focus:text-green-600 peer-focus:text-sm"
+                                        ? "top-1 text-green-600 text-xs"
+                                        : "top-4 text-gray-500 text-base peer-focus:top-1 peer-focus:text-green-600 peer-focus:text-xs"
                                     }`}
                             >
-                                Project Details
+                                Project Details *
                             </label>
                         </div>
 
-                        {/* Submit */}
+                        {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-[#0b2545] hover:bg-[#1f7a8c] text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#0b2545]"
+                            className="w-full bg-gradient-to-r from-[#0b2545] to-[#1f7a8c] hover:from-[#1f7a8c] hover:to-[#0b2545] text-white py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-[#0b2545]/50"
                         >
                             Send Message
                         </button>
+
+                        {/* Footer note */}
+                        <p className="text-xs text-gray-400 text-center mt-2">
+                            We respect your privacy. No spam.
+                        </p>
                     </form>
                 </PerspectiveCard>
             </div>

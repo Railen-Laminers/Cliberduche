@@ -18,7 +18,7 @@ export default function BackToTopButton() {
     const scrollToTop = () => {
         // Detect if touch device
         const isTouchDevice =
-            'ontouchstart' in window ||
+            "ontouchstart" in window ||
             navigator.maxTouchPoints > 0 ||
             navigator.msMaxTouchPoints > 0;
 
@@ -26,7 +26,7 @@ export default function BackToTopButton() {
             // Mobile: use native smooth scroll
             window.scrollTo({
                 top: 0,
-                behavior: 'smooth'
+                behavior: "smooth",
             });
         } else {
             // Desktop: use custom smooth scroll event
@@ -40,7 +40,7 @@ export default function BackToTopButton() {
         <button
             onClick={scrollToTop}
             aria-label="Back to top"
-            className={`fixed bottom-6 right-6 z-50 p-3 rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 transform
+            className={`fixed bottom-6 right-6 z-40 p-3 rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 transform
         ${visible ? "opacity-100 scale-100" : "opacity-0 scale-0 pointer-events-none"}
         hover:bg-green-600 hover:scale-110 active:scale-95`}
         >
