@@ -9,7 +9,7 @@ import {
   FaInfinity,
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
-import { BlockReveal, LetterReveal } from "../../hooks/RevealAnimations";
+import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
 
 export default function About({ introDone = true }) {
   // Scroll animations for each section (hero removed)
@@ -101,7 +101,7 @@ export default function About({ introDone = true }) {
             </h1>
           </div>
 
-          {/* Bottom spacer – only on desktop */}
+          {/* Bottom spacer – only on desktop  asdasda*/}
           <div className="hidden md:block flex-1" />
         </div>
       </div>
@@ -219,7 +219,7 @@ export default function About({ introDone = true }) {
             className={`text-center transition-all duration-1000 ${mvHeadingAnim}`}
           >
             <div className="flex justify-center items-center gap-2 mb-4">
-              <div className="h-px w-12 bg-green-300"></div>
+              <div className="h-px w-16 bg-green-300"></div>
               <FaInfinity className="text-black-600 text-2xl" />
               <div className="h-px w-16 bg-blue-300"></div>
             </div>

@@ -13,7 +13,6 @@ export default function Navbar({ introDone = false }) {
   const navContainerRef = useRef(null);
   const homeRef = useRef(null);
   const aboutRef = useRef(null);
-  const servicesRef = useRef(null);
   const projectsRef = useRef(null);
   const contactRef = useRef(null);
   const loginRef = useRef(null);
@@ -35,7 +34,6 @@ export default function Navbar({ introDone = false }) {
   const navItems = [
     { path: "/", label: "Home", ref: homeRef },
     { path: "/about", label: "About", ref: aboutRef },
-    { path: "/services", label: "Services", ref: servicesRef },
     { path: "/projects", label: "Projects", ref: projectsRef },
     { path: "/contact", label: "Contact", ref: contactRef },
   ];
@@ -58,9 +56,7 @@ export default function Navbar({ introDone = false }) {
         <button
           id="nav-logo"
           onClick={() => navigate("/")}
-          className={`flex items-center gap-2 transition-opacity duration-500 ${introDone && isTop
-            ? "opacity-100"
-            : "opacity-0 pointer-events-none"
+          className={`flex items-center gap-2 transition-opacity duration-500 ${introDone && isTop ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           aria-label="Go to homepage"
         >
@@ -75,8 +71,8 @@ export default function Navbar({ introDone = false }) {
         <nav
           ref={navContainerRef}
           className={`hidden lg:flex items-center space-x-4 xl:space-x-8 text-sm font-medium text-slate-200 bg-slate-900/70 backdrop-blur-md backdrop-saturate-150 px-4 xl:px-6 py-2 xl:py-3 rounded-sm shadow-md relative z-20 transition-all duration-700 ease-out ${navAnimationDone
-            ? "opacity-100 translate-y-0 scale-100 blur-0"
-            : "opacity-0 translate-y-10 scale-95 blur-sm"
+              ? "opacity-100 translate-y-0 scale-100 blur-0"
+              : "opacity-0 translate-y-10 scale-95 blur-sm"
             }`}
         >
           {navItems.map((item, index) => {
@@ -88,10 +84,9 @@ export default function Navbar({ introDone = false }) {
                 ref={item.ref}
                 to={item.path}
                 className={`relative group transition-all duration-700 ease-out ${navAnimationDone
-                  ? "opacity-100 translate-y-0 scale-100 blur-0"
-                  : "opacity-0 translate-y-10 scale-95 blur-sm"
-                  } ${isActive(item.path) ? "text-green-300" : ""
-                  }`}
+                    ? "opacity-100 translate-y-0 scale-100 blur-0"
+                    : "opacity-0 translate-y-10 scale-95 blur-sm"
+                  } ${isActive(item.path) ? "text-green-300" : ""}`}
                 style={{
                   transitionDelay: navAnimationDone ? `${delay}s` : "0s",
                 }}
@@ -103,22 +98,20 @@ export default function Navbar({ introDone = false }) {
                   <span className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></span>
                 </span>
                 <span
-                  className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 w-full transform origin-left transition-transform duration-500 group-hover:scale-x-100 ${isActive(item.path)
-                    ? "scale-x-100"
-                    : "scale-x-0"
+                  className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 w-full transform origin-left transition-transform duration-500 group-hover:scale-x-100 ${isActive(item.path) ? "scale-x-100" : "scale-x-0"
                     }`}
                 />
               </Link>
             );
           })}
 
-          {/* Login button - Updated to rounded-xl for box with smooth radius */}
+          {/* Login button */}
           <Link
             ref={loginRef}
             to="/login"
             className={`relative group bg-green-500 text-white px-4 py-2 rounded-sm hover:bg-green-600 transition-all duration-700 ease-out ${navAnimationDone
-              ? "opacity-100 translate-y-0 scale-100 blur-0"
-              : "opacity-0 translate-y-10 scale-95 blur-sm"
+                ? "opacity-100 translate-y-0 scale-100 blur-0"
+                : "opacity-0 translate-y-10 scale-95 blur-sm"
               }`}
             style={{
               transitionDelay: navAnimationDone ? "0.6s" : "0s",
@@ -160,8 +153,8 @@ export default function Navbar({ introDone = false }) {
             <button
               key={item.path}
               className={`text-left text-base sm:text-lg font-medium py-3 px-2 rounded-lg transition-colors ${isActive(item.path)
-                ? "text-green-300 bg-white/10"
-                : "hover:text-green-300 hover:bg-white/5"
+                  ? "text-green-300 bg-white/10"
+                  : "hover:text-green-300 hover:bg-white/5"
                 } focus:outline-none focus:ring-2 focus:ring-green-300`}
               onClick={() => {
                 navigate(item.path);

@@ -6,7 +6,6 @@ import Navbar from "./Navbar";
 import Intro from "./Intro";
 import Home from "./Home";
 import About from "./About";
-import Services from "./Services";
 import Contact from "./Contact";
 import Projects from "./Projects";
 import Footer from "./Footer";
@@ -38,11 +37,7 @@ export default function Homepage() {
     }, [pathname]);
 
     const isHome = pathname === "/";
-    const noTopPadding =
-        isHome ||
-        pathname === "/projects" ||
-        pathname === "/about" ||
-        pathname === "/services";
+    const noTopPadding = isHome || pathname === "/projects" || pathname === "/about";
 
     return (
         <div className="bg-[#f4faf7] text-[#0b2545] min-h-screen bg-white">
@@ -62,7 +57,6 @@ export default function Homepage() {
                         <Route index element={<Home introDone={introDone} />} />
                         <Route path="/" element={<Home introDone={introDone} />} />
                         <Route path="/about" element={<About introDone={introDone} />} />
-                        <Route path="/services" element={<Services introDone={introDone} />} />
                         <Route path="/projects" element={<Projects introDone={introDone} />} />
                         <Route path="/contact" element={<Contact introDone={introDone} />} />
                     </Routes>

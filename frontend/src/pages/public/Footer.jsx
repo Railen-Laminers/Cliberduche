@@ -29,7 +29,7 @@ export default function Footer({ introDone = true }) {
             const scrollY = window.scrollY + window.innerHeight;
 
             if (scrollY < footerTop + footerHeight / 2) {
-                setExitTrigger(true); // start exit typing
+                setExitTrigger(true);
             } else {
                 setExitTrigger(false);
             }
@@ -63,7 +63,7 @@ export default function Footer({ introDone = true }) {
                     setTypedCorp(corpWord.slice(0, i));
                     await sleep(70);
                 }
-                setTypedCorp(corpWord); // fade in rest instantly
+                setTypedCorp(corpWord);
                 setIsTyping(false);
             } else if (exitTrigger) {
                 // Exit animation: delete CLIBERDUCHE
@@ -71,7 +71,7 @@ export default function Footer({ introDone = true }) {
                     setTypedMain(mainWord.slice(0, i));
                     await sleep(50);
                 }
-                setTypedCorp(""); // fade out CORPORATION
+                setTypedCorp("");
                 setIsTyping(false);
             }
         };
@@ -88,7 +88,6 @@ export default function Footer({ introDone = true }) {
     const companyLinks = [
         { label: "Home", href: "/" },
         { label: "About", href: "/about" },
-        { label: "Services", href: "/services" },
         { label: "Contact", href: "/contact" },
     ];
 
@@ -97,38 +96,8 @@ export default function Footer({ introDone = true }) {
             <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 via-transparent to-transparent pointer-events-none" />
 
             <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-20">
-                {/* LOGO + COMPANY NAME */}
-                <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6 mb-10">
-                    <img
-                        ref={logoRef}
-                        src="/logo/cliberduche_logo.png"
-                        alt="Cliberduche Logo"
-                        className={`w-32 md:w-44 ${logoAnim}`}
-                    />
-
-                    <div className="flex flex-col leading-tight">
-                        {/* CLIBERDUCHE */}
-                        <h1 className="text-3xl md:text-5xl font-bold flex flex-wrap">
-                            {typedMain.split("").map((char, i) => (
-                                <span key={i} className="char" style={{ animationDelay: `${i * 30}ms` }}>
-                                    {char}
-                                </span>
-                            ))}
-                            <span className={`ml-1 cursor ${isTyping ? "blink" : ""}`}>|</span>
-                        </h1>
-
-                        {/* CORPORATION */}
-                        <h2
-                            className={`text-xl md:text-2xl font-semibold mt-0.5 transition-opacity duration-500 ${typedCorp ? "opacity-100" : "opacity-0"
-                                }`}
-                        >
-                            {typedCorp}
-                        </h2>
-                    </div>
-                </div>
-
                 {/* SOCIAL + NAV */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16">
                     <div ref={socialRef} className="flex space-x-4 justify-start w-full md:w-auto">
                         {[FaFacebook, FaTwitter, FaLinkedin].map((Icon, i) => (
                             <a
@@ -155,6 +124,45 @@ export default function Footer({ introDone = true }) {
                     </div>
                 </div>
 
+                {/* LOGO + COMPANY NAME - bottom left, full width, huge text */}
+                <div className="w-full flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 mb-10">
+                    {/* <img
+                        ref={logoRef}
+                        src="/logo/cliberduche_logo.png"
+                        alt="Cliberduche Logo"
+                        className={`w-40 sm:w-48 md:w-64 lg:w-80 xl:w-96 h-auto object-contain ${logoAnim}`}
+                    /> */}
+
+                    {/* Container for fluid typography */}
+                    <div
+                        className="flex flex-col leading-tight w-full"
+                        style={{ containerType: 'inline-size' }}
+                    >
+                        {/* CLIBERDUCHE - fluid size, stays on one line */}
+                        <h1 className="text-[clamp(1.5rem,11cqw,9.375rem)] font-bold whitespace-nowrap">
+                            {typedMain.split("").map((char, i) => (
+                                <span key={i} className="char" style={{ animationDelay: `${i * 30}ms` }}>
+                                    {char}
+                                </span>
+                            ))}
+                            {/* Visible cursor that fades out when typing finishes */}
+                            <span
+                                className={`ml-1 cursor transition-opacity duration-500 ${isTyping ? "opacity-100" : "opacity-0"}`}
+                            >
+                                |
+                            </span>
+                        </h1>
+
+                        {/* CORPORATION - fluid size */}
+                        <h2
+                            className={`text-[clamp(1rem,5cqw,4rem)] font-semibold mt-0.5 transition-opacity duration-500 ${typedCorp ? "opacity-100" : "opacity-0"
+                                }`}
+                        >
+                            {typedCorp}
+                        </h2>
+                    </div>
+                </div>
+
                 {/* BOTTOM LEGAL */}
                 <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
                     <p className="text-sm text-gray-500">
@@ -171,10 +179,7 @@ export default function Footer({ introDone = true }) {
             <style>{`
         .char { opacity: 0; animation: fadeChar 280ms ease forwards; }
         @keyframes fadeChar { from { opacity: 0; } to { opacity: 1; } }
-
         .cursor { font-weight: 400; }
-        .blink { animation: blink 1s steps(2, start) infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
       `}</style>
         </footer>
     );

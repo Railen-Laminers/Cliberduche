@@ -13,7 +13,7 @@ import useScrollAnimation from "../../hooks/useScrollAnimation";
 import PerspectiveCard from "../../components/PerspectiveCard";
 import { projects } from "./projectsData";
 import heroImage from "/projects/northport_ongoing/northport_img_5.jpg";
-import { BlockReveal, LetterReveal } from "../../hooks/RevealAnimations";
+import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
 
 // Scroll‑animated wrapper
 const ScrollAnimatedItem = ({ children, threshold = 0.15, introDone = true, className = "" }) => {
