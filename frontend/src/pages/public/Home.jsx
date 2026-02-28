@@ -324,21 +324,35 @@ const AnimatedServiceSection = ({ service, index }) => {
 };
 
 // Service Full Viewport Section with Animations (unchanged)
+// Service Full Viewport Section - Mobile: Image First, Desktop: Alternating
 function ServiceFullViewportSection({ service, index, active }) {
-    const isInfoRight = index % 2 === 0;
+    const isInfoRight = index % 2 === 0; // Desktop layout toggle
     const numberStr = (index + 1).toString().padStart(2, "0");
     const delays = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6];
 
     return (
         <section
-            className={`relative h-[80vh] w-full flex ${isInfoRight ? "flex-col-reverse md:flex-row-reverse" : "flex-col md:flex-row"
-                } bg-white border border-gray-200 m-0 p-0 overflow-hidden`}
+            className={`relative w-full flex flex-col md:${isInfoRight ? "flex-row-reverse" : "flex-row"} bg-white border border-gray-200 overflow-hidden`}
         >
             <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
-            <div className="w-full md:w-3/5 flex flex-col justify-start px-8 md:px-12 lg:px-16 py-8 md:py-12">
-                <div className="max-w-xl">
+            
+            {/* IMAGE SECTION - First on mobile, position toggled on desktop */}
+            <div className="relative w-full md:w-2/5 h-56 sm:h-64 md:h-auto min-h-[200px] md:min-h-0 overflow-hidden order-1 md:order-none">
+                <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                />
+                <BlockReveal active={active} rows={8} cols={12} />
+            </div>
+            
+            {/* INFO SECTION - Second on mobile, position toggled on desktop */}
+            <div className="w-full md:w-3/5 flex flex-col justify-start px-4 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 md:py-12 order-2 md:order-none">
+                <div className="max-w-xl mx-auto md:mx-0">
+                    {/* Service Number Badge */}
                     <div
-                        className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-700 font-bold text-xl mb-4 transition-all duration-700 ease-out"
+                        className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-100 text-green-700 font-bold text-base sm:text-xl mb-3 sm:mb-4 transition-all duration-700 ease-out"
                         style={{
                             opacity: active ? 1 : 0,
                             transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -347,8 +361,10 @@ function ServiceFullViewportSection({ service, index, active }) {
                     >
                         {numberStr}
                     </div>
+                    
+                    {/* Service Title - Responsive Typography */}
                     <h3
-                        className="text-3xl md:text-4xl font-bold text-[#0b2545] mt-2 mb-4 transition-all duration-700 ease-out"
+                        className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0b2545] mt-1 sm:mt-2 mb-3 sm:mb-4 transition-all duration-700 ease-out"
                         style={{
                             opacity: active ? 1 : 0,
                             transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -357,8 +373,10 @@ function ServiceFullViewportSection({ service, index, active }) {
                     >
                         {service.title}
                     </h3>
+                    
+                    {/* Sub Description */}
                     <p
-                        className="text-lg text-gray-700 font-medium mb-4 text-justify transition-all duration-700 ease-out"
+                        className="text-base sm:text-lg text-gray-700 font-medium mb-3 sm:mb-4 text-justify transition-all duration-700 ease-out"
                         style={{
                             opacity: active ? 1 : 0,
                             transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -367,8 +385,10 @@ function ServiceFullViewportSection({ service, index, active }) {
                     >
                         {service.subDescription}
                     </p>
+                    
+                    {/* Full Description */}
                     <p
-                        className="text-gray-600 leading-relaxed mb-6 text-justify transition-all duration-700 ease-out"
+                        className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-6 text-justify transition-all duration-700 ease-out"
                         style={{
                             opacity: active ? 1 : 0,
                             transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -377,9 +397,11 @@ function ServiceFullViewportSection({ service, index, active }) {
                     >
                         {service.fullDescription}
                     </p>
-                    <div className="border-t border-gray-200 pt-4">
+                    
+                    {/* Outcome Section */}
+                    <div className="border-t border-gray-200 pt-3 sm:pt-4">
                         <h4
-                            className="text-xl font-semibold text-[#0b2545] mb-2 transition-all duration-700 ease-out"
+                            className="text-lg sm:text-xl font-semibold text-[#0b2545] mb-1 sm:mb-2 transition-all duration-700 ease-out"
                             style={{
                                 opacity: active ? 1 : 0,
                                 transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -389,7 +411,7 @@ function ServiceFullViewportSection({ service, index, active }) {
                             Outcome
                         </h4>
                         <p
-                            className="text-gray-600 text-justify transition-all duration-700 ease-out"
+                            className="text-sm sm:text-base text-gray-600 text-justify transition-all duration-700 ease-out"
                             style={{
                                 opacity: active ? 1 : 0,
                                 transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -400,14 +422,6 @@ function ServiceFullViewportSection({ service, index, active }) {
                         </p>
                     </div>
                 </div>
-            </div>
-            <div className="relative w-full md:w-2/5 h-64 md:h-full overflow-hidden">
-                <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover"
-                />
-                <BlockReveal active={active} rows={8} cols={12} />
             </div>
         </section>
     );

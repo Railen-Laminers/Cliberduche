@@ -333,13 +333,6 @@ export default function About({ introDone = true }) {
         {/* Background decor – blue diagonal lines (no circles) */}
         <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
 
-        {/* Gradient overlay and border circles (kept manually) */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-green-100 via-transparent to-blue-100"></div>
-          <div className="absolute top-10 right-10 w-40 h-40 border-2 border-green-300 rounded-full opacity-30"></div>
-          <div className="absolute bottom-10 left-10 w-60 h-60 border-2 border-blue-300 rounded-full opacity-30"></div>
-        </div>
-
         <div className="max-w-4xl mx-auto text-right relative z-10">
           <div className="flex items-center gap-4 mb-4 justify-end">
             <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">
