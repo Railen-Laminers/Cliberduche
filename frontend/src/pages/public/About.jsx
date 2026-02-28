@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
-
+import BackgroundDecor from "../../components/BackgroundDecor";
 export default function About({ introDone = true }) {
   // Scroll animations for each section (hero removed)
   const [companyRef, companyAnim] = useScrollAnimation(0.1, introDone);
@@ -29,7 +29,7 @@ export default function About({ introDone = true }) {
   useEffect(() => {
     if (introDone) {
       const blockTimer = setTimeout(() => setHeroRevealed(true), 100);
-      const textTimer = setTimeout(() => setTextRevealed(true), 200); // text starts a bit later
+      const textTimer = setTimeout(() => setTextRevealed(true), 200);
       return () => {
         clearTimeout(blockTimer);
         clearTimeout(textTimer);
@@ -39,20 +39,16 @@ export default function About({ introDone = true }) {
 
   return (
     <>
-      {/* ========== MOBILE/TABLET HERO (below lg) ========== */}
+      {/* ========== MOBILE/TABLET HERO ========== */}
       <div className="relative min-h-screen overflow-hidden lg:hidden">
-        {/* Background image with parallax */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
-            backgroundImage: `url('https://plus.unsplash.com/premium_photo-1661340695541-ee1ca7efedd0?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YnVpbGRpbmd8ZW58MHx8MHx8fDA%3D')`,
+            backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')`,
           }}
         >
-          {/* Block overlay – fades out to reveal image */}
           <BlockReveal active={heroRevealed} rows={8} cols={12} />
         </div>
-
-        {/* Text overlay with semi-transparent background for readability */}
         <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-black/30">
           <div className="text-sm tracking-[0.3em] uppercase text-white/80 mb-3">
             About
@@ -67,27 +63,20 @@ export default function About({ introDone = true }) {
         </div>
       </div>
 
-      {/* ========== DESKTOP HERO (lg and up) – split screen ========== */}
+      {/* ========== DESKTOP HERO ========== */}
       <div className="hidden lg:flex flex-col md:flex-row min-h-screen md:h-screen">
-        {/* Image – with block reveal overlay and fixed background */}
         <div className="relative w-full md:w-1/2 h-96 md:h-full order-2 md:order-1 overflow-hidden">
-          {/* Background image with bg-fixed for parallax effect */}
           <div
             className="absolute inset-0 bg-cover bg-center bg-fixed"
             style={{
-              backgroundImage: `url('https://plus.unsplash.com/premium_photo-1661340695541-ee1ca7efedd0?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YnVpbGRpbmd8ZW58MHx8MHx8fDA%3D')`,
+              backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')`,
               backgroundPosition: 'left center',
             }}
           />
-          {/* Block overlay – fades out from top to bottom when heroRevealed = true */}
           <BlockReveal active={heroRevealed} rows={8} cols={12} />
         </div>
-
-        {/* Text content – on mobile: above image (order-1), on desktop: right side (order-2) */}
         <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2">
-          {/* Top spacer – only on desktop */}
           <div className="hidden md:block flex-1" />
-
           <div className="pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12">
             <div className="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">
               About
@@ -100,23 +89,22 @@ export default function About({ introDone = true }) {
               />
             </h1>
           </div>
-
-          {/* Bottom spacer – only on desktop  asdasda*/}
           <div className="hidden md:block flex-1" />
         </div>
       </div>
 
-      {/* ========== COMPANY STORY (left-aligned – primary pattern) ========== */}
+      {/* ========== COMPANY STORY ========== */}
       <section
         id="company"
         ref={companyRef}
-        className={`px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${companyAnim}`}
+        className={`relative px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${companyAnim} overflow-hidden`}
       >
-        <div className="max-w-6xl mx-auto">
+        {/* Background decor – green dots and green blurred circles */}
+        <BackgroundDecor pattern="dots" color="green" opacity={0.15} blurCircles={true} />
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-            {/* Text Column */}
             <div>
-              {/* Primary pattern: line + icon + heading (green) */}
               <div className="flex items-center gap-4 mb-4">
                 <div className="h-px w-16 bg-green-300"></div>
                 <FaInfinity className="text-green-600 text-2xl" />
@@ -147,7 +135,6 @@ export default function About({ introDone = true }) {
                 </p>
               </div>
             </div>
-            {/* Image Column   */}
             <div className="relative h-96 md:h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl">
               <img
                 src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80"
@@ -159,15 +146,17 @@ export default function About({ introDone = true }) {
         </div>
       </section>
 
-      {/* ========== PROJECTS & EXPERTISE – NOW RIGHT-ALIGNED (SECONDARY PATTERN) ========== */}
+      {/* ========== PROJECTS & EXPERTISE ========== */}
       <section
         id="projects"
         ref={projectsRef}
-        className={`px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${projectsAnim}`}
+        className={`relative px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${projectsAnim} overflow-hidden`}
       >
-        <div className="max-w-6xl mx-auto">
+        {/* Background decor – blue grid and blue blurred circles */}
+        <BackgroundDecor pattern="grid" color="blue" opacity={0.15} blurCircles={true} />
+
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Image Column */}
             <div className="relative h-96 md:h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
               <img
                 src="https://images.unsplash.com/photo-1580723843692-137caf37ad17?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3lkbmV5JTIwaGFyYm91ciUyMGJyaWRnZXxlbnwwfHwwfHx8MA%3D%3D"
@@ -175,9 +164,7 @@ export default function About({ introDone = true }) {
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
-            {/* Text Column */}
             <div className="order-1 md:order-2">
-              {/* Secondary pattern: heading + icon + line (blue) */}
               <div className="flex items-center gap-4 mb-4 justify-end md:justify-start">
                 <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">
                   Projects & Expertise
@@ -204,16 +191,19 @@ export default function About({ introDone = true }) {
       {/* ========== MISSION, VISION & CORE VALUES ========== */}
       <section
         id="mission-vision"
-        className="px-6 md:px-10 py-16 md:py-20 bg-[#f4faf7] relative overflow-hidden"
+        className="relative px-6 md:px-10 py-16 md:py-20 bg-[#f4faf7] overflow-hidden"
       >
-        {/* Decorative background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-green-200 blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-60 h-60 rounded-full bg-blue-200 blur-3xl"></div>
+        {/* Background decor – green dots (no circles – we add them manually to preserve three circles) */}
+        <BackgroundDecor pattern="dots" color="green" opacity={0.1} blurCircles={false} />
+
+        {/* Manually added circles to match original design */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-green-300 blur-3xl opacity-40"></div>
+          <div className="absolute bottom-20 right-10 w-60 h-60 rounded-full bg-blue-300 blur-3xl opacity-40"></div>
+          <div className="absolute top-1/2 left-1/4 w-80 h-80 bg-yellow-200 rounded-full blur-3xl opacity-30"></div>
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
-          {/* HEADING with icon cluster   */}
           <div
             ref={mvHeadingRef}
             className={`text-center transition-all duration-1000 ${mvHeadingAnim}`}
@@ -229,9 +219,7 @@ export default function About({ introDone = true }) {
             </p>
           </div>
 
-          {/* MISSION & VISION CARDS   */}
           <div className="grid md:grid-cols-2 gap-6 mb-16 items-stretch">
-            {/* MISSION CARD */}
             <div
               ref={missionRef}
               className={`transition-all duration-1000 ${missionAnim}`}
@@ -274,7 +262,6 @@ export default function About({ introDone = true }) {
               </PerspectiveCard>
             </div>
 
-            {/* VISION CARD */}
             <div
               ref={visionRef}
               className={`transition-all duration-1000 delay-200 ${visionAnim}`}
@@ -315,7 +302,6 @@ export default function About({ introDone = true }) {
             </div>
           </div>
 
-          {/* CORE VALUES – NOW WITH PRIMARY PATTERN (line + icon + heading) */}
           <div ref={valuesRef} className={`transition-all duration-1000 ${valuesAnim}`}>
             <div className="flex items-center gap-4 mb-10">
               <div className="h-px w-16 bg-green-300"></div>
@@ -345,14 +331,23 @@ export default function About({ introDone = true }) {
         </div>
       </section>
 
-      {/* ========== LEADERSHIP (right-aligned – secondary pattern) ========== */}
+      {/* ========== LEADERSHIP ========== */}
       <section
         id="leadership"
         ref={leadershipRef}
-        className={`px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${leadershipAnim}`}
+        className={`relative px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${leadershipAnim} overflow-hidden`}
       >
-        <div className="max-w-4xl mx-auto text-right">
-          {/* Secondary pattern: heading + icon + line (blue) */}
+        {/* Background decor – blue diagonal lines (no circles) */}
+        <BackgroundDecor pattern="lines" color="blue" opacity={0.1} blurCircles={false} />
+
+        {/* Gradient overlay and border circles (kept manually) */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-green-100 via-transparent to-blue-100"></div>
+          <div className="absolute top-10 right-10 w-40 h-40 border-2 border-green-300 rounded-full opacity-30"></div>
+          <div className="absolute bottom-10 left-10 w-60 h-60 border-2 border-blue-300 rounded-full opacity-30"></div>
+        </div>
+
+        <div className="max-w-4xl mx-auto text-right relative z-10">
           <div className="flex items-center gap-4 mb-4 justify-end">
             <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">
               Leadership & Team
@@ -362,8 +357,7 @@ export default function About({ introDone = true }) {
           </div>
         </div>
 
-        {/* Responsive grid – wraps automatically when many team members */}
-        <div className="mt-12 max-w-6xl mx-auto">
+        <div className="mt-12 max-w-6xl mx-auto relative z-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-0">
             {teamMembers.map((member, index) => (
               <TeamCard
@@ -381,9 +375,32 @@ export default function About({ introDone = true }) {
   );
 }
 
-// Team member data – add more items to test wrapping
+// Team member data
 const teamMembers = [
   {
+    name: "John Climaco",
+    title: "Founder & CEO",
+    brief: "Founder with 20+ years in construction. Leads with vision and integrity.",
+    imageUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Maria Climaco",
+    title: "Director",
+    brief: "Oversees operations and community relations. Ensures sustainable practices.",
+    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Pedro Climaco",
+    title: "Director",
+    brief: "Manages project execution and site safety. Experienced engineer.",
+    imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },
+  {
+    name: "Ana Santos",
+    title: "Project Manager",
+    brief: "Coordinates large-scale developments. Certified in environmental compliance.",
+    imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+  },{
     name: "John Climaco",
     title: "Founder & CEO",
     brief: "Founder with 20+ years in construction. Leads with vision and integrity.",
@@ -443,7 +460,7 @@ function ValueCardEnhanced({ icon, title, description }) {
   );
 }
 
-// TeamCard – now uses a fixed width (grid cell) and overlay on hover
+// TeamCard
 function TeamCard({ name, title, brief, imageUrl }) {
   return (
     <div
@@ -458,8 +475,6 @@ function TeamCard({ name, title, brief, imageUrl }) {
         alt={name}
         className="w-full h-full object-cover object-center"
       />
-
-      {/* Overlay – appears on hover */}
       <div
         className="
           absolute inset-0 bg-black/70 flex flex-col
@@ -478,8 +493,6 @@ function TeamCard({ name, title, brief, imageUrl }) {
           {brief}
         </p>
       </div>
-
-      {/* Optional: subtle scale on hover for extra feedback */}
       <div className="absolute inset-0 transition-transform duration-300 group-hover:scale-105 pointer-events-none" />
     </div>
   );

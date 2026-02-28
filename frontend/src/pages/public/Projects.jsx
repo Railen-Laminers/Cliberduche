@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import PerspectiveCard from "../../components/PerspectiveCard";
+import BackgroundDecor from "../../components/BackgroundDecor";
 import { projects } from "./projectsData";
 import heroImage from "/projects/northport_ongoing/northport_img_5.jpg";
 import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
@@ -22,30 +23,28 @@ const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) =>
       {/* Animated swipe cue - bounces when idle */}
       <div className={`flex items-center gap-1.5 transition-transform duration-200 ${isDragging ? 'scale-95' : 'animate-bounce-subtle'}`}>
         {/* Left chevron - fades when dragging right */}
-        <FaChevronLeft 
-          className={`text-[#0b2545]/60 transition-all duration-200 ${
-            isDragging && dragOffset > 20 ? 'opacity-30 scale-90' : 'opacity-100'
-          }`} 
-          size={14} 
+        <FaChevronLeft
+          className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset > 20 ? 'opacity-30 scale-90' : 'opacity-100'
+            }`}
+          size={14}
         />
-        
+
         {/* Animated dots showing slide position */}
         <div className="flex items-center gap-1.5 px-2">
           {Array.from({ length: Math.min(totalSlides, 5) }).map((_, idx) => {
             // Calculate approximate slide index based on drag offset
             const approximateIndex = currentSlide + (dragOffset / window.innerWidth);
-            const isActive = idx === currentSlide || 
+            const isActive = idx === currentSlide ||
               (isDragging && idx === Math.round(approximateIndex));
             const distance = Math.abs(idx - currentSlide);
-            
+
             return (
               <div
                 key={idx}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  isActive 
-                    ? 'bg-[#1f7a8c] scale-110 shadow-sm' 
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${isActive
+                    ? 'bg-[#1f7a8c] scale-110 shadow-sm'
                     : `bg-[#0b2545]/30 ${distance === 1 ? 'scale-90' : 'scale-75'}`
-                }`}
+                  }`}
                 style={{
                   transform: `scale(${isActive ? 1.1 : 1 - distance * 0.1})`,
                   opacity: isActive ? 1 : Math.max(0.3, 1 - distance * 0.3)
@@ -54,16 +53,15 @@ const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) =>
             );
           })}
         </div>
-        
+
         {/* Right chevron - fades when dragging left */}
-        <FaChevronRight 
-          className={`text-[#0b2545]/60 transition-all duration-200 ${
-            isDragging && dragOffset < -20 ? 'opacity-30 scale-90' : 'opacity-100'
-          }`} 
-          size={14} 
+        <FaChevronRight
+          className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset < -20 ? 'opacity-30 scale-90' : 'opacity-100'
+            }`}
+          size={14}
         />
       </div>
-      
+
       {/* Contextual hint text */}
       <span className="text-[10px] text-[#0b2545]/50 font-medium tracking-wide">
         {isDragging ? 'Release to navigate' : 'Swipe to explore'}
@@ -249,6 +247,9 @@ const CarouselView = ({
       className="relative w-full min-h-[70vh] md:h-screen overflow-hidden bg-white"
       style={{ touchAction: 'pan-y' }}
     >
+      {/* Background decor for carousel */}
+      <BackgroundDecor pattern="dots" color="green" opacity={0.1} blurCircles={true} />
+
       <div
         className={`flex h-auto md:h-full ${!isDragging ? 'transition-transform duration-700' : ''}`}
         style={{
@@ -290,7 +291,7 @@ const CarouselView = ({
       </div>
 
       {/* Mobile animated drag indicator */}
-      <DragIndicator 
+      <DragIndicator
         isDragging={isDragging}
         dragOffset={dragOffset}
         totalSlides={ongoingProjects.length}
@@ -305,8 +306,11 @@ const CompletedList = ({ completedProjects, openProject }) => {
   if (completedProjects.length === 0) return null;
 
   return (
-    <div className="bg-white px-6 md:px-10 py-16 md:py-20">
-      <div className="max-w-7xl mx-auto">
+    <div className="relative bg-white px-6 md:px-10 py-16 md:py-20 overflow-hidden">
+      {/* Background decor for completed list */}
+      <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={true} />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex items-center gap-4 mb-8 justify-end">
           <h3 className="text-2xl md:text-3xl font-bold text-[#0b2545]">Completed Projects</h3>
           <FaInfinity className="text-blue-600 text-2xl" />
@@ -357,8 +361,11 @@ const CarouselWithCompleted = ({
 // ========== Expanded view ==========
 const ExpandedView = ({ allProjects, openProject }) => {
   return (
-    <div className="bg-white px-6 md:px-10 py-16 md:py-20">
-      <div className="max-w-7xl mx-auto">
+    <div className="relative bg-white px-6 md:px-10 py-16 md:py-20 overflow-hidden">
+      {/* Background decor for expanded view */}
+      <BackgroundDecor pattern="lines" color="green" opacity={0.1} blurCircles={true} />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="divide-y divide-gray-200">
           {allProjects.map((project, index) => (
             <ProjectListItem
@@ -629,6 +636,8 @@ export default function Projects({ introDone = true }) {
         >
           <BlockReveal active={heroRevealed} rows={8} cols={12} />
         </div>
+        {/* Background decor for mobile hero */}
+        
         <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-black/30">
           <div className="text-sm tracking-[0.3em] uppercase text-white/80 mb-3">Projects</div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
@@ -649,9 +658,11 @@ export default function Projects({ introDone = true }) {
           />
           <BlockReveal active={heroRevealed} rows={8} cols={12} />
         </div>
-        <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2">
+        <div className="relative w-full md:w-1/2 flex flex-col order-1 md:order-2 overflow-hidden">
+          {/* Background decor for desktop hero text side */}
+         
           <div className="hidden md:block flex-1" />
-          <div ref={heroRef} className={`pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12 ${heroAnim}`}>
+          <div ref={heroRef} className={`relative z-10 pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12 ${heroAnim}`}>
             <div className="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">Projects</div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0b2545] leading-tight">
               <LetterReveal
@@ -665,44 +676,54 @@ export default function Projects({ introDone = true }) {
         </div>
       </div>
 
-      {/* Projects header */}
-      <div ref={projectsSectionRef} className="bg-white pt-16 pb-8 px-6 md:px-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center">
-          <div className="flex items-center gap-4">
-            {viewMode === 'carousel' ? (
-              <>
-                <div className="h-px w-16 bg-green-300"></div>
-                <FaInfinity className="text-green-600 text-2xl" />
-                <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight">
-                  Current developments
-                </h2>
-              </>
-            ) : (
-              <>
-                <div className="h-px w-16 bg-blue-300"></div>
-                <FaInfinity className="text-blue-600 text-2xl" />
-                <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight">
-                  Complete portfolio
-                </h2>
-              </>
-            )}
+      {/* Projects header with view toggle and subheading */}
+      <div ref={projectsSectionRef} className="relative bg-white pt-16 pb-8 px-6 md:px-10 overflow-hidden">
+        <BackgroundDecor pattern="grid" color="blue" opacity={0.08} blurCircles={false} />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+            <div className="flex items-center gap-4">
+              {viewMode === 'carousel' ? (
+                <>
+                  <div className="h-px w-16 bg-green-300"></div>
+                  <FaInfinity className="text-green-600 text-2xl" />
+                  <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight">
+                    Current developments
+                  </h2>
+                </>
+              ) : (
+                <>
+                  <div className="h-px w-16 bg-blue-300"></div>
+                  <FaInfinity className="text-blue-600 text-2xl" />
+                  <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight">
+                    Complete portfolio
+                  </h2>
+                </>
+              )}
+            </div>
+            <div className="mt-4 md:mt-0">
+              {viewMode === 'carousel' ? (
+                <button
+                  onClick={() => switchView('expanded')}
+                  className="px-4 md:px-8 py-2 md:py-3 bg-[#0b2545] text-white rounded-full hover:bg-[#1f3a5f] transition-colors text-xs md:text-sm font-medium"
+                >
+                  See all projects →
+                </button>
+              ) : (
+                <button
+                  onClick={() => switchView('carousel')}
+                  className="px-4 md:px-8 py-2 md:py-3 bg-[#0b2545] text-white rounded-full hover:bg-[#1f3a5f] transition-colors text-xs md:text-sm font-medium"
+                >
+                  ← Back to featured
+                </button>
+              )}
+            </div>
           </div>
-          <div className="mt-4 md:mt-0">
-            {viewMode === 'carousel' ? (
-              <button
-                onClick={() => switchView('expanded')}
-                className="px-4 md:px-8 py-2 md:py-3 bg-[#0b2545] text-white rounded-full hover:bg-[#1f3a5f] transition-colors text-xs md:text-sm font-medium"
-              >
-                See all projects →
-              </button>
-            ) : (
-              <button
-                onClick={() => switchView('carousel')}
-                className="px-4 md:px-8 py-2 md:py-3 bg-[#0b2545] text-white rounded-full hover:bg-[#1f3a5f] transition-colors text-xs md:text-sm font-medium"
-              >
-                ← Back to featured
-              </button>
-            )}
+
+          {/* Brief subheading */}
+          <div className="mt-4 max-w-3xl">
+            <p className="text-gray-600 text-lg">
+              Explore our portfolio of ongoing and completed projects that showcase our commitment to quality, innovation, and sustainable development across the region.
+            </p>
           </div>
         </div>
       </div>

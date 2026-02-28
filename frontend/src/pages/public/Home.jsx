@@ -4,6 +4,8 @@ import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { useNavigate, Link } from "react-router-dom";
 import office from "/office.jpg";
 import { LetterReveal } from "../../components/RevealAnimations";
+import ScrollReveal from "../../components/ScrollReveal";
+import BackgroundDecor from "../../components/BackgroundDecor";
 
 // Icons
 import {
@@ -16,7 +18,7 @@ import {
     FaPhoneAlt,
 } from "react-icons/fa";
 
-// ---------- CountUp Component (animates numbers) ----------
+// ---------- CountUp Component ----------
 const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     const [count, setCount] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
@@ -67,7 +69,7 @@ const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     );
 };
 
-// Floating infinity icon (interactive)
+// Floating infinity icon (interactive) – unchanged
 const FloatingInfinityIcon = forwardRef(
     ({ className, floatClass, animClass, iconClass }, ref) => {
         const [isHovered, setIsHovered] = useState(false);
@@ -178,7 +180,7 @@ const FloatingInfinityIcon = forwardRef(
 
 FloatingInfinityIcon.displayName = "FloatingInfinityIcon";
 
-// Services data
+// Services data (unchanged)
 const services = [
     {
         title: "Backfill & Land Sourcing",
@@ -230,30 +232,23 @@ const services = [
 const coreServices = services.filter((s) => s.type === "core");
 const specializedServices = services.filter((s) => s.type === "specialized");
 
-// Core service tile – immersive image with overlay
+// Core service tile – unchanged
 function CoreServiceTile({ service }) {
     return (
         <div className="group relative aspect-[4/3] overflow-hidden rounded-lg">
-            {/* Background image */}
             <img
                 src={service.image}
                 alt={service.title}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
-            {/* Dark overlay, lightens on hover */}
             <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500" />
-
-            {/* Content at bottom */}
             <div className="absolute inset-x-0 bottom-0 p-6 text-white transform translate-y-0 group-hover:translate-y-0 transition-transform duration-500">
-                {/* Icon and title always visible */}
                 <div className="flex items-center gap-3 mb-2">
                     <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white shadow-lg">
                         {React.cloneElement(service.icon, { className: "w-6 h-6" })}
                     </div>
                     <h4 className="text-2xl font-bold">{service.title}</h4>
                 </div>
-
-                {/* Description slides up on hover */}
                 <div className="overflow-hidden max-h-0 group-hover:max-h-40 transition-all duration-500 ease-in-out">
                     <p className="text-sm text-gray-200 leading-relaxed">
                         {service.description}
@@ -270,7 +265,7 @@ function CoreServiceTile({ service }) {
     );
 }
 
-// Specialized service split layout
+// Specialized service split layout – unchanged
 function SplitService({ service }) {
     return (
         <div className="flex flex-col md:flex-row">
@@ -325,7 +320,6 @@ export default function Home({ introDone = true }) {
         }
     }, [introDone]);
 
-    // Set viewport height variable for mobile
     useEffect(() => {
         const setVh = () => {
             document.documentElement.style.setProperty(
@@ -340,7 +334,7 @@ export default function Home({ introDone = true }) {
 
     return (
         <>
-            {/* Hero section */}
+            {/* ========== HERO SECTION ========== */}
             <section
                 id="home"
                 className="relative text-white px-4 sm:px-6 md:px-10 lg:px-16 overflow-hidden transition-all duration-1000 bg-cover bg-center md:bg-fixed flex items-center"
@@ -352,6 +346,7 @@ export default function Home({ introDone = true }) {
                     className="absolute inset-0 w-full h-full object-cover animate-pan will-change-transform"
                 />
                 <div className="absolute inset-0 bg-black/30" />
+               
                 <div className="max-w-6xl w-full mx-auto relative z-10 text-left">
                     <h1
                         className="font-bold leading-tight mb-4 sm:mb-6 drop-shadow-lg"
@@ -397,12 +392,13 @@ export default function Home({ introDone = true }) {
                 />
             </section>
 
-            {/* What We Do section */}
+            {/* ========== WHAT WE DO ========== */}
             <section
                 ref={introRef}
-                className={`px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-gradient-to-b from-white to-[#f4faf7] transition-all duration-1000 ${introAnim}`}
+                className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-gradient-to-b from-white to-[#f4faf7] transition-all duration-1000 ${introAnim} overflow-hidden`}
             >
-                <div className="max-w-4xl mx-auto text-center">
+                <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
+                <div className="max-w-4xl mx-auto text-center relative z-10">
                     <div
                         ref={mvHeadingRef}
                         className={`text-center transition-all duration-1000 ${mvHeadingAnim}`}
@@ -419,18 +415,24 @@ export default function Home({ introDone = true }) {
                     >
                         What We Do
                     </h2>
-                    <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
-                        At <span className="font-semibold text-green-700">CLIBERDUCHE</span>, we turn vision into reality through a comprehensive range of construction and land development services. Backed by years of experience and an unwavering commitment to excellence, we deliver trust on every project — from material sourcing and site development to expert consultation. Our integrated approach ensures that your project is built on a solid foundation, literally and figuratively.
-                    </p>
+                    <ScrollReveal
+                        enableBlur={false}
+                        baseOpacity={0.2}
+                        baseRotation={5}
+                        staggerStep={0.1}
+                    >
+                        At <span className="text-green-700 font-bold">Cliberduche</span>, we turn vision into reality through a comprehensive range of construction and land development services. Backed by years of experience and an unwavering commitment to excellence, we deliver trust on every project — from material sourcing and site development to expert consultation. Our integrated approach ensures that your project is built on a solid foundation, literally and figuratively.
+                    </ScrollReveal>
                 </div>
             </section>
 
-            {/* Core Services – immersive image grid */}
+            {/* ========== CORE SERVICES ========== */}
             <section
                 ref={coreRef}
-                className={`px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${coreAnim}`}
+                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${coreAnim} overflow-hidden`}
             >
-                <div className="max-w-7xl mx-auto">
+                <BackgroundDecor pattern="dots" color="green" opacity={0.15} blurCircles={true} />
+                <div className="max-w-7xl mx-auto relative z-10">
                     <div className="mb-16">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="h-px w-16 bg-green-300"></div>
@@ -455,13 +457,14 @@ export default function Home({ introDone = true }) {
                 </div>
             </section>
 
-            {/* Specialized Services */}
+            {/* ========== SPECIALIZED SERVICES ========== */}
             {specializedServices.length > 0 && (
                 <section
                     ref={specializedRef}
-                    className={`px-6 md:px-16 lg:px-24 py-16 md:py-20 bg-[#f4faf7] transition-all duration-1000 ${specializedAnim}`}
+                    className={`relative px-6 md:px-16 lg:px-24 py-16 md:py-20 bg-[#f4faf7] transition-all duration-1000 ${specializedAnim} overflow-hidden`}
                 >
-                    <div className="max-w-7xl mx-auto">
+                    <BackgroundDecor pattern="lines" color="blue" opacity={0.1} blurCircles={true} />
+                    <div className="max-w-7xl mx-auto relative z-10">
                         <div className="mb-12 flex flex-col items-end">
                             <div className="flex items-center gap-4 mb-4">
                                 <h3
@@ -487,12 +490,13 @@ export default function Home({ introDone = true }) {
                 </section>
             )}
 
-            {/* Why Choose Us section with counting numbers */}
+            {/* ========== WHY CHOOSE US ========== */}
             <section
                 ref={whyRef}
-                className={`px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${whyAnim}`}
+                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${whyAnim} overflow-hidden`}
             >
-                <div className="max-w-7xl mx-auto">
+                <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={true} />
+                <div className="max-w-7xl mx-auto relative z-10">
                     <div className="mb-20">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="h-px w-16 bg-green-300"></div>
@@ -582,8 +586,8 @@ export default function Home({ introDone = true }) {
                 </div>
             </section>
 
-            {/* Call to Action with background image */}
-            <section className="relative px-6 md:px-16 lg:px-24 py-16 md:py-20 text-white">
+            {/* ========== CALL TO ACTION ========== */}
+            <section className="relative px-6 md:px-16 lg:px-24 py-16 md:py-20 text-white overflow-hidden">
                 {/* Background image with overlay */}
                 <div className="absolute inset-0 z-0">
                     <img
@@ -593,7 +597,8 @@ export default function Home({ introDone = true }) {
                     />
                     <div className="absolute inset-0 bg-black/60"></div>
                 </div>
-                {/* Content */}
+                {/* Background decor – subtle pattern over image */}
+                <BackgroundDecor pattern="dots" color="gray" opacity={0.05} blurCircles={false} />
                 <div
                     ref={ctaContentRef}
                     className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000 ${ctaContentAnim}`}

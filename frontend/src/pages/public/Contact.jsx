@@ -4,6 +4,7 @@ import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import Map from "./Map";
 import PerspectiveCard from "../../components/PerspectiveCard";
+import BackgroundDecor from "../../components/BackgroundDecor";
 import logo from "/logo/cliberduche_logo.png";
 
 export default function Contact({ introDone = true }) {
@@ -35,11 +36,8 @@ export default function Contact({ introDone = true }) {
             id="contact"
             className="relative px-6 md:px-10 py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden"
         >
-            {/* Subtle decorative dots pattern */}
-            <div className="absolute inset-0 opacity-5 pointer-events-none">
-                <div className="absolute top-0 left-0 w-64 h-64 bg-[radial-gradient(circle,_#0b2545_1px,_transparent_1px)] bg-[length:20px_20px]"></div>
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-[radial-gradient(circle,_#1f7a8c_1px,_transparent_1px)] bg-[length:30px_30px]"></div>
-            </div>
+            {/* Reusable background decor – subtle green dots and blurred circles */}
+            <BackgroundDecor pattern="grid" color="green" opacity={0.08} blurCircles={true} />
 
             <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-16 items-start relative z-10">
 
@@ -48,12 +46,18 @@ export default function Contact({ introDone = true }) {
                     ref={infoRef}
                     className={`flex flex-col justify-center text-[#0b2545] transition-all duration-1000 ${infoAnim}`}
                 >
-                    <h3
-                        ref={headingRef}
-                        className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight ${headingAnim}`}
-                    >
-                        Contact <span className="text-green-600">CLIBERDUCHE</span>
-                    </h3>
+                    {/* Heading with subheading */}
+                    <div className="mb-6">
+                        <h3
+                            ref={headingRef}
+                            className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-3 leading-tight ${headingAnim}`}
+                        >
+                            Contact <span className="text-green-600">CLIBERDUCHE</span>
+                        </h3>
+                        <p className="text-gray-500 text-sm uppercase tracking-wider mb-2">
+                            Get in touch with us
+                        </p>
+                    </div>
 
                     <p className="text-gray-600 text-lg leading-relaxed mb-6">
                         Whether you need backfilling materials, land development, or complete
