@@ -2,73 +2,93 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 const MagneticButton = ({
   children,
-  padding = 100,               // still used for movement range, but only when hovered
+  padding = 100,
   disabled = false,
   magnetStrength = 2,
   activeTransition = 'transform 0.3s ease-out',
   inactiveTransition = 'transform 0.5s ease-in-out',
+  disableOnTouch = false,
   wrapperClassName = '',
   innerClassName = '',
   ...props
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+
   const wrapperRef = useRef(null);
-  
-  // Keep latest props in a ref to avoid stale closures in mousemove handler
-  const propsRef = useRef({ padding, disabled, magnetStrength });
-  useEffect(() => {
-    propsRef.current = { padding, disabled, magnetStrength };
-  }, [padding, disabled, magnetStrength]);
+  const frameRef = useRef(null);
 
-  const handleMouseMove = useCallback((e) => {
-    const { padding, disabled, magnetStrength } = propsRef.current;
-    if (disabled || !wrapperRef.current) return;
+  const isTouchDevice =
+    typeof window !== 'undefined' &&
+    ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-    const { left, top, width, height } = wrapperRef.current.getBoundingClientRect();
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
+  const shouldDisable = disabled || (disableOnTouch && isTouchDevice);
 
-    // Calculate offset based on mouse position relative to center
-    const offsetX = (e.clientX - centerX) / magnetStrength;
-    const offsetY = (e.clientY - centerY) / magnetStrength;
+  const updatePosition = useCallback((clientX, clientY) => {
+    if (!wrapperRef.current) return;
 
-    // Optional: clamp movement within padding? Usually we just move within the element.
-    // But we can use padding to limit how far it can go.
-    // Here we keep the same logic as before: move without clamping.
+    const rect = wrapperRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    let offsetX = (clientX - centerX) / magnetStrength;
+    let offsetY = (clientY - centerY) / magnetStrength;
+
+    // Clamp movement using padding
+    const maxX = rect.width / 2 + padding;
+    const maxY = rect.height / 2 + padding;
+
+    offsetX = Math.max(-maxX, Math.min(maxX, offsetX));
+    offsetY = Math.max(-maxY, Math.min(maxY, offsetY));
+
     setPosition({ x: offsetX, y: offsetY });
-  }, []);
+  }, [magnetStrength, padding]);
 
-  // Attach/remove mousemove based on hover state
+  const handlePointerMove = useCallback((e) => {
+    if (shouldDisable) return;
+
+    if (frameRef.current) {
+      cancelAnimationFrame(frameRef.current);
+    }
+
+    frameRef.current = requestAnimationFrame(() => {
+      updatePosition(e.clientX, e.clientY);
+    });
+  }, [updatePosition, shouldDisable]);
+
   useEffect(() => {
-    if (disabled || !isHovered) {
-      // If not hovered, ensure position resets and no listener
+    if (shouldDisable || !isActive) {
       setPosition({ x: 0, y: 0 });
       return;
     }
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('pointermove', handlePointerMove);
+
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('pointermove', handlePointerMove);
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
     };
-  }, [isHovered, disabled, handleMouseMove]);
+  }, [isActive, shouldDisable, handlePointerMove]);
 
-  // Reset position when hover ends (already done in the effect above, but explicit for clarity)
-  useEffect(() => {
-    if (!isHovered) {
-      setPosition({ x: 0, y: 0 });
-    }
-  }, [isHovered]);
-
-  const transitionStyle = isHovered ? activeTransition : inactiveTransition;
+  const transitionStyle = isActive
+    ? activeTransition
+    : inactiveTransition;
 
   return (
     <div
       ref={wrapperRef}
       className={wrapperClassName}
-      style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        position: 'relative',
+        display: 'inline-block',
+        touchAction: 'none', // important for mobile
+      }}
+      onPointerEnter={() => !shouldDisable && setIsActive(true)}
+      onPointerLeave={() => setIsActive(false)}
+      onPointerDown={() => !shouldDisable && setIsActive(true)}
+      onPointerUp={() => setIsActive(false)}
       {...props}
     >
       <div
