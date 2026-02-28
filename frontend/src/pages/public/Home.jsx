@@ -334,11 +334,11 @@ function ServiceFullViewportSection({ service, index, active }) {
     const desktopFlexClass = isEvenIndex ? "md:flex-row-reverse" : "md:flex-row";
 
     return (
-        <section className="relative w-full bg-white border border-gray-200 overflow-hidden">
+        <section className="relative w-full bg-white overflow-hidden">
             <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
 
-            {/* Centered container with max width */}
-            <div className="max-w-7xl mx-auto w-full">
+            {/* Centered container with max width and border */}
+            <div className="max-w-7xl mx-auto w-full border border-gray-200">
                 <div className={`flex flex-col ${desktopFlexClass}`}>
                     {/* IMAGE SECTION */}
                     <div className="relative w-full md:w-2/5 h-56 sm:h-64 md:h-auto min-h-[200px] md:min-h-0 overflow-hidden order-1 md:order-none">
