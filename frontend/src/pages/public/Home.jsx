@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import office from "/office.jpg";
 import { LetterReveal } from "../../components/RevealAnimations";
 
-// ----- Icons and components for services sections -----
+// Icons
 import {
     FaTruckLoading,
     FaMountain,
@@ -14,24 +14,67 @@ import {
     FaProjectDiagram,
     FaInfinity,
     FaPhoneAlt,
-    FaRegClock,
-    FaUsers,
-    FaLeaf,
 } from "react-icons/fa";
-import PerspectiveCard from "../../components/PerspectiveCard";
 
-// ------------------------------------------------------------
-// Smooth mouse‑avoidance icon with rotation – always floating
-// ------------------------------------------------------------
+// ---------- CountUp Component (animates numbers) ----------
+const CountUp = ({ end, duration = 2000, suffix = "" }) => {
+    const [count, setCount] = useState(0);
+    const [isVisible, setIsVisible] = useState(false);
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.3 }
+        );
+        if (ref.current) observer.observe(ref.current);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (!isVisible) return;
+
+        let startTime;
+        let rafId;
+
+        const animate = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            setCount(Math.floor(progress * end));
+
+            if (progress < 1) {
+                rafId = requestAnimationFrame(animate);
+            } else {
+                setCount(end);
+            }
+        };
+
+        rafId = requestAnimationFrame(animate);
+
+        return () => cancelAnimationFrame(rafId);
+    }, [isVisible, end, duration]);
+
+    return (
+        <span ref={ref}>
+            {count}
+            {suffix}
+        </span>
+    );
+};
+
+// Floating infinity icon (interactive)
 const FloatingInfinityIcon = forwardRef(
-    ({ className, animClass, floatClass, iconClass }, ref) => {
+    ({ className, floatClass, animClass, iconClass }, ref) => {
         const [isHovered, setIsHovered] = useState(false);
         const iconRef = useRef(null);
-
         const targetRef = useRef({ x: 0, y: 0, rotate: 0 });
         const currentRef = useRef({ x: 0, y: 0, rotate: 0 });
         const rafRef = useRef(null);
-
         const SMOOTHING = 0.12;
 
         const animate = useCallback(() => {
@@ -91,15 +134,11 @@ const FloatingInfinityIcon = forwardRef(
 
         const handleMouseMove = (e) => {
             if (!iconRef.current) return;
-
             const rect = iconRef.current.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-
-            const dx = centerX - mouseX;
-            const dy = centerY - mouseY;
+            const dx = centerX - e.clientX;
+            const dy = centerY - e.clientY;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 1) {
@@ -107,7 +146,6 @@ const FloatingInfinityIcon = forwardRef(
             } else {
                 const dirX = dx / distance;
                 const dirY = dy / distance;
-
                 const maxPush = 20;
                 const pushDistance = Math.min(
                     maxPush,
@@ -115,11 +153,9 @@ const FloatingInfinityIcon = forwardRef(
                 );
                 const newX = dirX * pushDistance;
                 const newY = dirY * pushDistance;
-
                 const angle = Math.atan2(dirY, dirX) * (180 / Math.PI);
                 targetRef.current = { x: newX, y: newY, rotate: angle };
             }
-
             startAnimation();
         };
 
@@ -142,9 +178,7 @@ const FloatingInfinityIcon = forwardRef(
 
 FloatingInfinityIcon.displayName = "FloatingInfinityIcon";
 
-// ------------------------------------------------------------
-// Service data and helper components
-// ------------------------------------------------------------
+// Services data
 const services = [
     {
         title: "Backfill & Land Sourcing",
@@ -196,30 +230,47 @@ const services = [
 const coreServices = services.filter((s) => s.type === "core");
 const specializedServices = services.filter((s) => s.type === "specialized");
 
-function ServiceTile({ service }) {
+// Core service tile – immersive image with overlay
+function CoreServiceTile({ service }) {
     return (
-        <div className="relative group h-80 overflow-hidden rounded-2xl">
-            <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${service.image})` }}
+        <div className="group relative aspect-[4/3] overflow-hidden rounded-lg">
+            {/* Background image */}
+            <img
+                src={service.image}
+                alt={service.title}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-green-600/90 rounded-lg flex items-center justify-center backdrop-blur-sm">
-                        {service.icon}
+            {/* Dark overlay, lightens on hover */}
+            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500" />
+
+            {/* Content at bottom */}
+            <div className="absolute inset-x-0 bottom-0 p-6 text-white transform translate-y-0 group-hover:translate-y-0 transition-transform duration-500">
+                {/* Icon and title always visible */}
+                <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                        {React.cloneElement(service.icon, { className: "w-6 h-6" })}
                     </div>
-                    <h4 className="text-xl font-bold">{service.title}</h4>
+                    <h4 className="text-2xl font-bold">{service.title}</h4>
                 </div>
-                <p className="text-sm text-gray-200 leading-relaxed">
-                    {service.description}
-                </p>
+
+                {/* Description slides up on hover */}
+                <div className="overflow-hidden max-h-0 group-hover:max-h-40 transition-all duration-500 ease-in-out">
+                    <p className="text-sm text-gray-200 leading-relaxed">
+                        {service.description}
+                    </p>
+                    <div className="mt-3 flex items-center text-green-300 text-sm font-medium">
+                        <span>Learn more</span>
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div className="absolute inset-0 border-2 border-transparent group-hover:border-green-400 rounded-2xl transition-colors duration-300 pointer-events-none" />
         </div>
     );
 }
 
+// Specialized service split layout
 function SplitService({ service }) {
     return (
         <div className="flex flex-col md:flex-row">
@@ -243,66 +294,38 @@ function SplitService({ service }) {
     );
 }
 
-function StatCard({ icon, number, label, description }) {
-    return (
-        <PerspectiveCard
-            className="w-full group"
-            enableTilt
-            maxRotate={6}
-            defaultRotateY={0}
-            defaultTranslateZ={6}
-        >
-            <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 h-[280px]">
-                <div className="relative z-10 flex flex-col items-center text-center p-6 h-full">
-                    <div className="w-14 h-14 mb-4 bg-green-100 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
-                        {React.cloneElement(icon, { className: "w-6 h-6" })}
-                    </div>
-                    <div className="text-3xl font-bold text-[#0b2545] mb-1 group-hover:text-green-700 transition-colors">
-                        {number}
-                    </div>
-                    <div className="font-semibold text-gray-800 mb-2 group-hover:text-green-600 transition-colors">
-                        {label}
-                    </div>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                        {description}
-                    </p>
-                </div>
-            </div>
-        </PerspectiveCard>
-    );
-}
-
-// ------------------------------------------------------------
-// Main Home component – fully responsive with services sections
-// ------------------------------------------------------------
+// Main Home component
 export default function Home({ introDone = true }) {
     const navigate = useNavigate();
 
+    // Scroll animation refs
     const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
     const [float1Ref, float1Anim] = useScrollAnimation(0.1, introDone);
     const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
-
-    // Animation refs for new intro and services sections
     const [introRef, introAnim] = useScrollAnimation(0.1, introDone);
-    const [mvHeadingRef, mvHeadingAnim] = useScrollAnimation(0.1, introDone); // Added missing ref
+    const [mvHeadingRef, mvHeadingAnim] = useScrollAnimation(0.1, introDone);
     const [coreRef, coreAnim] = useScrollAnimation(0.1, introDone);
     const [specializedRef, specializedAnim] = useScrollAnimation(0.1, introDone);
     const [whyRef, whyAnim] = useScrollAnimation(0.1, introDone);
     const [ctaContentRef, ctaContentAnim] = useScrollAnimation(0.1, introDone);
 
-    // Hero letter reveal states
-    const [heroRevealed, setHeroRevealed] = useState(false);
+    // Individual heading refs
+    const [whatWeDoHeadingRef, whatWeDoHeadingAnim] = useScrollAnimation(0.1, introDone);
+    const [coreHeadingRef, coreHeadingAnim] = useScrollAnimation(0.1, introDone);
+    const [specializedHeadingRef, specializedHeadingAnim] = useScrollAnimation(0.1, introDone);
+    const [whyHeadingRef, whyHeadingAnim] = useScrollAnimation(0.1, introDone);
+    const [ctaHeadingRef, ctaHeadingAnim] = useScrollAnimation(0.1, introDone);
+
     const [headingRevealed, setHeadingRevealed] = useState(false);
 
     useEffect(() => {
         if (introDone) {
-            setHeroRevealed(true);
             const headingTimer = setTimeout(() => setHeadingRevealed(true), 200);
             return () => clearTimeout(headingTimer);
         }
     }, [introDone]);
 
-    // Set CSS variable for viewport height (fixes mobile issues)
+    // Set viewport height variable for mobile
     useEffect(() => {
         const setVh = () => {
             document.documentElement.style.setProperty(
@@ -317,23 +340,18 @@ export default function Home({ introDone = true }) {
 
     return (
         <>
-            {/* Hero Section */}
+            {/* Hero section */}
             <section
                 id="home"
                 className="relative text-white px-4 sm:px-6 md:px-10 lg:px-16 overflow-hidden transition-all duration-1000 bg-cover bg-center md:bg-fixed flex items-center"
                 style={{ minHeight: "calc(var(--vh, 1vh) * 100)" }}
             >
-                {/* Background Image */}
                 <img
                     src={office}
                     alt="Office background"
                     className="absolute inset-0 w-full h-full object-cover animate-pan will-change-transform"
                 />
-
-                {/* Overlay */}
                 <div className="absolute inset-0 bg-black/30" />
-
-                {/* Content */}
                 <div className="max-w-6xl w-full mx-auto relative z-10 text-left">
                     <h1
                         className="font-bold leading-tight mb-4 sm:mb-6 drop-shadow-lg"
@@ -345,37 +363,24 @@ export default function Home({ introDone = true }) {
                             letterDelay={0.05}
                         />
                     </h1>
-
                     <div
                         ref={buttonsRef}
                         className={`mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 ${buttonsAnim}`}
                     >
                         <button
                             onClick={() => navigate("/contact")}
-                            className="w-full sm:w-auto bg-green-400 hover:bg-green-500 text-[#0b2545] 
-                     px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 
-                     rounded-sm font-semibold text-sm sm:text-base md:text-lg 
-                     transition-all duration-300 transform hover:scale-105 
-                     hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300"
+                            className="w-full sm:w-auto bg-green-400 hover:bg-green-500 text-[#0b2545] px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300"
                         >
                             Request a Quote
                         </button>
-
                         <button
                             onClick={() => navigate("/projects")}
-                            className="w-full sm:w-auto border-2 border-white text-white 
-                     hover:text-green-400 hover:border-green-400 
-                     px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 
-                     rounded-sm font-semibold text-sm sm:text-base md:text-lg 
-                     transition-all duration-300 transform hover:scale-105 
-                     focus:outline-none focus:ring-4 focus:ring-white"
+                            className="w-full sm:w-auto border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white"
                         >
                             View Projects
                         </button>
                     </div>
                 </div>
-
-                {/* Floating Icons */}
                 <FloatingInfinityIcon
                     ref={float1Ref}
                     className="absolute top-1/4 right-6 md:right-12 hidden lg:block"
@@ -383,7 +388,6 @@ export default function Home({ introDone = true }) {
                     animClass={float1Anim}
                     iconClass="w-12 h-12 lg:w-16 lg:h-16 text-green-400 opacity-20"
                 />
-
                 <FloatingInfinityIcon
                     ref={float2Ref}
                     className="absolute bottom-1/4 left-6 md:left-12 hidden lg:block animation-delay-1000"
@@ -393,13 +397,12 @@ export default function Home({ introDone = true }) {
                 />
             </section>
 
-            {/* Bridging Section: What We Do */}
+            {/* What We Do section */}
             <section
                 ref={introRef}
                 className={`px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-gradient-to-b from-white to-[#f4faf7] transition-all duration-1000 ${introAnim}`}
             >
                 <div className="max-w-4xl mx-auto text-center">
-                    {/* Decorative icon cluster*/}
                     <div
                         ref={mvHeadingRef}
                         className={`text-center transition-all duration-1000 ${mvHeadingAnim}`}
@@ -410,7 +413,10 @@ export default function Home({ introDone = true }) {
                             <div className="h-px w-16 bg-blue-300"></div>
                         </div>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-6">
+                    <h2
+                        ref={whatWeDoHeadingRef}
+                        className={`text-3xl md:text-4xl font-bold text-[#0b2545] mb-6 transition-all duration-1000 transform ${whatWeDoHeadingAnim}`}
+                    >
                         What We Do
                     </h2>
                     <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
@@ -419,34 +425,37 @@ export default function Home({ introDone = true }) {
                 </div>
             </section>
 
-            {/* Core Services (formerly Primary Functions) */}
+            {/* Core Services – immersive image grid */}
             <section
                 ref={coreRef}
-                className={`px-6 md:px-16 lg:px-24 py-16 md:py-20 bg-white transition-all duration-1000 ${coreAnim}`}
+                className={`px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${coreAnim}`}
             >
                 <div className="max-w-7xl mx-auto">
-                    <div className="mb-12">
+                    <div className="mb-16">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="h-px w-16 bg-green-300"></div>
                             <FaInfinity className="text-green-600 text-2xl" />
-                            <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">
+                            <h3
+                                ref={coreHeadingRef}
+                                className={`text-4xl font-bold text-[#0b2545] transition-all duration-1000 transform ${coreHeadingAnim}`}
+                            >
                                 Our Core Services
                             </h3>
                         </div>
-                        <p className="text-gray-600 max-w-3xl text-lg text-left">
+                        <p className="text-gray-600 text-lg max-w-3xl">
                             The foundation of our work — essential services we execute with precision, reliability, and proven expertise.
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {coreServices.map((service, idx) => (
-                            <ServiceTile key={idx} service={service} />
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {coreServices.map((service, index) => (
+                            <CoreServiceTile key={index} service={service} />
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Specialized Services (formerly Secondary Functions) */}
+            {/* Specialized Services */}
             {specializedServices.length > 0 && (
                 <section
                     ref={specializedRef}
@@ -455,7 +464,10 @@ export default function Home({ introDone = true }) {
                     <div className="max-w-7xl mx-auto">
                         <div className="mb-12 flex flex-col items-end">
                             <div className="flex items-center gap-4 mb-4">
-                                <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">
+                                <h3
+                                    ref={specializedHeadingRef}
+                                    className={`text-3xl md:text-4xl font-bold text-[#0b2545] transition-all duration-1000 transform ${specializedHeadingAnim}`}
+                                >
                                     Specialized Services
                                 </h3>
                                 <FaInfinity className="text-blue-600 text-2xl" />
@@ -475,61 +487,121 @@ export default function Home({ introDone = true }) {
                 </section>
             )}
 
-            {/* Why Choose Us */}
+            {/* Why Choose Us section with counting numbers */}
             <section
                 ref={whyRef}
-                className={`px-6 md:px-16 lg:px-24 py-16 md:py-20 bg-white transition-all duration-1000 ${whyAnim}`}
+                className={`px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${whyAnim}`}
             >
                 <div className="max-w-7xl mx-auto">
-                    <div className="mb-12">
+                    <div className="mb-20">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="h-px w-16 bg-green-300"></div>
                             <FaInfinity className="text-green-600 text-2xl" />
-                            <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">
+                            <h3
+                                ref={whyHeadingRef}
+                                className={`text-4xl font-bold text-[#0b2545] transition-all duration-1000 transform ${whyHeadingAnim}`}
+                            >
                                 Why Choose CLIBERDUCHE
                             </h3>
                         </div>
-                        <p className="text-gray-600 max-w-3xl text-lg text-left">
-                            We combine local expertise, substantial resources, and a commitment to sustainable practices.
+                        <p className="text-gray-600 text-lg max-w-3xl">
+                            We combine expertise, substantial resources, and sustainable practices to deliver long-term value.
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <StatCard
-                            icon={<FaRegClock />}
-                            number={`${new Date().getFullYear() - 2018}`}
-                            label="Years of Experience"
-                            description="Serving the CALABARZON region since 2018"
-                        />
-                        <StatCard
-                            icon={<FaUsers />}
-                            number="?"
-                            label="Skilled Team Members"
-                            description="Dedicated professionals ensuring quality and safety"
-                        />
-                        <StatCard
-                            icon={<FaTruckLoading />}
-                            number="14M"
-                            label="Cubic Meters of Material"
-                            description="Company‑owned land with abundant resources"
-                        />
-                        <StatCard
-                            icon={<FaLeaf />}
-                            number="100%"
-                            label="Eco‑Compliant"
-                            description="Adhering to DENR regulations & sustainable practices"
-                        />
+                    <div className="space-y-28">
+                        {/* Experience */}
+                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                            <div>
+                                <h4 className="text-7xl font-bold text-green-600 mb-4">
+                                    <CountUp end={new Date().getFullYear() - 2018} suffix="+" />
+                                </h4>
+                                <h5 className="text-2xl font-bold text-[#0b2545] mb-4">
+                                    Years of Proven Experience
+                                </h5>
+                                <p className="text-gray-600 text-lg leading-relaxed">
+                                    Since 2018, we have successfully supported land development
+                                    and construction projects across CALABARZON with reliable execution.
+                                </p>
+                            </div>
+                            <div className="h-96 rounded-2xl overflow-hidden shadow-2xl">
+                                <img
+                                    src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                    className="w-full h-full object-cover"
+                                    alt="Construction site overview"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Material Resources */}
+                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                            <div className="order-2 md:order-1 h-96 rounded-2xl overflow-hidden shadow-2xl">
+                                <img
+                                    src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                    className="w-full h-full object-cover"
+                                    alt="Excavator moving earth"
+                                />
+                            </div>
+                            <div className="order-1 md:order-2">
+                                <h4 className="text-7xl font-bold text-blue-600 mb-4">
+                                    <CountUp end={14} suffix="M" />
+                                </h4>
+                                <h5 className="text-2xl font-bold text-[#0b2545] mb-4">
+                                    Cubic Meters of Material
+                                </h5>
+                                <p className="text-gray-600 text-lg leading-relaxed">
+                                    Company-owned land ensures abundant supply and cost efficiency
+                                    for projects of any scale.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Eco Compliance */}
+                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                            <div>
+                                <h4 className="text-7xl font-bold text-green-600 mb-4">
+                                    <CountUp end={100} suffix="%" />
+                                </h4>
+                                <h5 className="text-2xl font-bold text-[#0b2545] mb-4">
+                                    Eco-Compliant Operations
+                                </h5>
+                                <p className="text-gray-600 text-lg leading-relaxed">
+                                    We strictly adhere to environmental regulations and
+                                    sustainable development practices.
+                                </p>
+                            </div>
+                            <div className="h-96 rounded-2xl overflow-hidden shadow-2xl">
+                                <img
+                                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                    className="w-full h-full object-cover"
+                                    alt="Green landscape with trees"
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Call to Action */}
-            <section className="px-6 md:px-16 lg:px-24 py-16 md:py-20 bg-[#0b2545] text-white">
+            {/* Call to Action with background image */}
+            <section className="relative px-6 md:px-16 lg:px-24 py-16 md:py-20 text-white">
+                {/* Background image with overlay */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80"
+                        alt="Modern building"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/60"></div>
+                </div>
+                {/* Content */}
                 <div
                     ref={ctaContentRef}
-                    className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${ctaContentAnim}`}
+                    className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000 ${ctaContentAnim}`}
                 >
-                    <h3 className="text-3xl md:text-4xl font-bold mb-6">
+                    <h3
+                        ref={ctaHeadingRef}
+                        className={`text-3xl md:text-4xl font-bold mb-6 transition-all duration-1000 transform ${ctaHeadingAnim}`}
+                    >
                         Ready to Start Your Project?
                     </h3>
                     <p className="text-xl text-gray-200 mb-8">

@@ -407,25 +407,6 @@ const teamMembers = [
     brief: "Coordinates large-scale developments. Certified in environmental compliance.",
     imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
   },
-  // Additional members to demonstrate wrapping
-  {
-    name: "Carlos Reyes",
-    title: "Site Supervisor",
-    brief: "Ensures daily operations run smoothly and safely.",
-    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-  },
-  {
-    name: "Luisa Gomez",
-    title: "Environmental Officer",
-    brief: "Monitors compliance with DENR regulations.",
-    imageUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-  },
-  {
-    name: "Luisa Gomez",
-    title: "Environmental Officer",
-    brief: "Monitors compliance with DENR regulations.",
-    imageUrl: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-  }
 ];
 
 // Enhanced Core value card

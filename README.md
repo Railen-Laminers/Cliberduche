@@ -8,5 +8,8 @@ Frontend
 
 
 Tasks for frontend
-- Fix the states management avoid repeating the same task just create a reusable component that manage the states to lessen the codes
-- Fix About page
+
+Enhancements
+- home page [done]
+- about
+- project
