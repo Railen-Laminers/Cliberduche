@@ -10,6 +10,4 @@ Frontend
 Tasks for frontend
 
 Enhancements
-- home page [done]
-- about
-- project: hover effect when hover the image
+= Footer

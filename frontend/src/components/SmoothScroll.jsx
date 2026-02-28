@@ -308,18 +308,14 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
 
         // ----- Custom event for programmatic scrolling -----
         const onSetTarget = (ev) => {
-            if (fallbackModeRef.current) return;
             try {
-                const raw = ev?.detail;
-                let v = typeof raw === "number" ? raw : raw?.value;
-                if (typeof v === "number" && !isNaN(v)) {
-                    targetRef.current = v;
-                    clampTarget();
-                }
+                const v = typeof ev.detail === "number" ? ev.detail : 0;
+                targetRef.current = v;   // set target position
+                currentRef.current = v;  // reset current scroll instantly
+                window.scrollTo(0, v);   // teleport user
+                clampTarget();
             } catch (err) {
                 console.warn("SmoothScroll onSetTarget error:", err);
-                errorCountRef.current++;
-                if (errorCountRef.current >= maxErrors) enableFallbackMode();
             }
         };
 

@@ -1,4 +1,3 @@
-// src/pages/homepage/Homepage.jsx
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
@@ -18,22 +17,14 @@ export default function Homepage() {
     const introDone = !introPlaying;
     const { pathname } = useLocation();
 
-    // Scroll to top on route change (inline effect)
+    // Teleport user to top on every route change
     useEffect(() => {
-        const isTouchDevice =
-            "ontouchstart" in window ||
-            navigator.maxTouchPoints > 0 ||
-            navigator.msMaxTouchPoints > 0;
+        // Instantly jump to top
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 
-        requestAnimationFrame(() => {
-            if (isTouchDevice) {
-                window.scrollTo({ top: 0, behavior: "auto" });
-            } else {
-                window.dispatchEvent(
-                    new CustomEvent("smooth-scroll-set-target", { detail: 0 })
-                );
-            }
-        });
+        // Notify SmoothScroll to reset its internal refs
+        const event = new CustomEvent("smooth-scroll-set-target", { detail: 0 });
+        window.dispatchEvent(event);
     }, [pathname]);
 
     const isHome = pathname === "/";
