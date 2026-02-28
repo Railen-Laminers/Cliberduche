@@ -6,7 +6,7 @@ import office from "/office.jpg";
 import { LetterReveal } from "../../components/RevealAnimations";
 import ScrollReveal from "../../components/ScrollReveal";
 import BackgroundDecor from "../../components/BackgroundDecor";
-import MagneticButton from "../../components/MagneticButton";   // <-- import the magnetic component
+import MagneticButton from "../../components/MagneticButton";
 
 // Icons
 import {
@@ -20,7 +20,7 @@ import {
     FaLeaf,
 } from "react-icons/fa";
 
-// ---------- BlockReveal Component (unchanged) ----------
+// ---------- BlockReveal Component ----------
 const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
     return (
         <div
@@ -49,7 +49,7 @@ const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
     );
 };
 
-// ---------- CountUp Component (unchanged) ----------
+// ---------- CountUp Component ----------
 const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     const [count, setCount] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
@@ -100,7 +100,7 @@ const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     );
 };
 
-// Floating infinity icon (unchanged) – interactive, but not a button
+// Floating infinity icon
 const FloatingInfinityIcon = forwardRef(
     ({ className, floatClass, animClass, iconClass }, ref) => {
         const [isHovered, setIsHovered] = useState(false);
@@ -211,7 +211,7 @@ const FloatingInfinityIcon = forwardRef(
 
 FloatingInfinityIcon.displayName = "FloatingInfinityIcon";
 
-// Original services data (base info) – restored
+// Original services data
 const services = [
     {
         title: "Backfill & Land Sourcing",
@@ -220,7 +220,7 @@ const services = [
         icon: <FaTruckLoading className="w-8 h-8" />,
         type: "core",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
     {
         title: "Land Development",
@@ -229,7 +229,7 @@ const services = [
         icon: <FaMountain className="w-8 h-8" />,
         type: "core",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
     {
         title: "Site Management",
@@ -238,7 +238,7 @@ const services = [
         icon: <FaClipboardList className="w-8 h-8" />,
         type: "core",
         image:
-            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
     {
         title: "Equipment Leasing",
@@ -247,7 +247,7 @@ const services = [
         icon: <FaTools className="w-8 h-8" />,
         type: "core",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
     {
         title: "Project Management Consultation",
@@ -256,64 +256,64 @@ const services = [
         icon: <FaProjectDiagram className="w-8 h-8" />,
         type: "specialized",
         image:
-            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
 ];
 
-// Enrich services with additional content for the new layout – restored
+// Enriched services data
 const allServices = [
     {
-        ...services[0], // Backfill & Land Sourcing
+        ...services[0],
         subDescription: "Premium backfilling materials for stable foundations.",
         fullDescription:
             "We supply high-quality sub-base, aggregates, boulders, and other land resources tailored to client specifications. Our materials meet rigorous standards to ensure long-lasting results.",
         outcome:
             "Projects benefit from reduced settlement, improved load-bearing capacity, and cost efficiency.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
     {
-        ...services[1], // Land Development
+        ...services[1],
         subDescription: "Comprehensive site preparation and development.",
         fullDescription:
             "From clearing and cutting to leveling and grading, we transform raw land into construction-ready sites. Our team uses advanced equipment and techniques to handle projects of any scale.",
         outcome:
             "Sites are delivered on time, fully compliant with regulations, and optimized for subsequent construction.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
     {
-        ...services[2], // Site Management
+        ...services[2],
         subDescription: "Professional on‑site supervision and coordination.",
         fullDescription:
             "We provide experienced site managers who oversee daily operations, ensure safety compliance, coordinate subcontractors, and maintain project schedules.",
         outcome: "Smoother workflows, fewer delays, and enhanced safety on every project.",
         image:
-            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
     {
-        ...services[3], // Equipment Leasing
+        ...services[3],
         subDescription: "Reliable machinery for your project needs.",
         fullDescription:
             "We offer a wide range of construction equipment for lease – from excavators to compactors – all well‑maintained and delivered to your site.",
         outcome:
             "Cost‑effective access to top‑quality equipment without the capital investment.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
     {
-        ...services[4], // Project Management Consultation
+        ...services[4],
         subDescription: "Expert guidance from planning to execution.",
         fullDescription:
             "Our consultants work alongside your team to plan, coordinate, and oversee every phase of your project, ensuring alignment with budget, timeline, and quality goals.",
         outcome:
             "Projects are delivered with greater efficiency, fewer risks, and optimized resource use.",
         image:
-            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
     },
 ];
 
-// Animated Service Section (unchanged)
+// Animated Service Section
 const AnimatedServiceSection = ({ service, index }) => {
     const [sectionRef, , isVisible] = useScrollAnimation(0.3, true, 0);
     return (
@@ -323,103 +323,109 @@ const AnimatedServiceSection = ({ service, index }) => {
     );
 };
 
-// Service Full Viewport Section with Animations (unchanged)
-// Service Full Viewport Section - Mobile: Image First, Desktop: Alternating
+// Desktop: Odd index (1,3,5) = Image LEFT | Even index (0,2,4) = Image RIGHT
+// Mobile: Always Image TOP / Content BOTTOM
 function ServiceFullViewportSection({ service, index, active }) {
-    const isInfoRight = index % 2 === 0; // Desktop layout toggle
     const numberStr = (index + 1).toString().padStart(2, "0");
     const delays = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6];
 
+    // Layout logic: Even = Image Right, Odd = Image Left
+    const isEvenIndex = index % 2 === 0;
+    const desktopFlexClass = isEvenIndex ? "md:flex-row-reverse" : "md:flex-row";
+
     return (
-        <section
-            className={`relative w-full flex flex-col md:${isInfoRight ? "flex-row-reverse" : "flex-row"} bg-white border border-gray-200 overflow-hidden`}
-        >
+        <section className="relative w-full bg-white border border-gray-200 overflow-hidden">
             <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
-            
-            {/* IMAGE SECTION - First on mobile, position toggled on desktop */}
-            <div className="relative w-full md:w-2/5 h-56 sm:h-64 md:h-auto min-h-[200px] md:min-h-0 overflow-hidden order-1 md:order-none">
-                <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                />
-                <BlockReveal active={active} rows={8} cols={12} />
-            </div>
-            
-            {/* INFO SECTION - Second on mobile, position toggled on desktop */}
-            <div className="w-full md:w-3/5 flex flex-col justify-start px-4 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 md:py-12 order-2 md:order-none">
-                <div className="max-w-xl mx-auto md:mx-0">
-                    {/* Service Number Badge */}
-                    <div
-                        className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-100 text-green-700 font-bold text-base sm:text-xl mb-3 sm:mb-4 transition-all duration-700 ease-out"
-                        style={{
-                            opacity: active ? 1 : 0,
-                            transform: active ? 'translateY(0)' : 'translateY(20px)',
-                            transitionDelay: `${delays[0]}s`,
-                        }}
-                    >
-                        {numberStr}
+
+            {/* Centered container with max width */}
+            <div className="max-w-7xl mx-auto w-full">
+                <div className={`flex flex-col ${desktopFlexClass}`}>
+                    {/* IMAGE SECTION */}
+                    <div className="relative w-full md:w-2/5 h-56 sm:h-64 md:h-auto min-h-[200px] md:min-h-0 overflow-hidden order-1 md:order-none">
+                        <img
+                            src={service.image}
+                            alt={service.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                        />
+                        <BlockReveal active={active} rows={8} cols={12} />
                     </div>
-                    
-                    {/* Service Title - Responsive Typography */}
-                    <h3
-                        className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0b2545] mt-1 sm:mt-2 mb-3 sm:mb-4 transition-all duration-700 ease-out"
-                        style={{
-                            opacity: active ? 1 : 0,
-                            transform: active ? 'translateY(0)' : 'translateY(20px)',
-                            transitionDelay: `${delays[1]}s`,
-                        }}
-                    >
-                        {service.title}
-                    </h3>
-                    
-                    {/* Sub Description */}
-                    <p
-                        className="text-base sm:text-lg text-gray-700 font-medium mb-3 sm:mb-4 text-justify transition-all duration-700 ease-out"
-                        style={{
-                            opacity: active ? 1 : 0,
-                            transform: active ? 'translateY(0)' : 'translateY(20px)',
-                            transitionDelay: `${delays[2]}s`,
-                        }}
-                    >
-                        {service.subDescription}
-                    </p>
-                    
-                    {/* Full Description */}
-                    <p
-                        className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-6 text-justify transition-all duration-700 ease-out"
-                        style={{
-                            opacity: active ? 1 : 0,
-                            transform: active ? 'translateY(0)' : 'translateY(20px)',
-                            transitionDelay: `${delays[3]}s`,
-                        }}
-                    >
-                        {service.fullDescription}
-                    </p>
-                    
-                    {/* Outcome Section */}
-                    <div className="border-t border-gray-200 pt-3 sm:pt-4">
-                        <h4
-                            className="text-lg sm:text-xl font-semibold text-[#0b2545] mb-1 sm:mb-2 transition-all duration-700 ease-out"
-                            style={{
-                                opacity: active ? 1 : 0,
-                                transform: active ? 'translateY(0)' : 'translateY(20px)',
-                                transitionDelay: `${delays[4]}s`,
-                            }}
-                        >
-                            Outcome
-                        </h4>
-                        <p
-                            className="text-sm sm:text-base text-gray-600 text-justify transition-all duration-700 ease-out"
-                            style={{
-                                opacity: active ? 1 : 0,
-                                transform: active ? 'translateY(0)' : 'translateY(20px)',
-                                transitionDelay: `${delays[5]}s`,
-                            }}
-                        >
-                            {service.outcome}
-                        </p>
+
+                    {/* INFO SECTION */}
+                    <div className="w-full md:w-3/5 flex flex-col justify-start px-4 sm:px-6 md:px-12 lg:px-16 py-6 sm:py-8 md:py-12 order-2 md:order-none">
+                        <div className="max-w-xl mx-auto md:mx-0">
+                            {/* Service Number Badge */}
+                            <div
+                                className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-100 text-green-700 font-bold text-base sm:text-xl mb-3 sm:mb-4 transition-all duration-700 ease-out"
+                                style={{
+                                    opacity: active ? 1 : 0,
+                                    transform: active ? 'translateY(0)' : 'translateY(20px)',
+                                    transitionDelay: `${delays[0]}s`,
+                                }}
+                            >
+                                {numberStr}
+                            </div>
+
+                            {/* Service Title */}
+                            <h3
+                                className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0b2545] mt-1 sm:mt-2 mb-3 sm:mb-4 transition-all duration-700 ease-out"
+                                style={{
+                                    opacity: active ? 1 : 0,
+                                    transform: active ? 'translateY(0)' : 'translateY(20px)',
+                                    transitionDelay: `${delays[1]}s`,
+                                }}
+                            >
+                                {service.title}
+                            </h3>
+
+                            {/* Sub Description */}
+                            <p
+                                className="text-base sm:text-lg text-gray-700 font-medium mb-3 sm:mb-4 text-justify transition-all duration-700 ease-out"
+                                style={{
+                                    opacity: active ? 1 : 0,
+                                    transform: active ? 'translateY(0)' : 'translateY(20px)',
+                                    transitionDelay: `${delays[2]}s`,
+                                }}
+                            >
+                                {service.subDescription}
+                            </p>
+
+                            {/* Full Description */}
+                            <p
+                                className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-6 text-justify transition-all duration-700 ease-out"
+                                style={{
+                                    opacity: active ? 1 : 0,
+                                    transform: active ? 'translateY(0)' : 'translateY(20px)',
+                                    transitionDelay: `${delays[3]}s`,
+                                }}
+                            >
+                                {service.fullDescription}
+                            </p>
+
+                            {/* Outcome Section */}
+                            <div className="border-t border-gray-200 pt-3 sm:pt-4">
+                                <h4
+                                    className="text-lg sm:text-xl font-semibold text-[#0b2545] mb-1 sm:mb-2 transition-all duration-700 ease-out"
+                                    style={{
+                                        opacity: active ? 1 : 0,
+                                        transform: active ? 'translateY(0)' : 'translateY(20px)',
+                                        transitionDelay: `${delays[4]}s`,
+                                    }}
+                                >
+                                    Outcome
+                                </h4>
+                                <p
+                                    className="text-sm sm:text-base text-gray-600 text-justify transition-all duration-700 ease-out"
+                                    style={{
+                                        opacity: active ? 1 : 0,
+                                        transform: active ? 'translateY(0)' : 'translateY(20px)',
+                                        transitionDelay: `${delays[5]}s`,
+                                    }}
+                                >
+                                    {service.outcome}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -431,7 +437,7 @@ function ServiceFullViewportSection({ service, index, active }) {
 export default function Home({ introDone = true }) {
     const navigate = useNavigate();
 
-    // Scroll animation refs (unchanged)
+    // Scroll animation refs
     const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
     const [float1Ref, float1Anim] = useScrollAnimation(0.1, introDone);
     const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
@@ -494,8 +500,6 @@ export default function Home({ introDone = true }) {
                         ref={buttonsRef}
                         className={`mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 ${buttonsAnim}`}
                     >
-
-                        {/* Request a Quote – original button */}
                         <button
                             onClick={() => navigate("/contact")}
                             className="w-full sm:w-auto bg-green-400 hover:bg-green-500 text-[#0b2545] px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300"
@@ -503,7 +507,6 @@ export default function Home({ introDone = true }) {
                             Request a Quote
                         </button>
 
-                        {/* View Projects – original button */}
                         <button
                             onClick={() => navigate("/projects")}
                             className="w-full sm:w-auto border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white"
@@ -528,7 +531,7 @@ export default function Home({ introDone = true }) {
                 />
             </section>
 
-            {/* ========== WHAT WE DO (unchanged) ========== */}
+            {/* ========== WHAT WE DO ========== */}
             <section
                 ref={introRef}
                 className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-gradient-to-b from-white to-[#f4faf7] transition-all duration-1000 ${introAnim} overflow-hidden`}
@@ -568,7 +571,7 @@ export default function Home({ introDone = true }) {
                 </div>
             </section>
 
-            {/* ========== OUR CORE SERVICES HEADER (unchanged) ========== */}
+            {/* ========== OUR CORE SERVICES HEADER ========== */}
             <section className="relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-white transition-all duration-1000 overflow-hidden">
                 <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
@@ -584,12 +587,12 @@ export default function Home({ introDone = true }) {
                 </div>
             </section>
 
-            {/* ========== FULL-VIEWPORT SERVICE SECTIONS (unchanged) ========== */}
+            {/* ========== FULL-VIEWPORT SERVICE SECTIONS ========== */}
             {allServices.map((service, index) => (
                 <AnimatedServiceSection key={index} service={service} index={index} />
             ))}
 
-            {/* ========== STATS (unchanged) ========== */}
+            {/* ========== STATS ========== */}
             <section
                 ref={whyRef}
                 className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${whyAnim} overflow-hidden`}
@@ -658,7 +661,7 @@ export default function Home({ introDone = true }) {
             <section className="relative px-6 md:px-16 lg:px-24 py-16 md:py-20 text-white overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <img
-                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80"
+                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80  "
                         alt="Modern building"
                         className="w-full h-full object-cover"
                     />
@@ -676,14 +679,13 @@ export default function Home({ introDone = true }) {
                         Ready to Start Your Project?
                     </h3>
                     <p className="text-xl text-gray-200 mb-8">
-                        Let’s discuss how our services can bring your vision to life.
+                        Let's discuss how our services can bring your vision to life.
                     </p>
 
-                    {/* Magnetic Link / Button */}
                     <MagneticButton
                         padding={80}
                         magnetStrength={3}
-                        wrapperClassName="inline-block"  // keeps it inline like the original link
+                        wrapperClassName="inline-block"
                     >
                         <Link
                             to="/contact"

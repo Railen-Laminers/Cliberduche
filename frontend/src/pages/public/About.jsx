@@ -346,7 +346,7 @@ export default function About({ introDone = true }) {
                 href="https://cliberduche-portfolio.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 bg-[#0b2545] hover:bg-green-700 text-white px-8 py-4 rounded-sm text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="group inline-flex items-center gap-3 bg-[#0b2545] hover:bg-[#1f3a5f] text-white px-8 py-4 rounded-sm text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 <span>View Our Portfolio</span>
                 <svg
