@@ -12,4 +12,4 @@ Tasks for frontend
 Enhancements
 - home page [done]
 - about
-- project
+- project: hover effect when hover the image

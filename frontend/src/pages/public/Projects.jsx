@@ -42,8 +42,8 @@ const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) =>
               <div
                 key={idx}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${isActive
-                    ? 'bg-[#1f7a8c] scale-110 shadow-sm'
-                    : `bg-[#0b2545]/30 ${distance === 1 ? 'scale-90' : 'scale-75'}`
+                  ? 'bg-[#1f7a8c] scale-110 shadow-sm'
+                  : `bg-[#0b2545]/30 ${distance === 1 ? 'scale-90' : 'scale-75'}`
                   }`}
                 style={{
                   transform: `scale(${isActive ? 1.1 : 1 - distance * 0.1})`,
@@ -248,7 +248,7 @@ const CarouselView = ({
       style={{ touchAction: 'pan-y' }}
     >
       {/* Background decor for carousel */}
-      <BackgroundDecor pattern="dots" color="green" opacity={0.1} blurCircles={true} />
+      <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={true} />
 
       <div
         className={`flex h-auto md:h-full ${!isDragging ? 'transition-transform duration-700' : ''}`}
@@ -637,7 +637,7 @@ export default function Projects({ introDone = true }) {
           <BlockReveal active={heroRevealed} rows={8} cols={12} />
         </div>
         {/* Background decor for mobile hero */}
-        
+
         <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-black/30">
           <div className="text-sm tracking-[0.3em] uppercase text-white/80 mb-3">Projects</div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
@@ -660,7 +660,7 @@ export default function Projects({ introDone = true }) {
         </div>
         <div className="relative w-full md:w-1/2 flex flex-col order-1 md:order-2 overflow-hidden">
           {/* Background decor for desktop hero text side */}
-         
+
           <div className="hidden md:block flex-1" />
           <div ref={heroRef} className={`relative z-10 pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12 ${heroAnim}`}>
             <div className="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">Projects</div>

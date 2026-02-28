@@ -100,7 +100,7 @@ export default function About({ introDone = true }) {
         className={`relative px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${companyAnim} overflow-hidden`}
       >
         {/* Background decor – green dots and green blurred circles */}
-        <BackgroundDecor pattern="dots" color="green" opacity={0.15} blurCircles={true} />
+        <BackgroundDecor pattern="grid" color="green" opacity={0.15} blurCircles={true} />
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
@@ -194,14 +194,7 @@ export default function About({ introDone = true }) {
         className="relative px-6 md:px-10 py-16 md:py-20 bg-[#f4faf7] overflow-hidden"
       >
         {/* Background decor – green dots (no circles – we add them manually to preserve three circles) */}
-        <BackgroundDecor pattern="dots" color="green" opacity={0.1} blurCircles={false} />
-
-        {/* Manually added circles to match original design */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-green-300 blur-3xl opacity-40"></div>
-          <div className="absolute bottom-20 right-10 w-60 h-60 rounded-full bg-blue-300 blur-3xl opacity-40"></div>
-          <div className="absolute top-1/2 left-1/4 w-80 h-80 bg-yellow-200 rounded-full blur-3xl opacity-30"></div>
-        </div>
+        <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div
@@ -338,7 +331,7 @@ export default function About({ introDone = true }) {
         className={`relative px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${leadershipAnim} overflow-hidden`}
       >
         {/* Background decor – blue diagonal lines (no circles) */}
-        <BackgroundDecor pattern="lines" color="blue" opacity={0.1} blurCircles={false} />
+        <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
 
         {/* Gradient overlay and border circles (kept manually) */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -400,7 +393,7 @@ const teamMembers = [
     title: "Project Manager",
     brief: "Coordinates large-scale developments. Certified in environmental compliance.",
     imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-  },{
+  }, {
     name: "John Climaco",
     title: "Founder & CEO",
     brief: "Founder with 20+ years in construction. Leads with vision and integrity.",

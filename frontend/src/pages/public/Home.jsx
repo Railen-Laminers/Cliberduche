@@ -6,6 +6,7 @@ import office from "/office.jpg";
 import { LetterReveal } from "../../components/RevealAnimations";
 import ScrollReveal from "../../components/ScrollReveal";
 import BackgroundDecor from "../../components/BackgroundDecor";
+import MagneticButton from "../../components/MagneticButton";   // <-- import the magnetic component
 
 // Icons
 import {
@@ -16,9 +17,39 @@ import {
     FaProjectDiagram,
     FaInfinity,
     FaPhoneAlt,
+    FaLeaf,
 } from "react-icons/fa";
 
-// ---------- CountUp Component ----------
+// ---------- BlockReveal Component (unchanged) ----------
+const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
+    return (
+        <div
+            className="absolute inset-0 grid pointer-events-none"
+            style={{
+                gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                gridTemplateRows: `repeat(${rows}, 1fr)`,
+            }}
+        >
+            {Array.from({ length: rows * cols }).map((_, i) => {
+                const row = Math.floor(i / cols);
+                const col = i % cols;
+                const delay = active ? `${row * 0.1 + col * 0.02}s` : '0s';
+                return (
+                    <div
+                        key={i}
+                        className="w-full h-full bg-white transition-opacity duration-700 ease-out"
+                        style={{
+                            opacity: active ? 0 : 1,
+                            transitionDelay: delay,
+                        }}
+                    />
+                );
+            })}
+        </div>
+    );
+};
+
+// ---------- CountUp Component (unchanged) ----------
 const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     const [count, setCount] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
@@ -69,7 +100,7 @@ const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     );
 };
 
-// Floating infinity icon (interactive) – unchanged
+// Floating infinity icon (unchanged) – interactive, but not a button
 const FloatingInfinityIcon = forwardRef(
     ({ className, floatClass, animClass, iconClass }, ref) => {
         const [isHovered, setIsHovered] = useState(false);
@@ -180,7 +211,7 @@ const FloatingInfinityIcon = forwardRef(
 
 FloatingInfinityIcon.displayName = "FloatingInfinityIcon";
 
-// Services data (unchanged)
+// Original services data (base info) – restored
 const services = [
     {
         title: "Backfill & Land Sourcing",
@@ -229,85 +260,172 @@ const services = [
     },
 ];
 
-const coreServices = services.filter((s) => s.type === "core");
-const specializedServices = services.filter((s) => s.type === "specialized");
+// Enrich services with additional content for the new layout – restored
+const allServices = [
+    {
+        ...services[0], // Backfill & Land Sourcing
+        subDescription: "Premium backfilling materials for stable foundations.",
+        fullDescription:
+            "We supply high-quality sub-base, aggregates, boulders, and other land resources tailored to client specifications. Our materials meet rigorous standards to ensure long-lasting results.",
+        outcome:
+            "Projects benefit from reduced settlement, improved load-bearing capacity, and cost efficiency.",
+        image:
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    },
+    {
+        ...services[1], // Land Development
+        subDescription: "Comprehensive site preparation and development.",
+        fullDescription:
+            "From clearing and cutting to leveling and grading, we transform raw land into construction-ready sites. Our team uses advanced equipment and techniques to handle projects of any scale.",
+        outcome:
+            "Sites are delivered on time, fully compliant with regulations, and optimized for subsequent construction.",
+        image:
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    },
+    {
+        ...services[2], // Site Management
+        subDescription: "Professional on‑site supervision and coordination.",
+        fullDescription:
+            "We provide experienced site managers who oversee daily operations, ensure safety compliance, coordinate subcontractors, and maintain project schedules.",
+        outcome: "Smoother workflows, fewer delays, and enhanced safety on every project.",
+        image:
+            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    },
+    {
+        ...services[3], // Equipment Leasing
+        subDescription: "Reliable machinery for your project needs.",
+        fullDescription:
+            "We offer a wide range of construction equipment for lease – from excavators to compactors – all well‑maintained and delivered to your site.",
+        outcome:
+            "Cost‑effective access to top‑quality equipment without the capital investment.",
+        image:
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    },
+    {
+        ...services[4], // Project Management Consultation
+        subDescription: "Expert guidance from planning to execution.",
+        fullDescription:
+            "Our consultants work alongside your team to plan, coordinate, and oversee every phase of your project, ensuring alignment with budget, timeline, and quality goals.",
+        outcome:
+            "Projects are delivered with greater efficiency, fewer risks, and optimized resource use.",
+        image:
+            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    },
+];
 
-// Core service tile – unchanged
-function CoreServiceTile({ service }) {
+// Animated Service Section (unchanged)
+const AnimatedServiceSection = ({ service, index }) => {
+    const [sectionRef, , isVisible] = useScrollAnimation(0.3, true, 0);
     return (
-        <div className="group relative aspect-[4/3] overflow-hidden rounded-lg">
-            <img
-                src={service.image}
-                alt={service.title}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors duration-500" />
-            <div className="absolute inset-x-0 bottom-0 p-6 text-white transform translate-y-0 group-hover:translate-y-0 transition-transform duration-500">
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white shadow-lg">
-                        {React.cloneElement(service.icon, { className: "w-6 h-6" })}
+        <div ref={sectionRef}>
+            <ServiceFullViewportSection service={service} index={index} active={isVisible} />
+        </div>
+    );
+};
+
+// Service Full Viewport Section with Animations (unchanged)
+function ServiceFullViewportSection({ service, index, active }) {
+    const isInfoRight = index % 2 === 0;
+    const numberStr = (index + 1).toString().padStart(2, "0");
+    const delays = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6];
+
+    return (
+        <section
+            className={`relative h-[80vh] w-full flex ${isInfoRight ? "flex-col-reverse md:flex-row-reverse" : "flex-col md:flex-row"
+                } bg-white border border-gray-200 m-0 p-0 overflow-hidden`}
+        >
+            <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
+            <div className="w-full md:w-3/5 flex flex-col justify-start px-8 md:px-12 lg:px-16 py-8 md:py-12">
+                <div className="max-w-xl">
+                    <div
+                        className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 text-green-700 font-bold text-xl mb-4 transition-all duration-700 ease-out"
+                        style={{
+                            opacity: active ? 1 : 0,
+                            transform: active ? 'translateY(0)' : 'translateY(20px)',
+                            transitionDelay: `${delays[0]}s`,
+                        }}
+                    >
+                        {numberStr}
                     </div>
-                    <h4 className="text-2xl font-bold">{service.title}</h4>
-                </div>
-                <div className="overflow-hidden max-h-0 group-hover:max-h-40 transition-all duration-500 ease-in-out">
-                    <p className="text-sm text-gray-200 leading-relaxed">
-                        {service.description}
+                    <h3
+                        className="text-3xl md:text-4xl font-bold text-[#0b2545] mt-2 mb-4 transition-all duration-700 ease-out"
+                        style={{
+                            opacity: active ? 1 : 0,
+                            transform: active ? 'translateY(0)' : 'translateY(20px)',
+                            transitionDelay: `${delays[1]}s`,
+                        }}
+                    >
+                        {service.title}
+                    </h3>
+                    <p
+                        className="text-lg text-gray-700 font-medium mb-4 text-justify transition-all duration-700 ease-out"
+                        style={{
+                            opacity: active ? 1 : 0,
+                            transform: active ? 'translateY(0)' : 'translateY(20px)',
+                            transitionDelay: `${delays[2]}s`,
+                        }}
+                    >
+                        {service.subDescription}
                     </p>
-                    <div className="mt-3 flex items-center text-green-300 text-sm font-medium">
-                        <span>Learn more</span>
-                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
+                    <p
+                        className="text-gray-600 leading-relaxed mb-6 text-justify transition-all duration-700 ease-out"
+                        style={{
+                            opacity: active ? 1 : 0,
+                            transform: active ? 'translateY(0)' : 'translateY(20px)',
+                            transitionDelay: `${delays[3]}s`,
+                        }}
+                    >
+                        {service.fullDescription}
+                    </p>
+                    <div className="border-t border-gray-200 pt-4">
+                        <h4
+                            className="text-xl font-semibold text-[#0b2545] mb-2 transition-all duration-700 ease-out"
+                            style={{
+                                opacity: active ? 1 : 0,
+                                transform: active ? 'translateY(0)' : 'translateY(20px)',
+                                transitionDelay: `${delays[4]}s`,
+                            }}
+                        >
+                            Outcome
+                        </h4>
+                        <p
+                            className="text-gray-600 text-justify transition-all duration-700 ease-out"
+                            style={{
+                                opacity: active ? 1 : 0,
+                                transform: active ? 'translateY(0)' : 'translateY(20px)',
+                                transitionDelay: `${delays[5]}s`,
+                            }}
+                        >
+                            {service.outcome}
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
-    );
-}
-
-// Specialized service split layout – unchanged
-function SplitService({ service }) {
-    return (
-        <div className="flex flex-col md:flex-row">
-            <div className="md:w-1/2 h-64 md:h-auto">
+            <div className="relative w-full md:w-2/5 h-64 md:h-full overflow-hidden">
                 <img
                     src={service.image}
                     alt={service.title}
                     className="w-full h-full object-cover"
                 />
+                <BlockReveal active={active} rows={8} cols={12} />
             </div>
-            <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-4">
-                    {service.icon}
-                </div>
-                <h4 className="text-2xl font-bold text-[#0b2545] mb-3">
-                    {service.title}
-                </h4>
-                <p className="text-gray-600 leading-relaxed">{service.description}</p>
-            </div>
-        </div>
+        </section>
     );
 }
 
-// Main Home component
+// ---------- Main Home Component ----------
 export default function Home({ introDone = true }) {
     const navigate = useNavigate();
 
-    // Scroll animation refs
+    // Scroll animation refs (unchanged)
     const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
     const [float1Ref, float1Anim] = useScrollAnimation(0.1, introDone);
     const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
     const [introRef, introAnim] = useScrollAnimation(0.1, introDone);
     const [mvHeadingRef, mvHeadingAnim] = useScrollAnimation(0.1, introDone);
-    const [coreRef, coreAnim] = useScrollAnimation(0.1, introDone);
-    const [specializedRef, specializedAnim] = useScrollAnimation(0.1, introDone);
     const [whyRef, whyAnim] = useScrollAnimation(0.1, introDone);
     const [ctaContentRef, ctaContentAnim] = useScrollAnimation(0.1, introDone);
-
-    // Individual heading refs
     const [whatWeDoHeadingRef, whatWeDoHeadingAnim] = useScrollAnimation(0.1, introDone);
-    const [coreHeadingRef, coreHeadingAnim] = useScrollAnimation(0.1, introDone);
-    const [specializedHeadingRef, specializedHeadingAnim] = useScrollAnimation(0.1, introDone);
     const [whyHeadingRef, whyHeadingAnim] = useScrollAnimation(0.1, introDone);
     const [ctaHeadingRef, ctaHeadingAnim] = useScrollAnimation(0.1, introDone);
 
@@ -346,7 +464,7 @@ export default function Home({ introDone = true }) {
                     className="absolute inset-0 w-full h-full object-cover animate-pan will-change-transform"
                 />
                 <div className="absolute inset-0 bg-black/30" />
-               
+
                 <div className="max-w-6xl w-full mx-auto relative z-10 text-left">
                     <h1
                         className="font-bold leading-tight mb-4 sm:mb-6 drop-shadow-lg"
@@ -362,12 +480,16 @@ export default function Home({ introDone = true }) {
                         ref={buttonsRef}
                         className={`mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 ${buttonsAnim}`}
                     >
+
+                        {/* Request a Quote – original button */}
                         <button
                             onClick={() => navigate("/contact")}
                             className="w-full sm:w-auto bg-green-400 hover:bg-green-500 text-[#0b2545] px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300"
                         >
                             Request a Quote
                         </button>
+
+                        {/* View Projects – original button */}
                         <button
                             onClick={() => navigate("/projects")}
                             className="w-full sm:w-auto border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white"
@@ -392,7 +514,7 @@ export default function Home({ introDone = true }) {
                 />
             </section>
 
-            {/* ========== WHAT WE DO ========== */}
+            {/* ========== WHAT WE DO (unchanged) ========== */}
             <section
                 ref={introRef}
                 className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-gradient-to-b from-white to-[#f4faf7] transition-all duration-1000 ${introAnim} overflow-hidden`}
@@ -421,165 +543,97 @@ export default function Home({ introDone = true }) {
                         baseRotation={5}
                         staggerStep={0.1}
                     >
-                        At <span className="text-green-700 font-bold">Cliberduche</span>, we turn vision into reality through a comprehensive range of construction and land development services. Backed by years of experience and an unwavering commitment to excellence, we deliver trust on every project — from material sourcing and site development to expert consultation. Our integrated approach ensures that your project is built on a solid foundation, literally and figuratively.
+                        At <span className="text-green-700 font-bold">Cliberduche</span>, we turn
+                        vision into reality through a comprehensive range of construction and land
+                        development services. Backed by years of experience and an unwavering
+                        commitment to excellence, we deliver trust on every project — from material
+                        sourcing and site development to expert consultation. Our integrated
+                        approach ensures that your project is built on a solid foundation, literally
+                        and figuratively.
                     </ScrollReveal>
                 </div>
             </section>
 
-            {/* ========== CORE SERVICES ========== */}
-            <section
-                ref={coreRef}
-                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${coreAnim} overflow-hidden`}
-            >
-                <BackgroundDecor pattern="dots" color="green" opacity={0.15} blurCircles={true} />
+            {/* ========== OUR CORE SERVICES HEADER (unchanged) ========== */}
+            <section className="relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-white transition-all duration-1000 overflow-hidden">
+                <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="mb-16">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="h-px w-16 bg-green-300"></div>
-                            <FaInfinity className="text-green-600 text-2xl" />
-                            <h3
-                                ref={coreHeadingRef}
-                                className={`text-4xl font-bold text-[#0b2545] transition-all duration-1000 transform ${coreHeadingAnim}`}
-                            >
-                                Our Core Services
-                            </h3>
-                        </div>
-                        <p className="text-gray-600 text-lg max-w-3xl">
-                            The foundation of our work — essential services we execute with precision, reliability, and proven expertise.
-                        </p>
+                    <div className="flex items-center gap-4 mb-4">
+                        <div className="h-px w-16 bg-green-300"></div>
+                        <FaInfinity className="text-green-600 text-2xl" />
+                        <h3 className="text-4xl font-bold text-[#0b2545]">Our Core Services</h3>
                     </div>
-
-                    <div className="grid md:grid-cols-2 gap-8">
-                        {coreServices.map((service, index) => (
-                            <CoreServiceTile key={index} service={service} />
-                        ))}
-                    </div>
+                    <p className="text-gray-600 text-lg max-w-3xl">
+                        The foundation of our work — essential services we execute with precision,
+                        reliability, and proven expertise.
+                    </p>
                 </div>
             </section>
 
-            {/* ========== SPECIALIZED SERVICES ========== */}
-            {specializedServices.length > 0 && (
-                <section
-                    ref={specializedRef}
-                    className={`relative px-6 md:px-16 lg:px-24 py-16 md:py-20 bg-[#f4faf7] transition-all duration-1000 ${specializedAnim} overflow-hidden`}
-                >
-                    <BackgroundDecor pattern="lines" color="blue" opacity={0.1} blurCircles={true} />
-                    <div className="max-w-7xl mx-auto relative z-10">
-                        <div className="mb-12 flex flex-col items-end">
-                            <div className="flex items-center gap-4 mb-4">
-                                <h3
-                                    ref={specializedHeadingRef}
-                                    className={`text-3xl md:text-4xl font-bold text-[#0b2545] transition-all duration-1000 transform ${specializedHeadingAnim}`}
-                                >
-                                    Specialized Services
-                                </h3>
-                                <FaInfinity className="text-blue-600 text-2xl" />
-                                <div className="h-px w-16 bg-blue-300"></div>
-                            </div>
-                            <p className="text-gray-600 max-w-3xl text-lg text-right">
-                                Targeted expertise that adds value and ensures your project runs smoothly from start to finish.
-                            </p>
-                        </div>
+            {/* ========== FULL-VIEWPORT SERVICE SECTIONS (unchanged) ========== */}
+            {allServices.map((service, index) => (
+                <AnimatedServiceSection key={index} service={service} index={index} />
+            ))}
 
-                        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                            {specializedServices.map((service, idx) => (
-                                <SplitService key={idx} service={service} />
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
-
-            {/* ========== WHY CHOOSE US ========== */}
+            {/* ========== STATS (unchanged) ========== */}
             <section
                 ref={whyRef}
                 className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${whyAnim} overflow-hidden`}
             >
-                <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={true} />
+                <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="mb-20">
-                        <div className="flex items-center gap-4 mb-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">
+                            Our Impact by Numbers
+                        </h2>
+                        <div className="flex justify-center items-center gap-2">
                             <div className="h-px w-16 bg-green-300"></div>
                             <FaInfinity className="text-green-600 text-2xl" />
-                            <h3
-                                ref={whyHeadingRef}
-                                className={`text-4xl font-bold text-[#0b2545] transition-all duration-1000 transform ${whyHeadingAnim}`}
-                            >
-                                Why Choose CLIBERDUCHE
-                            </h3>
+                            <div className="h-px w-16 bg-blue-300"></div>
                         </div>
-                        <p className="text-gray-600 text-lg max-w-3xl">
-                            We combine expertise, substantial resources, and sustainable practices to deliver long-term value.
-                        </p>
                     </div>
-
-                    <div className="space-y-28">
-                        {/* Experience */}
-                        <div className="grid md:grid-cols-2 gap-12 items-center">
-                            <div>
-                                <h4 className="text-7xl font-bold text-green-600 mb-4">
-                                    <CountUp end={new Date().getFullYear() - 2018} suffix="+" />
-                                </h4>
-                                <h5 className="text-2xl font-bold text-[#0b2545] mb-4">
-                                    Years of Proven Experience
-                                </h5>
-                                <p className="text-gray-600 text-lg leading-relaxed">
-                                    Since 2018, we have successfully supported land development
-                                    and construction projects across CALABARZON with reliable execution.
-                                </p>
-                            </div>
-                            <div className="h-96 rounded-2xl overflow-hidden shadow-2xl">
-                                <img
-                                    src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                    className="w-full h-full object-cover"
-                                    alt="Construction site overview"
-                                />
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 items-start">
+                        <div className="relative pl-6 border-l-8 border-green-600">
+                            <h4 className="text-7xl font-bold text-green-600 mb-2 leading-none">
+                                <CountUp end={new Date().getFullYear() - 2018} suffix="+" />
+                            </h4>
+                            <h5 className="text-2xl font-bold text-[#0b2545] mb-3">
+                                Years of Proven Experience
+                            </h5>
+                            <p className="text-gray-600 text-base">
+                                Since 2018, we have successfully supported land development and
+                                construction projects across CALABARZON with reliable execution.
+                            </p>
                         </div>
-
-                        {/* Material Resources */}
-                        <div className="grid md:grid-cols-2 gap-12 items-center">
-                            <div className="order-2 md:order-1 h-96 rounded-2xl overflow-hidden shadow-2xl">
-                                <img
-                                    src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                    className="w-full h-full object-cover"
-                                    alt="Excavator moving earth"
-                                />
-                            </div>
-                            <div className="order-1 md:order-2">
-                                <h4 className="text-7xl font-bold text-blue-600 mb-4">
+                        <div className="text-center">
+                            <div className="inline-flex items-center justify-center w-40 h-40 rounded-full border-4 border-blue-600/30 bg-blue-50 mb-4">
+                                <span className="text-6xl font-bold text-blue-600">
                                     <CountUp end={14} suffix="M" />
-                                </h4>
-                                <h5 className="text-2xl font-bold text-[#0b2545] mb-4">
-                                    Cubic Meters of Material
-                                </h5>
-                                <p className="text-gray-600 text-lg leading-relaxed">
-                                    Company-owned land ensures abundant supply and cost efficiency
-                                    for projects of any scale.
-                                </p>
+                                </span>
                             </div>
+                            <h5 className="text-2xl font-bold text-[#0b2545] mb-3">
+                                Cubic Meters of Material
+                            </h5>
+                            <p className="text-gray-600 text-base">
+                                Company‑owned land ensures abundant supply and cost efficiency for
+                                projects of any scale.
+                            </p>
                         </div>
-
-                        {/* Eco Compliance */}
-                        <div className="grid md:grid-cols-2 gap-12 items-center">
-                            <div>
-                                <h4 className="text-7xl font-bold text-green-600 mb-4">
+                        <div className="relative">
+                            <div className="absolute top-0 right-0 text-green-100 text-9xl select-none">
+                                <FaLeaf />
+                            </div>
+                            <div className="relative z-10">
+                                <h4 className="text-7xl font-bold text-green-600 mb-2">
                                     <CountUp end={100} suffix="%" />
                                 </h4>
-                                <h5 className="text-2xl font-bold text-[#0b2545] mb-4">
-                                    Eco-Compliant Operations
+                                <h5 className="text-2xl font-bold text-[#0b2545] mb-3">
+                                    Eco‑Compliant Operations
                                 </h5>
-                                <p className="text-gray-600 text-lg leading-relaxed">
-                                    We strictly adhere to environmental regulations and
-                                    sustainable development practices.
+                                <p className="text-gray-600 text-base">
+                                    We strictly adhere to environmental regulations and sustainable
+                                    development practices.
                                 </p>
-                            </div>
-                            <div className="h-96 rounded-2xl overflow-hidden shadow-2xl">
-                                <img
-                                    src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                    className="w-full h-full object-cover"
-                                    alt="Green landscape with trees"
-                                />
                             </div>
                         </div>
                     </div>
@@ -588,7 +642,6 @@ export default function Home({ introDone = true }) {
 
             {/* ========== CALL TO ACTION ========== */}
             <section className="relative px-6 md:px-16 lg:px-24 py-16 md:py-20 text-white overflow-hidden">
-                {/* Background image with overlay */}
                 <div className="absolute inset-0 z-0">
                     <img
                         src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80"
@@ -597,8 +650,7 @@ export default function Home({ introDone = true }) {
                     />
                     <div className="absolute inset-0 bg-black/60"></div>
                 </div>
-                {/* Background decor – subtle pattern over image */}
-                <BackgroundDecor pattern="dots" color="gray" opacity={0.05} blurCircles={false} />
+                <BackgroundDecor pattern="grid" color="gray" opacity={0.05} blurCircles={false} />
                 <div
                     ref={ctaContentRef}
                     className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000 ${ctaContentAnim}`}
@@ -612,13 +664,21 @@ export default function Home({ introDone = true }) {
                     <p className="text-xl text-gray-200 mb-8">
                         Let’s discuss how our services can bring your vision to life.
                     </p>
-                    <Link
-                        to="/contact"
-                        className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-sm text-lg font-semibold transition-colors duration-300"
+
+                    {/* Magnetic Link / Button */}
+                    <MagneticButton
+                        padding={80}
+                        magnetStrength={3}
+                        wrapperClassName="inline-block"  // keeps it inline like the original link
                     >
-                        <FaPhoneAlt className="w-5 h-5" />
-                        Contact Us Today
-                    </Link>
+                        <Link
+                            to="/contact"
+                            className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-sm text-lg font-semibold transition-colors duration-300"
+                        >
+                            <FaPhoneAlt className="w-5 h-5" />
+                            Contact Us Today
+                        </Link>
+                    </MagneticButton>
                 </div>
             </section>
         </>
