@@ -10,4 +10,5 @@ Frontend
 Tasks for frontend
 
 Enhancements
-= Footer
+- Navbar
+- Footer

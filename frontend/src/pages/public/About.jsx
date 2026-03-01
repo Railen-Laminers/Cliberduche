@@ -10,7 +10,7 @@ import {
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
 import BackgroundDecor from "../../components/BackgroundDecor";
-import MagneticButton from "../../components/MagneticButton";
+import PortfolioHero from "../../components/PortfolioHero";
 
 export default function About({ introDone = true }) {
   // Scroll animation refs
@@ -21,6 +21,9 @@ export default function About({ introDone = true }) {
   const [visionRef, visionAnim, visionVisible] = useScrollAnimation(0.1, introDone);
   const [valuesRef, valuesAnim, valuesVisible] = useScrollAnimation(0.1, introDone);
   const [leadershipRef, leadershipAnim, leadershipVisible] = useScrollAnimation(0.1, introDone);
+  // Refs for Insights section
+  const [insightsRef, insightsAnim, insightsVisible] = useScrollAnimation(0.1, introDone);
+  const [portfolioRef, portfolioAnim, portfolioVisible] = useScrollAnimation(0.1, introDone);
 
   // Hero animations
   const [heroRevealed, setHeroRevealed] = useState(false);
@@ -210,7 +213,7 @@ export default function About({ introDone = true }) {
         </div>
       </section>
 
-      {/* ========== REDESIGNED MISSION, VISION & CORE VALUES ========== */}
+      {/* ========== MISSION, VISION & CORE VALUES ========== */}
       <section
         id="mission-vision"
         className="relative px-6 md:px-10 py-16 md:py-20 bg-[#f4faf7] overflow-hidden"
@@ -230,7 +233,7 @@ export default function About({ introDone = true }) {
             </p>
           </div>
 
-          {/* Mission & Vision - side by side, no cards */}
+          {/* Mission & Vision */}
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 mb-20">
             {/* Mission */}
             <div ref={missionRef} className={`transition-all duration-1000 ${missionAnim}`}>
@@ -291,7 +294,7 @@ export default function About({ introDone = true }) {
             </div>
           </div>
 
-          {/* Core Values - no cards, just icons and text */}
+          {/* Core Values */}
           <div ref={valuesRef} className={`transition-all duration-1000 ${valuesAnim}`}>
             <div className="flex items-center gap-4 mb-10">
               <div className="h-px w-16 bg-green-300"></div>
@@ -338,37 +341,51 @@ export default function About({ introDone = true }) {
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Portfolio CTA */}
-          <div className="flex justify-center mt-16 md:mt-20">
-            <MagneticButton padding={80} magnetStrength={3} wrapperClassName="inline-block">
-              <a
-                href="https://cliberduche-portfolio.vercel.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 bg-[#0b2545] hover:bg-[#1f3a5f] text-white px-8 py-4 rounded-sm text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                <span>View Our Portfolio</span>
-                <svg
-                  className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
-              </a>
-            </MagneticButton>
+      {/* ========== INSIGHTS & PORTFOLIO (NEW SECTION) ========== */}
+      <section
+        id="insights"
+        className="relative px-6 md:px-10 py-16 md:py-20 bg-white overflow-hidden"
+      >
+        <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Insights heading */}
+          <div
+            ref={insightsRef}
+            className={`text-center mb-8 transition-all duration-1000 ${insightsAnim}`}
+          >
+            <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Insights</h3>
+            <div className="flex justify-center items-center gap-2 mb-4">
+              <div className="h-px w-16 bg-green-300"></div>
+              <FaInfinity className="text-green-600 text-2xl" />
+              <div className="h-px w-16 bg-blue-300"></div>
+            </div>
+            <p className="text-gray-600 max-w-3xl mx-auto text-lg">
+              Drawing from years of experience in land development and construction, our insights
+              showcase the practical knowledge, sustainable practices, and innovative approaches
+              that guide every project. We share lessons learned and strategies that help
+              communities, clients, and partners make informed decisions.
+            </p>
+          </div>
+
+          {/* Portfolio card */}
+          <div
+            ref={portfolioRef}
+            className={`transition-all duration-1000 ${portfolioAnim}`}
+          >
+            <PortfolioHero
+              imageUrl="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80"
+              title="Discover Our Work"
+              description="Explore CLIBERDUCHE CORPORATION’s journey—from our foundation in 2018 to our current projects. Learn about our sustainable land development practices, community impact, and how we deliver high-quality materials and construction services across CALABARZON."
+              ctaUrl="https://cliberduche-portfolio.vercel.app/"
+            />
           </div>
         </div>
       </section>
 
-      {/* ========== REVISED LEADERSHIP & TEAM ========== */}
+      {/* ========== LEADERSHIP & TEAM ========== */}
       <section
         id="leadership"
         ref={leadershipRef}
@@ -377,7 +394,6 @@ export default function About({ introDone = true }) {
         <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
 
         <div className="max-w-6xl mx-auto relative z-10">
-          {/* New intro text */}
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Our Team</h2>
             <div className="flex justify-center items-center gap-2 mb-4">
@@ -393,7 +409,7 @@ export default function About({ introDone = true }) {
             </p>
           </div>
 
-          {/* Team grid – now with real data from the company story */}
+          {/* Team grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
             {realTeamMembers.map((member, index) => (
               <TeamCard
@@ -413,7 +429,7 @@ export default function About({ introDone = true }) {
   );
 }
 
-// ========== REAL TEAM DATA (based on "The Company" section) ==========
+// ========== TEAM DATA ==========
 const realTeamMembers = [
   {
     name: "John Climaco",
