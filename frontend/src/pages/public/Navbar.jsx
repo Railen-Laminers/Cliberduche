@@ -77,6 +77,7 @@ export default function Navbar({ introDone = false }) {
             disabled={!isTop}
           >
             <img
+              id="nav-logo"
               src={logo}
               alt="Cliberduche Logo"
               className="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
@@ -174,8 +175,8 @@ export default function Navbar({ introDone = false }) {
                 to={item.path}
                 onClick={() => setIsOpen(false)}
                 className={`group py-6 md:py-8 border-b border-white/10 transition-all duration-500 ease-out ${isOpen
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
                   }`}
                 style={{
                   transitionDelay: isOpen ? `${index * 100 + 200}ms` : "0ms",
@@ -184,16 +185,16 @@ export default function Navbar({ introDone = false }) {
                 <div className="flex items-center justify-between">
                   <span
                     className={`text-4xl md:text-6xl font-bold tracking-tight transition-colors duration-300 ${isActive(item.path)
-                        ? "text-green-400"
-                        : "text-white group-hover:text-green-400"
+                      ? "text-green-400"
+                      : "text-white group-hover:text-green-400"
                       }`}
                   >
                     {item.label.toUpperCase()}
                   </span>
                   <span
                     className={`transform transition-all duration-300 ${isOpen
-                        ? "translate-x-0 opacity-100"
-                        : "-translate-x-4 opacity-0"
+                      ? "translate-x-0 opacity-100"
+                      : "-translate-x-4 opacity-0"
                       }`}
                     style={{
                       transitionDelay: isOpen
