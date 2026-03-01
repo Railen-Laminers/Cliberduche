@@ -764,7 +764,7 @@ export default function Projects({ introDone = true }) {
                 <MagneticButton
                   onClick={() => switchView('expanded')}
                   wrapperClassName="inline-block"
-                  innerClassName="px-4 md:px-8 py-2 md:py-3 bg-[#0b2545] text-white rounded-sm hover:bg-[#1f3a5f] transition-colors text-xs md:text-sm font-medium"
+                  innerClassName="px-6 md:px-8 py-3 md:py-3 bg-[#0b2545] text-white rounded-sm hover:bg-[#1f3a5f] transition-colors text-sm md:text-sm font-medium"
                   role="button"
                   tabIndex={0}
                 >
@@ -774,7 +774,7 @@ export default function Projects({ introDone = true }) {
                 <MagneticButton
                   onClick={() => switchView('carousel')}
                   wrapperClassName="inline-block"
-                  innerClassName="px-4 md:px-8 py-2 md:py-3 bg-[#0b2545] text-white rounded-sm hover:bg-[#1f3a5f] transition-colors text-xs md:text-sm font-medium"
+                  innerClassName="px-6 md:px-8 py-3 md:py-3 bg-[#0b2545] text-white rounded-sm hover:bg-[#1f3a5f] transition-colors text-sm md:text-sm font-medium"
                   role="button"
                   tabIndex={0}
                 >

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { useNavigate } from "react-router-dom";
+import MagneticButton from "../../components/MagneticButton";
 
 export default function Footer({ introDone = true }) {
     const navigate = useNavigate();
@@ -29,7 +30,7 @@ export default function Footer({ introDone = true }) {
             const scrollY = window.scrollY + window.innerHeight;
 
             if (scrollY < footerTop + footerHeight / 2) {
-                setExitTrigger(true); // start exit typing
+                setExitTrigger(true);
             } else {
                 setExitTrigger(false);
             }
@@ -52,26 +53,22 @@ export default function Footer({ introDone = true }) {
         const playTypewriter = async () => {
             setIsTyping(true);
             if (inView && !exitTrigger) {
-                // Animate CLIBERDUCHE typing
                 for (let i = 0; i <= mainWord.length; i++) {
                     setTypedMain(mainWord.slice(0, i));
                     await sleep(70);
                 }
-
-                // Animate CORPORATION combined: first 3 letters type, rest fade in
                 for (let i = 1; i <= 3; i++) {
                     setTypedCorp(corpWord.slice(0, i));
                     await sleep(70);
                 }
-                setTypedCorp(corpWord); // fade in rest instantly
+                setTypedCorp(corpWord);
                 setIsTyping(false);
             } else if (exitTrigger) {
-                // Exit animation: delete CLIBERDUCHE
                 for (let i = mainWord.length; i >= 0; i--) {
                     setTypedMain(mainWord.slice(0, i));
                     await sleep(50);
                 }
-                setTypedCorp(""); // fade out CORPORATION
+                setTypedCorp("");
                 setIsTyping(false);
             }
         };
@@ -86,29 +83,31 @@ export default function Footer({ introDone = true }) {
     const [companyRefs, companyAnim] = useScrollAnimation(0.2, introDone);
 
     const companyLinks = [
-        { label: "Home", href: "/" },
-        { label: "About", href: "/about" },
-        { label: "Projects", href: "/projects" },
-        { label: "Contact", href: "/contact" },
+        { label: "Home", href: "/", isCTA: false },
+        { label: "About", href: "/about", isCTA: false },
+        { label: "Projects", href: "/projects", isCTA: false },
+        { label: "Contact", href: "/contact", isCTA: true },
     ];
 
     return (
-        <footer ref={footerRef} className="relative bg-[#081c33] text-white overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 via-transparent to-transparent pointer-events-none" />
+        <footer
+            ref={footerRef}
+            className="relative bg-[#081c33] text-white overflow-hidden min-h-[600px]"
+        >
+            {/* Angular line decoration - top right corner */}
+            <div className="absolute top-0 right-0 w-1/2 h-96 pointer-events-none overflow-hidden">
+                <svg className="w-full h-full" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="600" y1="0" x2="0" y2="400" stroke="white" strokeWidth="0.5" opacity="0.2" />
+                    <line x1="600" y1="100" x2="100" y2="400" stroke="white" strokeWidth="0.5" opacity="0.1" />
+                </svg>
+            </div>
 
-            <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-20">
-                {/* LOGO + COMPANY NAME */}
-                <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6 mb-10">
-                    <img
-                        ref={logoRef}
-                        src="/logo/cliberduche_logo.png"
-                        alt="Cliberduche Logo"
-                        className={`w-32 md:w-44 ${logoAnim}`}
-                    />
-
+            <div className="relative max-w-7xl mx-auto px-6 md:px-10 py-20 h-full flex flex-col justify-between min-h-[600px]">
+                {/* TOP SECTION - Company Name with Typewriter */}
+                <div className="mb-auto pt-10">
                     <div className="flex flex-col leading-tight">
                         {/* CLIBERDUCHE */}
-                        <h1 className="text-3xl md:text-5xl font-bold flex flex-wrap">
+                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold flex flex-wrap">
                             {typedMain.split("").map((char, i) => (
                                 <span key={i} className="char" style={{ animationDelay: `${i * 30}ms` }}>
                                     {char}
@@ -119,7 +118,7 @@ export default function Footer({ introDone = true }) {
 
                         {/* CORPORATION */}
                         <h2
-                            className={`text-xl md:text-2xl font-semibold mt-0.5 transition-opacity duration-500 ${typedCorp ? "opacity-100" : "opacity-0"
+                            className={`text-xl md:text-2xl lg:text-3xl font-semibold mt-0.5 transition-opacity duration-500 ${typedCorp ? "opacity-100" : "opacity-0"
                                 }`}
                         >
                             {typedCorp}
@@ -127,40 +126,75 @@ export default function Footer({ introDone = true }) {
                     </div>
                 </div>
 
-                {/* SOCIAL + NAV */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-                    <div ref={socialRef} className="flex space-x-4 justify-start w-full md:w-auto">
-                        {[FaFacebook, FaTwitter, FaLinkedin].map((Icon, i) => (
-                            <a
-                                key={i}
-                                href="#"
-                                className="group w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-green-400 transition"
-                            >
-                                <Icon className="text-lg group-hover:text-green-400 transition" />
-                            </a>
-                        ))}
+                {/* BOTTOM SECTION - Logo + Nav + Social */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-12 pb-4">
+                    {/* Left Side - Logo + Social */}
+                    <div className="flex flex-col gap-6">
+                        <img
+                            ref={logoRef}
+                            src="/logo/cliberduche_logo.png"
+                            alt="Cliberduche Logo"
+                            className={`w-24 md:w-32 ${logoAnim}`}
+                        />
+
+                        {/* Social Icons */}
+                        <div ref={socialRef} className={`flex space-x-3 ${socialAnim}`}>
+                            {[FaFacebook, FaTwitter, FaLinkedin].map((Icon, i) => (
+                                <a
+                                    key={i}
+                                    href="#"
+                                    className="group w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-green-400 transition-all duration-300"
+                                >
+                                    <Icon className="text-lg group-hover:text-green-400 transition-colors" />
+                                </a>
+                            ))}
+                        </div>
                     </div>
 
-                    <div className="flex flex-wrap justify-end gap-6 md:gap-12 w-full md:w-auto mt-4 md:mt-0">
-                        {companyLinks.map((link, i) => (
-                            <button
-                                key={i}
-                                onClick={() => navigate(link.href)}
-                                ref={companyRefs}
-                                className={`text-sm text-gray-400 hover:text-green-300 transition ${companyAnim}`}
-                            >
-                                {link.label}
-                            </button>
-                        ))}
+                    {/* Right Side - Navigation with Magnetic Contact CTA */}
+                    <div className="flex flex-wrap items-end gap-6 md:gap-10 w-full md:w-auto">
+                        {companyLinks.map((link, i) => {
+                            if (link.isCTA) {
+                                return (
+                                    <MagneticButton
+                                        key={i}
+                                        padding={80}
+                                        magnetStrength={2.5}
+                                        activeTransition="transform 0.2s ease-out"
+                                        inactiveTransition="transform 0.5s ease-in-out"
+                                        wrapperClassName="inline-block"
+                                        innerClassName="block"
+                                    >
+                                        <button
+                                            onClick={() => navigate(link.href)}
+                                            ref={companyRefs}
+                                            className={`text-sm font-medium px-5 py-2.5 border border-green-400 text-green-400 hover:bg-green-400 hover:text-[#081c33] rounded transition-all duration-300 ${companyAnim}`}
+                                            style={{ animationDelay: `${i * 50}ms` }}
+                                        >
+                                            {link.label}
+                                        </button>
+                                    </MagneticButton>
+                                );
+                            }
+                            return (
+                                <button
+                                    key={i}
+                                    onClick={() => navigate(link.href)}
+                                    ref={companyRefs}
+                                    className={`text-sm font-medium text-gray-400 hover:text-green-300 transition-all duration-300 ${companyAnim}`}
+                                    style={{ animationDelay: `${i * 50}ms` }}
+                                >
+                                    {link.label}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
-                {/* BOTTOM LEGAL */}
-                <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-sm text-gray-500">
-                        © {new Date().getFullYear()} . All rights reserved.
-                    </p>
-                    <div className="flex gap-8 text-sm text-gray-500">
+                {/* Bottom Legal */}
+                <div className="mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                    <p>© {new Date().getFullYear()} Cliberduche Corporation. All rights reserved.</p>
+                    <div className="flex gap-6">
                         <span className="hover:text-green-300 cursor-pointer transition">Privacy Policy</span>
                         <span className="hover:text-green-300 cursor-pointer transition">Terms of Service</span>
                     </div>
@@ -169,13 +203,13 @@ export default function Footer({ introDone = true }) {
 
             {/* Inline CSS for typewriter effect */}
             <style>{`
-        .char { opacity: 0; animation: fadeChar 280ms ease forwards; }
-        @keyframes fadeChar { from { opacity: 0; } to { opacity: 1; } }
+                .char { opacity: 0; animation: fadeChar 280ms ease forwards; }
+                @keyframes fadeChar { from { opacity: 0; } to { opacity: 1; } }
 
-        .cursor { font-weight: 400; }
-        .blink { animation: blink 1s steps(2, start) infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-      `}</style>
+                .cursor { font-weight: 400; }
+                .blink { animation: blink 1s steps(2, start) infinite; }
+                @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+            `}</style>
         </footer>
     );
 }

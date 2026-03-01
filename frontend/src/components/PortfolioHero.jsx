@@ -18,20 +18,23 @@ export default function PortfolioHero({
 }) {
     return (
         <section className="w-full">
-            <div className="max-w-7xl mx-auto px-6 py-12">
+            {/* Outer container: no horizontal padding on mobile, reduced vertical padding */}
+            <div className="max-w-7xl mx-auto md:px-6 py-6 md:py-12">
                 <div className="relative bg-[#081c33] text-white rounded-2xl overflow-hidden shadow-lg">
-                    {/* subtle green gradient overlay (optional, like footer) */}
+                    {/* subtle green gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 via-transparent to-transparent pointer-events-none" />
 
                     <div className="relative grid grid-cols-1 lg:grid-cols-[3fr_2fr] min-h-[500px]">
-                        {/* LEFT: content (60%) */}
-                        <div className="p-8 md:p-12 lg:p-16 flex items-center">
+                        {/* LEFT: content */}
+                        <div className="p-6 md:p-8 lg:p-12 xl:p-16 flex items-center">
                             <div className="max-w-xl">
-                                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-6">
+                                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight mb-4 md:mb-6">
                                     {title}
                                 </h2>
 
-                                <p className="text-gray-200 mb-8 leading-relaxed">{description}</p>
+                                <p className="text-gray-200 mb-6 md:mb-8 leading-relaxed text-sm sm:text-base">
+                                    {description}
+                                </p>
 
                                 {/* Magnetic CTA button */}
                                 <MagneticButton
@@ -69,9 +72,9 @@ export default function PortfolioHero({
                             </div>
                         </div>
 
-                        {/* RIGHT: image area (40%) */}
-                        <div className="relative w-full h-80 lg:h-auto lg:min-h-[500px]">
-                            {/* On small screens: plain image */}
+                        {/* RIGHT: image area */}
+                        <div className="relative w-full h-96 md:h-80 lg:h-auto lg:min-h-[500px]">
+                            {/* On small screens: plain image (taller for mobile) */}
                             <img
                                 src={imageUrl}
                                 alt=""
@@ -79,7 +82,7 @@ export default function PortfolioHero({
                                 aria-hidden
                             />
 
-                            {/* On large screens: image with CSS clip-path (sharper than SVG) */}
+                            {/* On large screens: image with CSS clip-path */}
                             <div className="hidden lg:block absolute inset-0 w-full h-full">
                                 <img
                                     src={imageUrl}
@@ -91,7 +94,7 @@ export default function PortfolioHero({
                                 />
                             </div>
 
-                            {/* subtle right-side vertical spacer so the parent rounding looks good */}
+                            {/* subtle right-side vertical spacer */}
                             <div className="absolute right-0 top-0 h-full w-12 pointer-events-none" />
                         </div>
                     </div>
