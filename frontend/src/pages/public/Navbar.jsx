@@ -8,18 +8,33 @@ export default function Navbar({ introDone = false }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isTop, setIsTop] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(false); // new state
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScrollAndResize = () => {
       const currentScrollPos = window.scrollY;
       setIsScrolled(currentScrollPos > 50);
       setIsTop(currentScrollPos < 10);
+
+      // Bottom detection (within 50px of the bottom)
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const bottomThreshold = 50;
+      const atBottom = scrollY + windowHeight >= documentHeight - bottomThreshold;
+      setIsAtBottom(atBottom);
     };
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScrollAndResize);
+    window.addEventListener("resize", handleScrollAndResize);
+    handleScrollAndResize(); // initial call
+
+    return () => {
+      window.removeEventListener("scroll", handleScrollAndResize);
+      window.removeEventListener("resize", handleScrollAndResize);
+    };
   }, []);
 
   useEffect(() => {
@@ -28,17 +43,23 @@ export default function Navbar({ introDone = false }) {
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "unset";
-    return () => { document.body.style.overflow = "unset"; };
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [isOpen]);
 
   useEffect(() => {
-    const handleEsc = (e) => { if (e.key === "Escape") setIsOpen(false); };
+    const handleEsc = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
   useEffect(() => {
-    const handleResize = () => { if (window.innerWidth >= 1024) setIsOpen(false); };
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) setIsOpen(false);
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -61,8 +82,10 @@ export default function Navbar({ introDone = false }) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 ${isLoaded ? "opacity-100" : "opacity-0"
-          }`}
+        className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 transition-transform duration-300 ease-in-out ${
+          isLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ transform: isAtBottom ? "translateY(-100%)" : "translateY(0)" }}
       >
         {/* Inner container: wider max-width and smaller padding */}
         <div
@@ -71,8 +94,9 @@ export default function Navbar({ introDone = false }) {
           {/* Logo - fades in/out */}
           <button
             onClick={() => navigate("/")}
-            className={`flex items-center gap-3 group transition-opacity duration-300 ${isTop ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
+            className={`flex items-center gap-3 group transition-opacity duration-300 ${
+              isTop ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
             aria-label="Go to homepage"
             disabled={!isTop}
           >
@@ -110,8 +134,9 @@ export default function Navbar({ introDone = false }) {
                         {item.label}
                       </span>
                       <FaArrowUp
-                        className={`w-3 h-3 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${isActive(item.path) ? "text-green-400" : "text-white group-hover:text-green-400"
-                          }`}
+                        className={`w-3 h-3 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${
+                          isActive(item.path) ? "text-green-400" : "text-white group-hover:text-green-400"
+                        }`}
                       />
                     </Link>
                   )}
@@ -134,8 +159,9 @@ export default function Navbar({ introDone = false }) {
 
       {/* Mobile Full-Screen Overlay - now with floating glass effect */}
       <div
-        className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-500 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          }`}
+        className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-500 ${
+          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
         onClick={() => setIsOpen(false)} // Close when clicking backdrop
       >
         {/* Invisible backdrop for click-outside */}
@@ -143,8 +169,9 @@ export default function Navbar({ introDone = false }) {
 
         {/* Sliding panel with glass effect */}
         <div
-          className={`absolute right-0 top-0 h-full w-full sm:w-[400px] bg-[#081c33]/80 backdrop-blur-sm border-l border-white/10 shadow-2xl transition-transform duration-500 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
-            }`}
+          className={`absolute right-0 top-0 h-full w-full sm:w-[400px] bg-[#081c33]/80 backdrop-blur-sm border-l border-white/10 shadow-2xl transition-transform duration-500 ease-out ${
+            isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
           onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside panel
         >
           {/* Header */}
@@ -174,32 +201,27 @@ export default function Navbar({ introDone = false }) {
                 key={item.path}
                 to={item.path}
                 onClick={() => setIsOpen(false)}
-                className={`group py-6 md:py-8 border-b border-white/10 transition-all duration-500 ease-out ${isOpen
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
-                  }`}
+                className={`group py-6 md:py-8 border-b border-white/10 transition-all duration-500 ease-out ${
+                  isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                }`}
                 style={{
                   transitionDelay: isOpen ? `${index * 100 + 200}ms` : "0ms",
                 }}
               >
                 <div className="flex items-center justify-between">
                   <span
-                    className={`text-4xl md:text-6xl font-bold tracking-tight transition-colors duration-300 ${isActive(item.path)
-                      ? "text-green-400"
-                      : "text-white group-hover:text-green-400"
-                      }`}
+                    className={`text-4xl md:text-6xl font-bold tracking-tight transition-colors duration-300 ${
+                      isActive(item.path) ? "text-green-400" : "text-white group-hover:text-green-400"
+                    }`}
                   >
                     {item.label.toUpperCase()}
                   </span>
                   <span
-                    className={`transform transition-all duration-300 ${isOpen
-                      ? "translate-x-0 opacity-100"
-                      : "-translate-x-4 opacity-0"
-                      }`}
+                    className={`transform transition-all duration-300 ${
+                      isOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
+                    }`}
                     style={{
-                      transitionDelay: isOpen
-                        ? `${index * 100 + 400}ms`
-                        : "0ms",
+                      transitionDelay: isOpen ? `${index * 100 + 400}ms` : "0ms",
                     }}
                   >
                     <svg
@@ -225,12 +247,11 @@ export default function Navbar({ introDone = false }) {
 
           {/* Footer */}
           <div
-            className={`px-6 py-6 border-t border-white/10 transition-all duration-500 delay-700 ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
+            className={`px-6 py-6 border-t border-white/10 transition-all duration-500 delay-700 ${
+              isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
           >
-            <p className="text-slate-400 text-sm">
-              © 2026 Cliberduche. All rights reserved.
-            </p>
+            <p className="text-slate-400 text-sm">© 2026 Cliberduche. All rights reserved.</p>
           </div>
         </div>
       </div>

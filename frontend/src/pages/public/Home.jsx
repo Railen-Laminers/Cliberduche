@@ -3,7 +3,7 @@ import { LuInfinity } from "react-icons/lu";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { useNavigate, Link } from "react-router-dom";
 import office from "/office.jpg";
-import { LetterReveal } from "../../components/RevealAnimations";
+import { LetterReveal, BlockReveal } from "../../components/RevealAnimations";
 import ScrollReveal from "../../components/ScrollReveal";
 import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
@@ -19,35 +19,6 @@ import {
     FaPhoneAlt,
     FaLeaf,
 } from "react-icons/fa";
-
-// ---------- BlockReveal Component ----------
-const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
-    return (
-        <div
-            className="absolute inset-0 grid pointer-events-none"
-            style={{
-                gridTemplateColumns: `repeat(${cols}, 1fr)`,
-                gridTemplateRows: `repeat(${rows}, 1fr)`,
-            }}
-        >
-            {Array.from({ length: rows * cols }).map((_, i) => {
-                const row = Math.floor(i / cols);
-                const col = i % cols;
-                const delay = active ? `${row * 0.1 + col * 0.02}s` : '0s';
-                return (
-                    <div
-                        key={i}
-                        className="w-full h-full bg-white transition-opacity duration-700 ease-out"
-                        style={{
-                            opacity: active ? 0 : 1,
-                            transitionDelay: delay,
-                        }}
-                    />
-                );
-            })}
-        </div>
-    );
-};
 
 // ---------- CountUp Component ----------
 const CountUp = ({ end, duration = 2000, suffix = "" }) => {
@@ -220,7 +191,7 @@ const services = [
         icon: <FaTruckLoading className="w-8 h-8" />,
         type: "core",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
     {
         title: "Land Development",
@@ -229,7 +200,7 @@ const services = [
         icon: <FaMountain className="w-8 h-8" />,
         type: "core",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
     {
         title: "Site Management",
@@ -238,7 +209,7 @@ const services = [
         icon: <FaClipboardList className="w-8 h-8" />,
         type: "core",
         image:
-            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
     {
         title: "Equipment Leasing",
@@ -247,7 +218,7 @@ const services = [
         icon: <FaTools className="w-8 h-8" />,
         type: "core",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
     {
         title: "Project Management Consultation",
@@ -256,7 +227,7 @@ const services = [
         icon: <FaProjectDiagram className="w-8 h-8" />,
         type: "specialized",
         image:
-            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
 ];
 
@@ -270,7 +241,7 @@ const allServices = [
         outcome:
             "Projects benefit from reduced settlement, improved load-bearing capacity, and cost efficiency.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
     {
         ...services[1],
@@ -280,7 +251,7 @@ const allServices = [
         outcome:
             "Sites are delivered on time, fully compliant with regulations, and optimized for subsequent construction.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
     {
         ...services[2],
@@ -289,7 +260,7 @@ const allServices = [
             "We provide experienced site managers who oversee daily operations, ensure safety compliance, coordinate subcontractors, and maintain project schedules.",
         outcome: "Smoother workflows, fewer delays, and enhanced safety on every project.",
         image:
-            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
     {
         ...services[3],
@@ -299,7 +270,7 @@ const allServices = [
         outcome:
             "Cost‑effective access to top‑quality equipment without the capital investment.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
     {
         ...services[4],
@@ -309,25 +280,38 @@ const allServices = [
         outcome:
             "Projects are delivered with greater efficiency, fewer risks, and optimized resource use.",
         image:
-            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80  ",
+            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     },
 ];
 
 // Animated Service Section
-const AnimatedServiceSection = ({ service, index }) => {
+const AnimatedServiceSection = ({ service, index, animConfig }) => {
     const [sectionRef, , isVisible] = useScrollAnimation(0.3, true, 0);
     return (
         <div ref={sectionRef}>
-            <ServiceFullViewportSection service={service} index={index} active={isVisible} />
+            <ServiceFullViewportSection
+                service={service}
+                index={index}
+                active={isVisible}
+                animConfig={animConfig}
+            />
         </div>
     );
 };
 
 // Desktop: Odd index (1,3,5) = Image LEFT | Even index (0,2,4) = Image RIGHT
 // Mobile: Always Image TOP / Content BOTTOM
-function ServiceFullViewportSection({ service, index, active }) {
+function ServiceFullViewportSection({ service, index, active, animConfig }) {
     const numberStr = (index + 1).toString().padStart(2, "0");
-    const delays = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6];
+    // Use paragraphStagger from config to create narrative flow
+    const delays = [
+        0,
+        animConfig.paragraphStagger,
+        animConfig.paragraphStagger * 2,
+        animConfig.paragraphStagger * 3,
+        animConfig.paragraphStagger * 4,
+        animConfig.paragraphStagger * 5,
+    ];
 
     // Layout logic: Even = Image Right, Odd = Image Left
     const isEvenIndex = index % 2 === 0;
@@ -437,17 +421,32 @@ function ServiceFullViewportSection({ service, index, active }) {
 export default function Home({ introDone = true }) {
     const navigate = useNavigate();
 
-    // Scroll animation refs
+    // ========== ANIMATION CONFIGURATION ==========
+    const ANIM_CONFIG = {
+        duration: "0.8s",
+        easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        staggerBase: 0.6,
+        paragraphStagger: 0.4,
+    };
+
+    // Reusable fade‑up style
+    const fadeUpStyle = (visible, delay) => ({
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(20px)",
+        transition: `opacity ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}, transform ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}`,
+        transitionDelay: `${delay}s`,
+    });
+
+    // Scroll animation refs with visibility
     const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
     const [float1Ref, float1Anim] = useScrollAnimation(0.1, introDone);
     const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
-    const [introRef, introAnim] = useScrollAnimation(0.1, introDone);
+    const [introRef, introAnim, introVisible] = useScrollAnimation(0.1, introDone);
     const [mvHeadingRef, mvHeadingAnim] = useScrollAnimation(0.1, introDone);
-    const [whyRef, whyAnim] = useScrollAnimation(0.1, introDone);
-    const [ctaContentRef, ctaContentAnim] = useScrollAnimation(0.1, introDone);
-    const [whatWeDoHeadingRef, whatWeDoHeadingAnim] = useScrollAnimation(0.1, introDone);
-    const [whyHeadingRef, whyHeadingAnim] = useScrollAnimation(0.1, introDone);
-    const [ctaHeadingRef, ctaHeadingAnim] = useScrollAnimation(0.1, introDone);
+    const [whatWeDoHeadingRef, whatWeDoHeadingAnim, whatWeDoHeadingVisible] = useScrollAnimation(0.1, introDone);
+    const [coreServicesRef, coreServicesAnim, coreServicesVisible] = useScrollAnimation(0.1, introDone);
+    const [whyRef, whyAnim, whyVisible] = useScrollAnimation(0.1, introDone);
+    const [ctaContentRef, ctaContentAnim, ctaContentVisible] = useScrollAnimation(0.1, introDone);
 
     const [headingRevealed, setHeadingRevealed] = useState(false);
 
@@ -475,15 +474,20 @@ export default function Home({ introDone = true }) {
             {/* ========== HERO SECTION ========== */}
             <section
                 id="home"
-                className="relative text-white px-4 sm:px-6 md:px-10 lg:px-16 overflow-hidden transition-all duration-1000 bg-cover bg-center md:bg-fixed flex items-center"
+                className="relative text-white px-4 sm:px-6 md:px-10 lg:px-16 overflow-hidden transition-all duration-1000 flex items-center"
                 style={{ minHeight: "calc(var(--vh, 1vh) * 100)" }}
             >
-                <img
-                    src={office}
-                    alt="Office background"
-                    className="absolute inset-0 w-full h-full object-cover animate-pan will-change-transform"
-                />
-                <div className="absolute inset-0 bg-black/30" />
+                {/* Background with BlockReveal */}
+                <div className="absolute inset-0">
+                    <div
+                        className="absolute inset-0 bg-cover bg-center md:bg-fixed"
+                        style={{
+                            backgroundImage: `url(${office})`,
+                        }}
+                    />
+                    <BlockReveal active={headingRevealed} rows={8} cols={12} />
+                    <div className="absolute inset-0 bg-black/30" />
+                </div>
 
                 <div className="max-w-6xl w-full mx-auto relative z-10 text-left">
                     <h1
@@ -550,10 +554,12 @@ export default function Home({ introDone = true }) {
                     </div>
                     <h2
                         ref={whatWeDoHeadingRef}
-                        className={`text-3xl md:text-4xl font-bold text-[#0b2545] mb-6 transition-all duration-1000 transform ${whatWeDoHeadingAnim}`}
+                        style={fadeUpStyle(whatWeDoHeadingVisible, 0)}
+                        className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-6"
                     >
                         What We Do
                     </h2>
+                    {/* Keep ScrollReveal as requested */}
                     <ScrollReveal
                         enableBlur={false}
                         baseOpacity={0.2}
@@ -572,15 +578,26 @@ export default function Home({ introDone = true }) {
             </section>
 
             {/* ========== OUR CORE SERVICES HEADER ========== */}
-            <section className="relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-white transition-all duration-1000 overflow-hidden">
+            <section
+                ref={coreServicesRef}
+                className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-white transition-all duration-1000 ${coreServicesAnim} overflow-hidden`}
+            >
                 <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="flex items-center gap-4 mb-4">
                         <div className="h-px w-16 bg-green-300"></div>
                         <FaInfinity className="text-green-600 text-2xl" />
-                        <h3 className="text-4xl font-bold text-[#0b2545]">Our Core Services</h3>
+                        <h3
+                            style={fadeUpStyle(coreServicesVisible, 0)}
+                            className="text-4xl font-bold text-[#0b2545]"
+                        >
+                            Our Core Services
+                        </h3>
                     </div>
-                    <p className="text-gray-600 text-lg max-w-3xl">
+                    <p
+                        style={fadeUpStyle(coreServicesVisible, ANIM_CONFIG.paragraphStagger)}
+                        className="text-gray-600 text-lg max-w-3xl"
+                    >
                         The foundation of our work — essential services we execute with precision,
                         reliability, and proven expertise.
                     </p>
@@ -589,7 +606,12 @@ export default function Home({ introDone = true }) {
 
             {/* ========== FULL-VIEWPORT SERVICE SECTIONS ========== */}
             {allServices.map((service, index) => (
-                <AnimatedServiceSection key={index} service={service} index={index} />
+                <AnimatedServiceSection
+                    key={index}
+                    service={service}
+                    index={index}
+                    animConfig={ANIM_CONFIG}
+                />
             ))}
 
             {/* ========== STATS ========== */}
@@ -600,17 +622,26 @@ export default function Home({ introDone = true }) {
                 <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">
+                        <h2
+                            style={fadeUpStyle(whyVisible, 0)}
+                            className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4"
+                        >
                             Our Impact by Numbers
                         </h2>
-                        <div className="flex justify-center items-center gap-2">
+                        <div
+                            style={fadeUpStyle(whyVisible, ANIM_CONFIG.paragraphStagger)}
+                            className="flex justify-center items-center gap-2"
+                        >
                             <div className="h-px w-16 bg-green-300"></div>
                             <FaInfinity className="text-dark-600 text-2xl" />
                             <div className="h-px w-16 bg-blue-300"></div>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 items-start">
-                        <div className="relative pl-6 border-l-8 border-green-600">
+                        <div
+                            style={fadeUpStyle(whyVisible, 0 * ANIM_CONFIG.staggerBase)}
+                            className="relative pl-6 border-l-8 border-green-600"
+                        >
                             <h4 className="text-7xl font-bold text-green-600 mb-2 leading-none">
                                 <CountUp end={new Date().getFullYear() - 2018} suffix="+" />
                             </h4>
@@ -622,7 +653,10 @@ export default function Home({ introDone = true }) {
                                 construction projects across CALABARZON with reliable execution.
                             </p>
                         </div>
-                        <div className="text-center">
+                        <div
+                            style={fadeUpStyle(whyVisible, 1 * ANIM_CONFIG.staggerBase)}
+                            className="text-center"
+                        >
                             <div className="inline-flex items-center justify-center w-40 h-40 rounded-full border-4 border-blue-600/30 bg-blue-50 mb-4">
                                 <span className="text-6xl font-bold text-blue-600">
                                     <CountUp end={14} suffix="M" />
@@ -636,7 +670,10 @@ export default function Home({ introDone = true }) {
                                 projects of any scale.
                             </p>
                         </div>
-                        <div className="relative">
+                        <div
+                            style={fadeUpStyle(whyVisible, 2 * ANIM_CONFIG.staggerBase)}
+                            className="relative"
+                        >
                             <div className="absolute top-0 right-0 text-green-100 text-9xl select-none">
                                 <FaLeaf />
                             </div>
@@ -660,10 +697,11 @@ export default function Home({ introDone = true }) {
             {/* ========== CALL TO ACTION ========== */}
             <section className="relative px-6 md:px-16 lg:px-24 py-16 md:py-20 text-white overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                    <img
-                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80  "
-                        alt="Modern building"
-                        className="w-full h-full object-cover"
+                    <div
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{
+                            backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')`,
+                        }}
                     />
                     <div className="absolute inset-0 bg-black/60"></div>
                 </div>
@@ -673,28 +711,35 @@ export default function Home({ introDone = true }) {
                     className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000 ${ctaContentAnim}`}
                 >
                     <h3
-                        ref={ctaHeadingRef}
-                        className={`text-3xl md:text-4xl font-bold mb-6 transition-all duration-1000 transform ${ctaHeadingAnim}`}
+                        style={fadeUpStyle(ctaContentVisible, 0)}
+                        className="text-3xl md:text-4xl font-bold mb-6"
                     >
                         Ready to Start Your Project?
                     </h3>
-                    <p className="text-xl text-gray-200 mb-8">
+                    <p
+                        style={fadeUpStyle(ctaContentVisible, ANIM_CONFIG.paragraphStagger)}
+                        className="text-xl text-gray-200 mb-8"
+                    >
                         Let's discuss how our services can bring your vision to life.
                     </p>
 
-                    <MagneticButton
-                        padding={80}
-                        magnetStrength={3}
-                        wrapperClassName="inline-block"
+                    <div
+                        style={fadeUpStyle(ctaContentVisible, ANIM_CONFIG.paragraphStagger * 2)}
                     >
-                        <Link
-                            to="/contact"
-                            className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-sm text-lg font-semibold transition-colors duration-300"
+                        <MagneticButton
+                            padding={80}
+                            magnetStrength={3}
+                            wrapperClassName="inline-block"
                         >
-                            <FaPhoneAlt className="w-5 h-5" />
-                            Contact Us Today
-                        </Link>
-                    </MagneticButton>
+                            <Link
+                                to="/contact"
+                                className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-sm text-lg font-semibold transition-colors duration-300"
+                            >
+                                <FaPhoneAlt className="w-5 h-5" />
+                                Contact Us Today
+                            </Link>
+                        </MagneticButton>
+                    </div>
                 </div>
             </section>
         </>

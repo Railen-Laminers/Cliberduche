@@ -118,7 +118,7 @@ export default function Contact({ introDone = true }) {
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN – FORM (unchanged) */}
+                {/* RIGHT COLUMN – FORM */}
                 <div ref={formRef} className={`transition-all duration-1000 ${formAnim}`}>
                     <div className="bg-white rounded-2xl p-8">
                         <form onSubmit={handleSubmit} className="space-y-6">

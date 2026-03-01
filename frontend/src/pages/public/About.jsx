@@ -13,6 +13,15 @@ import BackgroundDecor from "../../components/BackgroundDecor";
 import PortfolioHero from "../../components/PortfolioHero";
 
 export default function About({ introDone = true }) {
+  // ========== ANIMATION CONFIGURATION ==========
+  // Adjust these values to control speed and staggering
+  const ANIM_CONFIG = {
+    duration: "0.8s",           // was 1.2s – shorter = faster fade
+    easing: "cubic-bezier(0.25, 0.1, 0.25, 1)", // easing curve
+    staggerBase: 0.6,           // was 0.2 – delay between team cards
+    paragraphStagger: 0.6,      // delay between paragraphs / list items
+  };
+
   // Scroll animation refs
   const [companyRef, companyAnim, companyVisible] = useScrollAnimation(0.1, introDone);
   const [projectsRef, projectsAnim, projectsVisible] = useScrollAnimation(0.1, introDone);
@@ -21,7 +30,6 @@ export default function About({ introDone = true }) {
   const [visionRef, visionAnim, visionVisible] = useScrollAnimation(0.1, introDone);
   const [valuesRef, valuesAnim, valuesVisible] = useScrollAnimation(0.1, introDone);
   const [leadershipRef, leadershipAnim, leadershipVisible] = useScrollAnimation(0.1, introDone);
-  // Refs for Insights section
   const [insightsRef, insightsAnim, insightsVisible] = useScrollAnimation(0.1, introDone);
   const [portfolioRef, portfolioAnim, portfolioVisible] = useScrollAnimation(0.1, introDone);
 
@@ -40,15 +48,11 @@ export default function About({ introDone = true }) {
     }
   }, [introDone]);
 
-  // Animation constants
-  const ANIM_DURATION = "1.2s";
-  const ANIM_EASING = "cubic-bezier(0.25, 0.1, 0.25, 1)";
-  const STAGGER_BASE = 0.2;
-
+  // Reusable fade‑up style with configurable duration, easing, and delay
   const fadeUpStyle = (visible, delay) => ({
     opacity: visible ? 1 : 0,
     transform: visible ? "translateY(0)" : "translateY(20px)",
-    transition: `opacity ${ANIM_DURATION} ${ANIM_EASING}, transform ${ANIM_DURATION} ${ANIM_EASING}`,
+    transition: `opacity ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}, transform ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}`,
     transitionDelay: `${delay}s`,
   });
 
@@ -70,7 +74,7 @@ export default function About({ introDone = true }) {
             <LetterReveal
               active={textRevealed}
               lines={["CLIBERDUCHE", "CORPORATION"]}
-              letterDelay={0.05}
+              letterDelay={0.05}  // you can also adjust this (e.g., 0.03 for faster)
             />
           </h1>
         </div>
@@ -120,34 +124,34 @@ export default function About({ introDone = true }) {
                 <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">The Company</h3>
               </div>
               <div className="space-y-6 text-gray-600 leading-relaxed">
-                <p style={fadeUpStyle(companyVisible, 0)}>
+                <p style={fadeUpStyle(companyVisible, 0 * ANIM_CONFIG.paragraphStagger)}>
                   Established in 2018, CLIBERDUCHE CORPORATION was born out of the dream of a person
                   to provide the best for his family without leaving the country anymore. This person
                   found this opportunity in the wide field of the construction business. Immediately,
                   he invited his friends to join him and officially registered CLIBERDUCHE CORPORATION
                   with the Securities and Exchange Commission on November 28, 2018.
                 </p>
-                <p style={fadeUpStyle(companyVisible, 1)}>
+                <p style={fadeUpStyle(companyVisible, 1 * ANIM_CONFIG.paragraphStagger)}>
                   <strong>CLIBERDUCHE</strong> stands for the surnames of the founder and co-founders:
                 </p>
-                <ul style={fadeUpStyle(companyVisible, 2)} className="list-disc list-inside pl-4 space-y-1 text-gray-700">
+                <ul style={fadeUpStyle(companyVisible, 2 * ANIM_CONFIG.paragraphStagger)} className="list-disc list-inside pl-4 space-y-1 text-gray-700">
                   <li>CLImaco</li>
                   <li>BERonilla</li>
                   <li>PiaDUCHE</li>
                 </ul>
-                <p style={fadeUpStyle(companyVisible, 3)}>
+                <p style={fadeUpStyle(companyVisible, 3 * ANIM_CONFIG.paragraphStagger)}>
                   As time passed, the other two incorporators (Beronilla and Piaduche) ventured into
                   other areas of interest. They all agreed to officially part ways. The founder’s spouse
                   and brother became the new directors, carrying forward the original mission with renewed focus.
                 </p>
-                <p style={fadeUpStyle(companyVisible, 4)}>
+                <p style={fadeUpStyle(companyVisible, 4 * ANIM_CONFIG.paragraphStagger)}>
                   Today, CLIBERDUCHE CORPORATION provides high-quality backfill materials—sub-base,
                   aggregates, and boulders—to clients across the CALABARZON area and beyond. Our
                   company-owned land development sites in Laguna and Cavite contain over{" "}
                   <strong>14 million cubic meters</strong> of materials, enabling us to support projects
                   of any scale while adhering to DENR regulations and sustainable practices.
                 </p>
-                <p style={fadeUpStyle(companyVisible, 5)}>
+                <p style={fadeUpStyle(companyVisible, 5 * ANIM_CONFIG.paragraphStagger)}>
                   As client needs expanded, we grew into a one-stop shop offering General Engineering,
                   Civil Works, and Construction & Development for both horizontal and vertical projects.
                   We remain committed to eco-friendly operations and building lasting relationships with
@@ -193,17 +197,17 @@ export default function About({ introDone = true }) {
                 <div className="h-px w-16 bg-blue-300"></div>
               </div>
               <div className="space-y-6 text-gray-600 leading-relaxed text-left">
-                <p style={fadeUpStyle(projectsVisible, 0)}>
+                <p style={fadeUpStyle(projectsVisible, 0 * ANIM_CONFIG.paragraphStagger)}>
                   CLIBERDUCHE CORPORATION handles a diverse range of projects—from small-scale to large
                   commercial and industrial developments. We specialize in supplying backfilling materials,
                   aggregates, and other land resources tailored to client specifications.
                 </p>
-                <p style={fadeUpStyle(projectsVisible, 1)}>
+                <p style={fadeUpStyle(projectsVisible, 1 * ANIM_CONFIG.paragraphStagger)}>
                   Our land development capabilities include clearing, cutting and peeling, levelling, and
                   RCP/PVC pipe laying. We have also built bridges, concrete roads, gutters, ripraps,
                   easements, and slope protection systems addressing erosion prevention and soil liquefaction.
                 </p>
-                <p style={fadeUpStyle(projectsVisible, 2)}>
+                <p style={fadeUpStyle(projectsVisible, 2 * ANIM_CONFIG.paragraphStagger)}>
                   Every project is executed with strict adherence to safety protocols and environmental
                   standards, ensuring long-term value for our clients and the community.
                 </p>
@@ -305,7 +309,7 @@ export default function About({ introDone = true }) {
 
             <div className="grid md:grid-cols-3 gap-8 md:gap-12">
               {/* Quality */}
-              <div style={fadeUpStyle(valuesVisible, 0)} className="text-center md:text-left">
+              <div style={fadeUpStyle(valuesVisible, 0 * ANIM_CONFIG.staggerBase)} className="text-center md:text-left">
                 <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 rounded-full text-green-600">
                   <FaCheckCircle className="w-7 h-7" />
                 </div>
@@ -317,7 +321,7 @@ export default function About({ introDone = true }) {
               </div>
 
               {/* Safety */}
-              <div style={fadeUpStyle(valuesVisible, 1)} className="text-center md:text-left">
+              <div style={fadeUpStyle(valuesVisible, 1 * ANIM_CONFIG.staggerBase)} className="text-center md:text-left">
                 <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 rounded-full text-green-600">
                   <FaShieldAlt className="w-7 h-7" />
                 </div>
@@ -329,7 +333,7 @@ export default function About({ introDone = true }) {
               </div>
 
               {/* Integrity */}
-              <div style={fadeUpStyle(valuesVisible, 2)} className="text-center md:text-left">
+              <div style={fadeUpStyle(valuesVisible, 2 * ANIM_CONFIG.staggerBase)} className="text-center md:text-left">
                 <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 rounded-full text-green-600">
                   <FaBalanceScale className="w-7 h-7" />
                 </div>
@@ -419,7 +423,8 @@ export default function About({ introDone = true }) {
                 brief={member.brief}
                 imageUrl={member.imageUrl}
                 visible={leadershipVisible}
-                delay={(index % 4) * STAGGER_BASE}
+                delay={(index % 4) * ANIM_CONFIG.staggerBase}
+                animConfig={ANIM_CONFIG} // pass config to TeamCard
               />
             ))}
           </div>
@@ -466,10 +471,7 @@ const realTeamMembers = [
 ];
 
 // ========== TeamCard component ==========
-function TeamCard({ name, title, brief, imageUrl, visible, delay }) {
-  const ANIM_DURATION = "1.2s";
-  const ANIM_EASING = "cubic-bezier(0.25, 0.1, 0.25, 1)";
-
+function TeamCard({ name, title, brief, imageUrl, visible, delay, animConfig }) {
   return (
     <div className="relative group overflow-hidden h-[500px] w-full transition-all duration-500 ease-in-out">
       <div className="absolute inset-0">
@@ -481,7 +483,7 @@ function TeamCard({ name, title, brief, imageUrl, visible, delay }) {
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: `opacity ${ANIM_DURATION} ${ANIM_EASING}, transform ${ANIM_DURATION} ${ANIM_EASING}`,
+            transition: `opacity ${animConfig.duration} ${animConfig.easing}, transform ${animConfig.duration} ${animConfig.easing}`,
             transitionDelay: `${delay}s`,
           }}
           className="text-white font-semibold text-xl mb-2"
@@ -492,7 +494,7 @@ function TeamCard({ name, title, brief, imageUrl, visible, delay }) {
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: `opacity ${ANIM_DURATION} ${ANIM_EASING}, transform ${ANIM_DURATION} ${ANIM_EASING}`,
+            transition: `opacity ${animConfig.duration} ${animConfig.easing}, transform ${animConfig.duration} ${animConfig.easing}`,
             transitionDelay: `${delay + 0.15}s`,
           }}
           className="text-gray-200 text-base mb-3"
@@ -503,7 +505,7 @@ function TeamCard({ name, title, brief, imageUrl, visible, delay }) {
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: `opacity ${ANIM_DURATION} ${ANIM_EASING}, transform ${ANIM_DURATION} ${ANIM_EASING}`,
+            transition: `opacity ${animConfig.duration} ${animConfig.easing}, transform ${animConfig.duration} ${animConfig.easing}`,
             transitionDelay: `${delay + 0.3}s`,
           }}
           className="text-gray-300 text-sm"

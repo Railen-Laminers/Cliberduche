@@ -18,26 +18,29 @@ import heroImage from "/projects/northport_ongoing/northport_img_5.jpg";
 import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
 import MagneticButton from "../../components/MagneticButton";
 
-// Animation constants
-const ANIM_DURATION = "1.2s";
-const ANIM_EASING = "cubic-bezier(0.25, 0.1, 0.25, 1)";
-const STAGGER_BASE = 0.2;
+// ========== ANIMATION CONFIGURATION ==========
+const ANIM_CONFIG = {
+  duration: "0.8s",
+  easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+  staggerBase: 0.6,
+  paragraphStagger: 0.4,
+};
 
+// Reusable fade‑up style
 const fadeUpStyle = (visible, delay) => ({
   opacity: visible ? 1 : 0,
   transform: visible ? "translateY(0)" : "translateY(20px)",
-  transition: `opacity ${ANIM_DURATION} ${ANIM_EASING}, transform ${ANIM_DURATION} ${ANIM_EASING}`,
+  transition: `opacity ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}, transform ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}`,
   transitionDelay: `${delay}s`,
 });
 
-// Mobile drag indicator
+// ---------- DragIndicator (mobile) ----------
 const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) => {
   return (
     <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 md:hidden flex flex-col items-center gap-2">
       <div className={`flex items-center gap-1.5 transition-transform duration-200 ${isDragging ? 'scale-95' : 'animate-bounce-subtle'}`}>
         <FaChevronLeft
-          className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset > 20 ? 'opacity-30 scale-90' : 'opacity-100'
-            }`}
+          className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset > 20 ? 'opacity-30 scale-90' : 'opacity-100'}`}
           size={14}
         />
         <div className="flex items-center gap-1.5 px-2">
@@ -63,8 +66,7 @@ const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) =>
           })}
         </div>
         <FaChevronRight
-          className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset < -20 ? 'opacity-30 scale-90' : 'opacity-100'
-            }`}
+          className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset < -20 ? 'opacity-30 scale-90' : 'opacity-100'}`}
           size={14}
         />
       </div>
@@ -75,16 +77,17 @@ const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) =>
   );
 };
 
-// Full‑screen slide component
-const ProjectSlide = ({ project, index, onClick, active }) => {
+// ---------- Carousel Slide (styled like completed project items) ----------
+const CarouselProjectItem = ({ project, index, onClick, active }) => {
   const isOngoing = project.category === "ongoing";
   return (
-    <div className="w-full min-h-[70vh] md:h-full flex-shrink-0 flex items-start md:items-center justify-center bg-white">
-      <div className="max-w-7xl mx-auto w-full h-auto md:h-full px-6 md:px-10 py-6">
-        <div className="grid md:grid-cols-2 gap-8 items-start md:items-center w-full h-auto md:h-full">
-          <div className="h-auto md:h-full">
-            <PerspectiveCard enableTilt maxRotate={6} className="rounded-2xl overflow-hidden shadow-lg">
-              <div onClick={onClick} className="cursor-pointer relative w-full h-64 md:h-full group">
+    <div className="w-full flex-shrink-0 px-6 md:px-10 py-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 items-stretch">
+          {/* Image column - same as list items */}
+          <div className="h-auto">
+            <PerspectiveCard enableTilt maxRotate={6} className="rounded-2xl overflow-hidden shadow-lg h-full">
+              <div onClick={onClick} className="cursor-pointer relative h-64 md:h-80 group">
                 <img
                   src={project.images[0]}
                   alt={project.title}
@@ -99,30 +102,31 @@ const ProjectSlide = ({ project, index, onClick, active }) => {
             </PerspectiveCard>
           </div>
 
-          <div className="h-auto flex flex-col justify-center">
+          {/* Text column - same as list items */}
+          <div className="flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-4">
               <div
-                style={fadeUpStyle(active, 0 * STAGGER_BASE)}
+                style={fadeUpStyle(active, 0 * ANIM_CONFIG.paragraphStagger)}
                 className="text-[#1f7a8c] font-bold text-lg"
               >
                 0{index + 1}
               </div>
               <div
-                style={fadeUpStyle(active, 0.1 * STAGGER_BASE)}
+                style={fadeUpStyle(active, 0.1 * ANIM_CONFIG.paragraphStagger)}
                 className="h-px flex-1 bg-gradient-to-r from-[#1f7a8c] to-transparent"
               />
             </div>
 
             <h3
               onClick={onClick}
-              style={fadeUpStyle(active, 0.2 * STAGGER_BASE)}
+              style={fadeUpStyle(active, 0.2 * ANIM_CONFIG.paragraphStagger)}
               className="text-2xl md:text-3xl font-bold mb-4 cursor-pointer hover:text-[#1f7a8c] transition-colors"
             >
               {project.title}
             </h3>
 
             <p
-              style={fadeUpStyle(active, 0.3 * STAGGER_BASE)}
+              style={fadeUpStyle(active, 0.3 * ANIM_CONFIG.paragraphStagger)}
               className="text-gray-600 mb-6 leading-relaxed text-base md:text-lg"
             >
               {project.description}
@@ -130,14 +134,14 @@ const ProjectSlide = ({ project, index, onClick, active }) => {
 
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div
-                style={fadeUpStyle(active, 0.4 * STAGGER_BASE)}
+                style={fadeUpStyle(active, 0.4 * ANIM_CONFIG.paragraphStagger)}
                 className="flex items-center gap-2 text-[#1f7a8c]"
               >
                 <FaCalendarAlt className="text-lg" />
                 <span className="font-medium">{project.year}</span>
               </div>
               <div
-                style={fadeUpStyle(active, 0.5 * STAGGER_BASE)}
+                style={fadeUpStyle(active, 0.5 * ANIM_CONFIG.paragraphStagger)}
                 className="flex items-center gap-2 text-green-700"
               >
                 <FaImages className="text-lg" />
@@ -145,7 +149,7 @@ const ProjectSlide = ({ project, index, onClick, active }) => {
               </div>
               {project.area && (
                 <div
-                  style={fadeUpStyle(active, 0.6 * STAGGER_BASE)}
+                  style={fadeUpStyle(active, 0.6 * ANIM_CONFIG.paragraphStagger)}
                   className="flex items-center gap-2 text-gray-500 col-span-2"
                 >
                   <FaMapMarkerAlt className="text-lg" />
@@ -156,7 +160,7 @@ const ProjectSlide = ({ project, index, onClick, active }) => {
 
             {project.partnerLogos && project.partnerLogos.length > 0 && (
               <div
-                style={fadeUpStyle(active, 0.7 * STAGGER_BASE)}
+                style={fadeUpStyle(active, 0.7 * ANIM_CONFIG.paragraphStagger)}
                 className="pt-4 mt-4 border-t border-gray-100"
               >
                 <div className="flex items-center gap-3">
@@ -185,7 +189,84 @@ const ProjectSlide = ({ project, index, onClick, active }) => {
   );
 };
 
-// Animated list item for completed projects
+// ---------- CarouselView with navigation below ----------
+const CarouselView = ({
+  ongoingProjects,
+  currentSlide,
+  goToSlide,
+  openProject,
+  carouselRef,
+  dragOffset,
+  isDragging
+}) => {
+  const totalSlides = ongoingProjects.length;
+  const isFirst = currentSlide === 0;
+  const isLast = currentSlide === totalSlides - 1;
+
+  return (
+    <div className="relative bg-white">
+      <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={true} />
+
+      {/* Slides container (draggable area) */}
+      <div
+        ref={carouselRef}
+        className="relative w-full overflow-hidden"
+        style={{ touchAction: 'pan-y' }}
+      >
+        <div
+          className={`flex ${!isDragging ? 'transition-transform duration-700' : ''}`}
+          style={{
+            transform: `translateX(calc(-${currentSlide * 100}% + ${dragOffset}px))`,
+            transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
+          }}
+        >
+          {ongoingProjects.map((project, idx) => (
+            <CarouselProjectItem
+              key={project.id}
+              project={project}
+              index={idx}
+              onClick={() => openProject(project)}
+              active={currentSlide === idx}
+            />
+          ))}
+        </div>
+
+        {/* Mobile drag indicator (overlaid) */}
+        <DragIndicator
+          isDragging={isDragging}
+          dragOffset={dragOffset}
+          totalSlides={ongoingProjects.length}
+          currentSlide={currentSlide}
+        />
+      </div>
+
+      {/* Desktop navigation buttons (below the slides) */}
+      <div className="hidden md:flex items-center justify-center gap-6 py-8 md:py-10">
+        <div className="w-12 h-px bg-green-400 hidden md:block" />
+        <button
+          onClick={() => goToSlide(currentSlide - 1)}
+          disabled={isFirst}
+          className="w-12 h-12 flex items-center justify-center bg-white border border-gray-200 text-[#0b2545] rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+          aria-label="Previous project"
+        >
+          <FaChevronLeft className="text-2xl" />
+        </button>
+        <FaInfinity className="text-2xl text-black-600" />
+        <button
+          onClick={() => goToSlide(currentSlide + 1)}
+          disabled={isLast}
+          className="w-12 h-12 flex items-center justify-center bg-white border border-gray-200 text-[#0b2545] rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+          aria-label="Next project"
+        >
+          <FaChevronRight className="text-2xl" />
+        </button>
+        <div className="w-12 h-px bg-blue-400 hidden md:block" />
+      </div>
+    </div>
+  );
+};
+
+// ---------- Animated list item for completed projects (unchanged) ----------
 const AnimatedProjectListItem = ({ project, index, onClick }) => {
   const [itemRef, itemAnim, itemVisible] = useScrollAnimation(0.1, true);
   const isOngoing = project.category === 'ongoing';
@@ -196,7 +277,7 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
       className={`group py-8 first:pt-0 last:pb-0 transition-all duration-1000 ${itemAnim}`}
     >
       <div className="grid md:grid-cols-2 gap-8 items-center">
-        <PerspectiveCard enableTilt maxRotate={6} className="rounded-2xl overflow-hidden shadow-lg">
+        <PerspectiveCard enableTilt maxRotate={6} className="rounded-2xl overflow-hidden shadow-lg h-full">
           <div onClick={onClick} className="cursor-pointer relative h-64 md:h-80">
             <img
               src={project.images[0]}
@@ -214,27 +295,27 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div
-              style={fadeUpStyle(itemVisible, 0 * STAGGER_BASE)}
+              style={fadeUpStyle(itemVisible, 0 * ANIM_CONFIG.paragraphStagger)}
               className="text-[#1f7a8c] font-bold text-lg"
             >
               0{index + 1}
             </div>
             <div
-              style={fadeUpStyle(itemVisible, 0.1 * STAGGER_BASE)}
+              style={fadeUpStyle(itemVisible, 0.1 * ANIM_CONFIG.paragraphStagger)}
               className="h-px flex-1 bg-gradient-to-r from-[#1f7a8c] to-transparent"
             />
           </div>
 
           <h3
             onClick={onClick}
-            style={fadeUpStyle(itemVisible, 0.2 * STAGGER_BASE)}
+            style={fadeUpStyle(itemVisible, 0.2 * ANIM_CONFIG.paragraphStagger)}
             className="text-2xl font-bold mb-4 cursor-pointer group-hover:text-[#1f7a8c] transition-colors"
           >
             {project.title}
           </h3>
 
           <p
-            style={fadeUpStyle(itemVisible, 0.3 * STAGGER_BASE)}
+            style={fadeUpStyle(itemVisible, 0.3 * ANIM_CONFIG.paragraphStagger)}
             className="text-gray-600 mb-6 leading-relaxed"
           >
             {project.description}
@@ -242,14 +323,14 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div
-              style={fadeUpStyle(itemVisible, 0.4 * STAGGER_BASE)}
+              style={fadeUpStyle(itemVisible, 0.4 * ANIM_CONFIG.paragraphStagger)}
               className="flex items-center gap-2 text-[#1f7a8c]"
             >
               <FaCalendarAlt className="text-lg" />
               <span className="font-medium">{project.year}</span>
             </div>
             <div
-              style={fadeUpStyle(itemVisible, 0.5 * STAGGER_BASE)}
+              style={fadeUpStyle(itemVisible, 0.5 * ANIM_CONFIG.paragraphStagger)}
               className="flex items-center gap-2 text-green-700"
             >
               <FaImages className="text-lg" />
@@ -257,7 +338,7 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
             </div>
             {project.area && (
               <div
-                style={fadeUpStyle(itemVisible, 0.6 * STAGGER_BASE)}
+                style={fadeUpStyle(itemVisible, 0.6 * ANIM_CONFIG.paragraphStagger)}
                 className="flex items-center gap-2 text-gray-500 col-span-2"
               >
                 <FaMapMarkerAlt className="text-lg" />
@@ -268,7 +349,7 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
 
           {project.partnerLogos && project.partnerLogos.length > 0 && (
             <div
-              style={fadeUpStyle(itemVisible, 0.7 * STAGGER_BASE)}
+              style={fadeUpStyle(itemVisible, 0.7 * ANIM_CONFIG.paragraphStagger)}
               className="pt-4 border-t border-gray-100"
             >
               <div className="flex items-center gap-3">
@@ -292,82 +373,10 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
   );
 };
 
-// Carousel view
-const CarouselView = ({
-  ongoingProjects,
-  currentSlide,
-  goToSlide,
-  openProject,
-  carouselRef,
-  dragOffset,
-  isDragging
-}) => {
-  const totalSlides = ongoingProjects.length;
-  const isFirst = currentSlide === 0;
-  const isLast = currentSlide === totalSlides - 1;
-
-  return (
-    <div
-      ref={carouselRef}
-      className="relative w-full min-h-[70vh] md:h-screen overflow-hidden bg-white"
-      style={{ touchAction: 'pan-y' }}
-    >
-      <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={true} />
-
-      <div
-        className={`flex h-auto md:h-full ${!isDragging ? 'transition-transform duration-700' : ''}`}
-        style={{
-          transform: `translateX(calc(-${currentSlide * 100}vw + ${dragOffset}px))`,
-          transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 0.25, 1)'
-        }}
-      >
-        {ongoingProjects.map((project, idx) => (
-          <ProjectSlide
-            key={project.id}
-            project={project}
-            index={idx}
-            onClick={() => openProject(project)}
-            active={currentSlide === idx}
-          />
-        ))}
-      </div>
-
-      {/* Desktop navigation */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 items-center gap-6 hidden md:flex">
-        <div className="w-12 h-px bg-green-400" />
-        <button
-          onClick={() => goToSlide(currentSlide - 1)}
-          disabled={isFirst}
-          className="w-12 h-12 flex items-center justify-center bg-white/80 backdrop-blur-sm text-[#0b2545] rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
-          aria-label="Previous project"
-        >
-          <FaChevronLeft className="text-2xl" />
-        </button>
-        <FaInfinity className="text-2xl text-black-600" />
-        <button
-          onClick={() => goToSlide(currentSlide + 1)}
-          disabled={isLast}
-          className="w-12 h-12 flex items-center justify-center bg-white/80 backdrop-blur-sm text-[#0b2545] rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
-          aria-label="Next project"
-        >
-          <FaChevronRight className="text-2xl" />
-        </button>
-        <div className="w-12 h-px bg-blue-400" />
-      </div>
-
-      {/* Mobile drag indicator */}
-      <DragIndicator
-        isDragging={isDragging}
-        dragOffset={dragOffset}
-        totalSlides={ongoingProjects.length}
-        currentSlide={currentSlide}
-      />
-    </div>
-  );
-};
-
-// Completed projects list
+// ---------- CompletedList (unchanged) ----------
 const CompletedList = ({ completedProjects, openProject }) => {
+  const [headingRef, headingAnim, headingVisible] = useScrollAnimation(0.1, true);
+
   if (completedProjects.length === 0) return null;
 
   return (
@@ -375,11 +384,25 @@ const CompletedList = ({ completedProjects, openProject }) => {
       <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={true} />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex items-center gap-4 mb-8 justify-end">
-          <h3 className="text-2xl md:text-3xl font-bold text-[#0b2545]">Completed Projects</h3>
-          <FaInfinity className="text-blue-600 text-2xl" />
-          <div className="h-px w-16 bg-blue-300" />
+        <div ref={headingRef} className={`transition-all duration-1000 ${headingAnim}`}>
+          <div className="flex items-center gap-4 mb-8 justify-end">
+            <h3
+              style={fadeUpStyle(headingVisible, 0)}
+              className="text-2xl md:text-3xl font-bold text-[#0b2545]"
+            >
+              Completed Projects
+            </h3>
+            <FaInfinity
+              style={fadeUpStyle(headingVisible, 0.1 * ANIM_CONFIG.staggerBase)}
+              className="text-blue-600 text-2xl"
+            />
+            <div
+              style={fadeUpStyle(headingVisible, 0.2 * ANIM_CONFIG.staggerBase)}
+              className="h-px w-16 bg-blue-300"
+            />
+          </div>
         </div>
+
         <div className="divide-y divide-gray-200">
           {completedProjects.map((project, index) => (
             <AnimatedProjectListItem
@@ -395,7 +418,7 @@ const CompletedList = ({ completedProjects, openProject }) => {
   );
 };
 
-// Expanded view with all projects
+// ---------- ExpandedView (unchanged) ----------
 const ExpandedView = ({ allProjects, openProject }) => {
   return (
     <div className="relative bg-white px-6 md:px-10 py-16 md:py-20 overflow-hidden">
@@ -417,7 +440,7 @@ const ExpandedView = ({ allProjects, openProject }) => {
   );
 };
 
-// Combined carousel + completed
+// ---------- CarouselWithCompleted (combines both) ----------
 const CarouselWithCompleted = ({
   ongoingProjects,
   completedProjects,
@@ -444,6 +467,7 @@ const CarouselWithCompleted = ({
   );
 };
 
+// ---------- Main Projects component (unchanged except for minor adjustments) ----------
 export default function Projects({ introDone = true }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeProject, setActiveProject] = useState(null);
@@ -482,7 +506,7 @@ export default function Projects({ introDone = true }) {
     }
   }, [introDone]);
 
-  const [heroRef, heroAnim] = useScrollAnimation(0.1, introDone);
+  const [headerRef, headerAnim, headerVisible] = useScrollAnimation(0.1, introDone);
 
   const ongoingProjects = projects.filter((p) => p.category === "ongoing");
   const completedProjects = projects.filter((p) => p.category !== "ongoing");
@@ -551,7 +575,7 @@ export default function Projects({ introDone = true }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, viewMode, currentSlide, ongoingProjects.length]);
 
-  // Drag to navigate carousel
+  // Drag to navigate carousel (updated to work with new carousel structure)
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel || isOpen || viewMode !== 'carousel') return;
@@ -593,7 +617,7 @@ export default function Projects({ introDone = true }) {
       e.preventDefault();
       const delta = clientX - dragStartX.current;
       const maxSlides = ongoingProjects.length;
-      const slideWidth = window.innerWidth;
+      const slideWidth = carousel.clientWidth; // width of carousel container
 
       let offset = delta;
       if (currentSlide === 0 && delta > 0) offset = delta / 3;
@@ -619,7 +643,7 @@ export default function Projects({ introDone = true }) {
       }
 
       const delta = dragState.offset;
-      const slideWidth = window.innerWidth;
+      const slideWidth = carousel.clientWidth;
       const threshold = slideWidth * 0.2;
       const timeDiff = Math.max(1, dragLastTime.current - dragStartTime.current);
       const velocity = (dragLastX.current - dragStartX.current) / timeDiff * 8;
@@ -691,7 +715,7 @@ export default function Projects({ introDone = true }) {
 
   return (
     <div className="bg-white text-[#0b2545] overflow-x-hidden">
-      {/* Hero section */}
+      {/* Hero section (unchanged) */}
       <div className="relative min-h-screen overflow-hidden lg:hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed"
@@ -721,7 +745,7 @@ export default function Projects({ introDone = true }) {
         </div>
         <div className="relative w-full md:w-1/2 flex flex-col order-1 md:order-2 overflow-hidden">
           <div className="hidden md:block flex-1" />
-          <div ref={heroRef} className={`relative z-10 pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12 ${heroAnim}`}>
+          <div className="relative z-10 pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12">
             <div className="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">Projects</div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0b2545] leading-tight">
               <LetterReveal
@@ -735,31 +759,52 @@ export default function Projects({ introDone = true }) {
         </div>
       </div>
 
-      {/* Projects header */}
+      {/* Projects header (unchanged) */}
       <div ref={projectsSectionRef} className="relative bg-white pt-16 pb-8 px-6 md:px-10 overflow-hidden">
         <BackgroundDecor pattern="grid" color="blue" opacity={0.08} blurCircles={false} />
-        <div className="max-w-7xl mx-auto relative z-10">
+        <div ref={headerRef} className={`max-w-7xl mx-auto relative z-10 transition-all duration-1000 ${headerAnim}`}>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
             <div className="flex items-center gap-4">
               {viewMode === 'carousel' ? (
                 <>
-                  <div className="h-px w-16 bg-green-300"></div>
-                  <FaInfinity className="text-green-600 text-2xl" />
-                  <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight">
+                  <div
+                    style={fadeUpStyle(headerVisible, 0)}
+                    className="h-px w-16 bg-green-300"
+                  ></div>
+                  <FaInfinity
+                    style={fadeUpStyle(headerVisible, 0.1 * ANIM_CONFIG.staggerBase)}
+                    className="text-green-600 text-2xl"
+                  />
+                  <h2
+                    style={fadeUpStyle(headerVisible, 0.2 * ANIM_CONFIG.staggerBase)}
+                    className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight"
+                  >
                     Current developments
                   </h2>
                 </>
               ) : (
                 <>
-                  <div className="h-px w-16 bg-blue-300"></div>
-                  <FaInfinity className="text-blue-600 text-2xl" />
-                  <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight">
+                  <div
+                    style={fadeUpStyle(headerVisible, 0)}
+                    className="h-px w-16 bg-blue-300"
+                  ></div>
+                  <FaInfinity
+                    style={fadeUpStyle(headerVisible, 0.1 * ANIM_CONFIG.staggerBase)}
+                    className="text-blue-600 text-2xl"
+                  />
+                  <h2
+                    style={fadeUpStyle(headerVisible, 0.2 * ANIM_CONFIG.staggerBase)}
+                    className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight"
+                  >
                     Complete portfolio
                   </h2>
                 </>
               )}
             </div>
-            <div className="mt-4 md:mt-0">
+            <div
+              style={fadeUpStyle(headerVisible, 0.3 * ANIM_CONFIG.staggerBase)}
+              className="mt-6 md:mt-0"
+            >
               {viewMode === 'carousel' ? (
                 <MagneticButton
                   onClick={() => switchView('expanded')}
@@ -784,7 +829,10 @@ export default function Projects({ introDone = true }) {
             </div>
           </div>
 
-          <div className="mt-4 max-w-3xl">
+          <div
+            style={fadeUpStyle(headerVisible, 0.4 * ANIM_CONFIG.staggerBase)}
+            className="mt-4 max-w-3xl"
+          >
             <p className="text-gray-600 text-lg">
               Explore our portfolio of ongoing and completed projects that showcase our commitment to quality, innovation, and sustainable development across the region.
             </p>
@@ -792,7 +840,7 @@ export default function Projects({ introDone = true }) {
         </div>
       </div>
 
-      {/* Fade wrapper */}
+      {/* Fade wrapper for view transition */}
       <div
         style={{
           opacity: fadeState === 'visible' ? 1 : 0,
@@ -815,7 +863,7 @@ export default function Projects({ introDone = true }) {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Modal (unchanged) */}
       {isOpen && activeProject && (
         <div
           className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
@@ -841,8 +889,7 @@ export default function Projects({ introDone = true }) {
                     key={img}
                     src={img}
                     alt={`${activeProject.title} view ${idx + 1}`}
-                    className={`absolute inset-0 w-full h-full object-contain bg-white p-4 transition-opacity duration-500 ${idx === activeIndex ? "opacity-100" : "opacity-0"
-                      }`}
+                    className={`absolute inset-0 w-full h-full object-contain bg-white p-4 transition-opacity duration-500 ${idx === activeIndex ? "opacity-100" : "opacity-0"}`}
                     loading={idx === 0 ? "eager" : "lazy"}
                   />
                 ))}
