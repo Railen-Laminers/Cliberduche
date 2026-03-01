@@ -37,7 +37,7 @@ const fadeUpStyle = (visible, delay) => ({
 // ---------- DragIndicator (mobile) ----------
 const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) => {
   return (
-    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 md:hidden flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2">   {/* removed absolute/transform classes */}
       <div className={`flex items-center gap-1.5 transition-transform duration-200 ${isDragging ? 'scale-95' : 'animate-bounce-subtle'}`}>
         <FaChevronLeft
           className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset > 20 ? 'opacity-30 scale-90' : 'opacity-100'}`}
@@ -230,8 +230,10 @@ const CarouselView = ({
             />
           ))}
         </div>
+      </div>
 
-        {/* Mobile drag indicator (overlaid) */}
+      {/* Mobile drag indicator (now below the slides) */}
+      <div className="md:hidden flex justify-center w-full py-4">
         <DragIndicator
           isDragging={isDragging}
           dragOffset={dragOffset}
@@ -240,7 +242,7 @@ const CarouselView = ({
         />
       </div>
 
-      {/* Desktop navigation buttons (below the slides) */}
+      {/* Desktop navigation buttons (unchanged) */}
       <div className="hidden md:flex items-center justify-center gap-6 py-8 md:py-10">
         <div className="w-12 h-px bg-green-400 hidden md:block" />
         <button
