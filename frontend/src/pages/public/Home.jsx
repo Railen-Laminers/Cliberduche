@@ -605,7 +605,7 @@ export default function Home({ introDone = true }) {
                         </h2>
                         <div className="flex justify-center items-center gap-2">
                             <div className="h-px w-16 bg-green-300"></div>
-                            <FaInfinity className="text-green-600 text-2xl" />
+                            <FaInfinity className="text-dark-600 text-2xl" />
                             <div className="h-px w-16 bg-blue-300"></div>
                         </div>
                     </div>

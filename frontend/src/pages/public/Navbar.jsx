@@ -1,211 +1,238 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaTimes, FaBars, FaArrowUp } from "react-icons/fa";
 import logo from "/logo/cliberduche_logo.png";
 
 export default function Navbar({ introDone = false }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [isTop, setIsTop] = useState(true);
-  const [overlayActive, setOverlayActive] = useState(false);
-  const [navAnimationDone, setNavAnimationDone] = useState(false);
-  const [itemsVisible, setItemsVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const navContainerRef = useRef(null);
-  const homeRef = useRef(null);
-  const aboutRef = useRef(null);
-  const projectsRef = useRef(null);
-  const contactRef = useRef(null);
-
   useEffect(() => {
-    if (introDone && !navAnimationDone) {
-      setNavAnimationDone(true);
-    }
-  }, [introDone, navAnimationDone]);
-
-  useEffect(() => {
-    const handleScroll = () => setIsTop(window.scrollY < 50);
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      setIsScrolled(currentScrollPos > 50);
+      setIsTop(currentScrollPos < 10);
+    };
     window.addEventListener("scroll", handleScroll);
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Auto-close mobile menu when reaching desktop breakpoint
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) { // lg breakpoint
-        setIsOpen(false);
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if (introDone) setTimeout(() => setIsLoaded(true), 300);
+  }, [introDone]);
 
-  // Staggered animation: wait for drawer to open, then show items
   useEffect(() => {
-    let timer;
-    if (isOpen) {
-      timer = setTimeout(() => setItemsVisible(true), 300);
-    } else {
-      setItemsVisible(false);
-    }
-    return () => clearTimeout(timer);
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
+    return () => { document.body.style.overflow = "unset"; };
   }, [isOpen]);
 
-  const navItems = [
-    { path: "/", label: "Home", ref: homeRef },
-    { path: "/about", label: "About", ref: aboutRef },
-    { path: "/projects", label: "Projects", ref: projectsRef },
-    { path: "/contact", label: "Contact", ref: contactRef },
-  ];
-
-  const isActive = (path) => location.pathname === path;
-
   useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") setIsOpen(false);
-    };
+    const handleEsc = (e) => { if (e.key === "Escape") setIsOpen(false); };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => { if (window.innerWidth >= 1024) setIsOpen(false); };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const navItems = [
+    { path: "/", label: "Home" },
+    { path: "/about", label: "About" },
+    { path: "/projects", label: "Projects" },
+    { path: "/contact", label: "Contact" },
+  ];
+
+  const isActive = (path) => location.pathname === path;
+
+  const desktopLinkClass = (path) => {
+    return isActive(path)
+      ? "text-green-400"
+      : "text-white hover:text-green-400";
+  };
+
   return (
-    <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300">
-      <div className="flex items-center justify-between px-4 sm:px-6 md:px-12 h-16 sm:h-20 bg-transparent">
-        {/* Logo */}
-        <button
-          id="nav-logo"
-          onClick={() => navigate("/")}
-          className={`flex items-center gap-2 transition-opacity duration-500 ${introDone && isTop ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
-          aria-label="Go to homepage"
-        >
-          <img
-            src={logo}
-            alt="Cliberduche Logo"
-            className="h-8 sm:h-10 md:h-12 w-auto drop-shadow-lg"
-          />
-        </button>
-
-        {/* Desktop nav */}
-        <nav
-          ref={navContainerRef}
-          className={`hidden lg:flex items-center space-x-4 xl:space-x-8 text-sm font-medium text-slate-200 bg-slate-900/70 backdrop-blur-md backdrop-saturate-150 px-3 xl:px-4 py-1.5 xl:py-2.5 rounded-sm shadow-md relative z-20 transition-all duration-700 ease-out ${navAnimationDone
-              ? "opacity-100 translate-y-0 scale-100 blur-0"
-              : "opacity-0 translate-y-10 scale-95 blur-sm"
-            }`}
-        >
-          {navItems.map((item, index) => {
-            const delay = 0.1 * (index + 1);
-            const isContact = item.label === "Contact";
-
-            return (
-              <Link
-                key={item.path}
-                ref={item.ref}
-                to={item.path}
-                className={`relative group transition-all duration-700 ease-out ${navAnimationDone
-                    ? "opacity-100 translate-y-0 scale-100 blur-0"
-                    : "opacity-0 translate-y-10 scale-95 blur-sm"
-                  } ${isContact
-                    ? "bg-green-500 text-white px-4 py-2 rounded-sm hover:bg-green-600"
-                    : ""
-                  } ${isActive(item.path) && !isContact ? "text-green-300" : ""}`}
-                style={{
-                  transitionDelay: navAnimationDone ? `${delay}s` : "0s",
-                }}
-                onMouseEnter={() => setOverlayActive(true)}
-                onMouseLeave={() => setOverlayActive(false)}
-              >
-                <span className="relative z-10 px-2 py-1 whitespace-nowrap">
-                  {item.label}
-                  {!isContact && (
-                    <span className="absolute inset-0 bg-white/20 rounded-md opacity-0 group-hover:opacity-40 transition-opacity duration-300"></span>
-                  )}
-                </span>
-
-                {!isContact && (
-                  <span
-                    className={`absolute -bottom-1 left-0 h-0.5 bg-green-300 w-full transform origin-left transition-transform duration-500 ${isActive(item.path)
-                        ? "scale-x-100"
-                        : "scale-x-0 group-hover:scale-x-100"
-                      }`}
-                  />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Mobile menu button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden relative z-50 text-white text-2xl p-3 rounded-xl bg-green-500 shadow-lg hover:bg-green-600 hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-300 focus:ring-offset-2 focus:ring-offset-slate-900"
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isOpen}
-        >
-          {isOpen ? <FaTimes /> : <FaBars />}
-        </button>
-      </div>
-
-      {/* Hover overlay */}
-      <div
-        className={`fixed inset-0 bg-black/20 pointer-events-none z-10 transition-opacity duration-500 ${overlayActive ? "opacity-100" : "opacity-0"
-          }`}
-      />
-
-      {/* Mobile drawer */}
-      <div
-        className={`fixed top-0 right-0 h-full w-64 xs:w-56 sm:w-64 max-w-xs bg-slate-900/80 backdrop-blur-md rounded-l-2xl shadow-xl z-40 transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? "translate-x-0" : "translate-x-full"
+    <>
+      <header
+        className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 ${isLoaded ? "opacity-100" : "opacity-0"
           }`}
       >
-        {/* Nav container with conditional overflow */}
-        <nav
-          className={`flex flex-col mt-20 space-y-4 text-white px-4 sm:px-6 ${itemsVisible ? "overflow-y-auto" : "overflow-hidden"
-            }`}
+        {/* Inner container: wider max-width and smaller padding */}
+        <div
+          className={`max-w-screen-2xl mx-auto flex items-center justify-between px-4 lg:px-8 h-20 transition-all duration-300 bg-transparent text-white mt-4`}
         >
-          {navItems.map((item, index) => {
-            const isContact = item.label === "Contact";
-            const delay = 0.1 * (index + 1);
+          {/* Logo - fades in/out */}
+          <button
+            onClick={() => navigate("/")}
+            className={`flex items-center gap-3 group transition-opacity duration-300 ${isTop ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            aria-label="Go to homepage"
+            disabled={!isTop}
+          >
+            <img
+              src={logo}
+              alt="Cliberduche Logo"
+              className="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+            />
+          </button>
 
-            return (
-              <button
+          {/* Desktop Navigation - Floating */}
+          <nav className="hidden lg:flex items-center gap-2 bg-[#081c33]/80 backdrop-blur-sm border border-white/10 px-6 py-2 rounded-sm shadow-2xl">
+            {navItems.map((item) => {
+              const isContact = item.label === "Contact";
+
+              return (
+                <React.Fragment key={item.path}>
+                  {isContact ? (
+                    <Link
+                      to={item.path}
+                      className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2 group ml-2"
+                    >
+                      <span>{item.label}</span>
+                      <FaArrowUp className="w-3 h-3 rotate-45 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
+                  ) : (
+                    <Link
+                      to={item.path}
+                      className={`relative px-4 py-2 font-medium transition-all duration-300 group flex items-center gap-1 ${desktopLinkClass(
+                        item.path
+                      )}`}
+                    >
+                      <span className="relative z-10 text-sm tracking-[0.3em] uppercase">
+                        {item.label}
+                      </span>
+                      <FaArrowUp
+                        className={`w-3 h-3 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${isActive(item.path) ? "text-green-400" : "text-white group-hover:text-green-400"
+                          }`}
+                      />
+                    </Link>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="lg:hidden relative z-50 w-12 h-12 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-sm transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+            aria-label="Open menu"
+            aria-expanded={isOpen}
+          >
+            <FaBars className="w-5 h-5" />
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Full-Screen Overlay - now with floating glass effect */}
+      <div
+        className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-500 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+        onClick={() => setIsOpen(false)} // Close when clicking backdrop
+      >
+        {/* Invisible backdrop for click-outside */}
+        <div className="absolute inset-0 bg-transparent" />
+
+        {/* Sliding panel with glass effect */}
+        <div
+          className={`absolute right-0 top-0 h-full w-full sm:w-[400px] bg-[#081c33]/80 backdrop-blur-sm border-l border-white/10 shadow-2xl transition-transform duration-500 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside panel
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 py-6 border-b border-white/10">
+            <button
+              onClick={() => {
+                navigate("/");
+                setIsOpen(false);
+              }}
+              className="flex items-center gap-3"
+            >
+              <img src={logo} alt="Cliberduche Logo" className="h-10 w-auto" />
+            </button>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-green-400 transition-colors duration-300"
+              aria-label="Close menu"
+            >
+              <FaTimes className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Navigation Items */}
+          <nav className="flex-1 flex flex-col justify-center px-6 md:px-12">
+            {navItems.map((item, index) => (
+              <Link
                 key={item.path}
-                className={`text-left font-medium py-3 px-3 rounded-sm transform transition-all duration-500 ease-out
-                  ${isContact
-                    ? "bg-green-500 text-white hover:bg-green-600 text-center w-32 self-start"
-                    : isActive(item.path)
-                      ? "text-green-300 bg-white/10"
-                      : "hover:text-green-300 hover:bg-white/5"
-                  }
-                  ${itemsVisible
-                    ? "opacity-100 translate-y-0 rotate-0 scale-100"
-                    : "opacity-0 translate-y-6 rotate-3 scale-95"
-                  }
-                  // Restored original font sizes
-                  text-base sm:text-lg
-                `}
-                style={{ transitionDelay: itemsVisible ? `${delay}s` : "0s" }}
-                onClick={() => {
-                  navigate(item.path);
-                  setIsOpen(false);
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+                className={`group py-6 md:py-8 border-b border-white/10 transition-all duration-500 ease-out ${isOpen
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-8"
+                  }`}
+                style={{
+                  transitionDelay: isOpen ? `${index * 100 + 200}ms` : "0ms",
                 }}
               >
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
-      </div>
+                <div className="flex items-center justify-between">
+                  <span
+                    className={`text-4xl md:text-6xl font-bold tracking-tight transition-colors duration-300 ${isActive(item.path)
+                        ? "text-green-400"
+                        : "text-white group-hover:text-green-400"
+                      }`}
+                  >
+                    {item.label.toUpperCase()}
+                  </span>
+                  <span
+                    className={`transform transition-all duration-300 ${isOpen
+                        ? "translate-x-0 opacity-100"
+                        : "-translate-x-4 opacity-0"
+                      }`}
+                    style={{
+                      transitionDelay: isOpen
+                        ? `${index * 100 + 400}ms`
+                        : "0ms",
+                    }}
+                  >
+                    <svg
+                      width="40"
+                      height="40"
+                      viewBox="0 0 40 40"
+                      fill="none"
+                      className="text-slate-400 group-hover:text-green-400 transition-colors duration-300"
+                    >
+                      <path
+                        d="M8 20H32M32 20L24 12M32 20L24 28"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </nav>
 
-      {/* Mobile overlay */}
-      {isOpen && (
-        <div
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/50 z-30 transition-opacity duration-300"
-          aria-hidden="true"
-        />
-      )}
-    </header>
+          {/* Footer */}
+          <div
+            className={`px-6 py-6 border-t border-white/10 transition-all duration-500 delay-700 ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
+          >
+            <p className="text-slate-400 text-sm">
+              © 2026 Cliberduche. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

@@ -359,7 +359,7 @@ export default function About({ introDone = true }) {
             <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Insights</h3>
             <div className="flex justify-center items-center gap-2 mb-4">
               <div className="h-px w-16 bg-green-300"></div>
-              <FaInfinity className="text-green-600 text-2xl" />
+              <FaInfinity className="text-dark-600 text-2xl" />
               <div className="h-px w-16 bg-blue-300"></div>
             </div>
             <p className="text-gray-600 max-w-3xl mx-auto text-lg">
@@ -398,7 +398,7 @@ export default function About({ introDone = true }) {
             <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Our Team</h2>
             <div className="flex justify-center items-center gap-2 mb-4">
               <div className="h-px w-16 bg-green-300"></div>
-              <FaInfinity className="text-green-600 text-2xl" />
+              <FaInfinity className="text-dark-600 text-2xl" />
               <div className="h-px w-16 bg-blue-300"></div>
             </div>
             <p className="text-gray-600 max-w-3xl mx-auto text-lg">
