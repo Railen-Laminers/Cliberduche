@@ -11,4 +11,6 @@ Tasks for frontend
 
 Enhancements
 - Navbar
-- Footer
+- Footer - Mobile
+- Contact 
+- sequential animation timing of all pages for consistency
