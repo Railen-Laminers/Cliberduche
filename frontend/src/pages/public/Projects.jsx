@@ -205,7 +205,7 @@ const CarouselView = ({
 
   return (
     <div className="relative bg-white">
-      <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={true} />
+      <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
 
       {/* Slides container (draggable area) */}
       <div
@@ -805,7 +805,7 @@ export default function Projects({ introDone = true }) {
             </div>
             <div
               style={fadeUpStyle(headerVisible, 0.3 * ANIM_CONFIG.staggerBase)}
-              className="mt-6 md:mt-0"
+              className="mt-6 md:mt-0 py-4 md:py-0 text-center md:text-left"
             >
               {viewMode === 'carousel' ? (
                 <MagneticButton
