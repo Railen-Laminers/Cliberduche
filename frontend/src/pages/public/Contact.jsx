@@ -1,5 +1,5 @@
 // Contact.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaInfinity } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import Map from "./Map";
@@ -7,6 +7,14 @@ import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
 
 export default function Contact({ introDone = true }) {
+    // ========== ANIMATION CONFIGURATION (same as About) ==========
+    const ANIM_CONFIG = {
+        duration: "0.8s",
+        easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        staggerBase: 0.6,
+        paragraphStagger: 0.6,
+    };
+
     const [formData, setFormData] = useState({
         subject: "",
         name: "",
@@ -39,43 +47,56 @@ export default function Contact({ introDone = true }) {
         });
     };
 
-    // Scroll animations
-    const [headingRef, headingAnim] = useScrollAnimation(0.2, introDone);
-    const [infoRef, infoAnim] = useScrollAnimation(0.2, introDone);
-    const [formRef, formAnim] = useScrollAnimation(0.2, introDone);
+    // Dynamic viewport height (same as Home page)
+    useEffect(() => {
+        const setVh = () => {
+            document.documentElement.style.setProperty(
+                "--vh",
+                `${window.innerHeight * 0.01}px`
+            );
+        };
+        setVh();
+        window.addEventListener("resize", setVh);
+        return () => window.removeEventListener("resize", setVh);
+    }, []);
 
-    const ANIM_DURATION = "1.2s";
-    const ANIM_EASING = "cubic-bezier(0.25, 0.1, 0.25, 1)";
+    // Scroll animations – capture visible booleans
+    const [headingRef, headingAnim, headingVisible] = useScrollAnimation(0.2, introDone);
+    const [infoRef, infoAnim, infoVisible] = useScrollAnimation(0.2, introDone);
+    const [formRef, formAnim, formVisible] = useScrollAnimation(0.2, introDone);
 
     const fadeUpStyle = (visible, delay) => ({
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(20px)",
-        transition: `opacity ${ANIM_DURATION} ${ANIM_EASING}, transform ${ANIM_DURATION} ${ANIM_EASING}`,
+        transition: `opacity ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}, transform ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}`,
         transitionDelay: `${delay}s`,
     });
 
     return (
         <section
             id="contact"
-            className="relative px-6 md:px-10 py-16 md:py-20 bg-white overflow-hidden"
+            className="relative p-6 md:px-10 bg-white overflow-hidden flex flex-col justify-center"
+            style={{ minHeight: "calc(var(--vh, 1vh) * 100)" }}
         >
             <BackgroundDecor pattern="grid" color="green" opacity={0.05} blurCircles={false} />
 
-            <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-16 items-start relative z-10">
+            <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-16 items-center relative z-10">
                 {/* LEFT COLUMN – COMPANY INFO & MAP */}
                 <div
                     ref={infoRef}
                     className={`flex flex-col text-gray-800 transition-all duration-1000 ${infoAnim}`}
                 >
+                    {/* Heading – uses headingVisible */}
                     <div ref={headingRef} className={`mb-8 transition-all duration-1000 ${headingAnim}`}>
-                        <div className="flex items-center gap-4 mb-2">
+                        <div style={fadeUpStyle(headingVisible, 0)} className="flex items-center gap-4 mb-2">
                             <div className="h-px w-16 bg-green-300"></div>
                             <FaInfinity className="text-green-600 text-2xl" />
                             <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">Contact Us</h3>
                         </div>
                     </div>
 
-                    <div className="space-y-6 mb-8" style={fadeUpStyle(infoAnim !== "" ? true : false, 0)}>
+                    {/* Address block – staggered with paragraphStagger */}
+                    <div className="space-y-6 mb-8" style={fadeUpStyle(infoVisible, 0 * ANIM_CONFIG.paragraphStagger)}>
                         <div>
                             <h4 className="text-lg font-semibold text-green-800 mb-1">Cabuyao Office</h4>
                             <p className="text-sm text-gray-600">4025</p>
@@ -91,7 +112,8 @@ export default function Contact({ introDone = true }) {
                         </div>
                     </div>
 
-                    <div className="mb-8" style={fadeUpStyle(infoAnim !== "" ? true : false, 0.1)}>
+                    {/* Core services – next stagger */}
+                    <div className="mb-8" style={fadeUpStyle(infoVisible, 1 * ANIM_CONFIG.paragraphStagger)}>
                         <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
                             Core Services
                         </h4>
@@ -105,12 +127,17 @@ export default function Contact({ introDone = true }) {
                         </ul>
                     </div>
 
-                    <div className="flex space-x-8 text-sm text-gray-600 mb-10" style={fadeUpStyle(infoAnim !== "" ? true : false, 0.2)}>
+                    {/* Founded / incorporated – next stagger */}
+                    <div
+                        className="flex space-x-8 text-sm text-gray-600 mb-10"
+                        style={fadeUpStyle(infoVisible, 2 * ANIM_CONFIG.paragraphStagger)}
+                    >
                         <p><span className="font-medium">Founded:</span> 2018</p>
                         <p><span className="font-medium">Incorporated:</span> November 28, 2018</p>
                     </div>
 
-                    <div style={fadeUpStyle(infoAnim !== "" ? true : false, 0.3)}>
+                    {/* Map – last stagger */}
+                    <div style={fadeUpStyle(infoVisible, 3 * ANIM_CONFIG.paragraphStagger)}>
                         <div className="rounded-sm overflow-hidden border border-gray-200 shadow-sm">
                             <Map />
                         </div>
@@ -119,7 +146,11 @@ export default function Contact({ introDone = true }) {
                 </div>
 
                 {/* RIGHT COLUMN – FORM */}
-                <div ref={formRef} className={`transition-all duration-1000 ${formAnim}`}>
+                <div
+                    ref={formRef}
+                    className={`transition-all duration-1000 ${formAnim}`}
+                    style={fadeUpStyle(formVisible, 0)}
+                >
                     <div className="bg-white rounded-2xl p-8">
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <h4 className="text-xl font-light text-gray-800 border-b border-gray-200 pb-3">
