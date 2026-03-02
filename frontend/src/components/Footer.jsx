@@ -158,9 +158,12 @@ export default function Footer() {
                 {/* Large Brand Name */}
                 <div className="w-full mt-40 overflow-hidden">
                     <h1
-                        className="font-black tracking-[-0.04em] leading-none
-                           text-[clamp(2.8rem,14vw,12rem)] sm:text-[clamp(3rem,16vw,12rem)]
-                           whitespace-nowrap"
+                        className="
+    font-black tracking-[-0.04em] leading-none
+    text-[clamp(2.8rem,14vw,12rem)]  /* mobile + tablet */
+    lg:text-[clamp(3rem,16vw,12rem)] /* only desktop */
+    whitespace-nowrap
+  "
                     >
                         <span className="block hover:text-green-400 transition-colors duration-500 cursor-default">
                             CLIBERDUCHE
