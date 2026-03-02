@@ -10,7 +10,5 @@ Frontend
 Tasks for frontend
 
 Enhancements
-- Navbar
-- Footer - Mobile
-- Contact 
-- sequential animation timing of all pages for consistency
+- height and width constraint for all pages critically the hero, navbar, and footer
+- putol yung company name ng footer sa cp ko

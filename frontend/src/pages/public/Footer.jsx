@@ -132,8 +132,9 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom – Large Brand Name */}
-                <div className="w-full max-w-7xl mx-auto px-2 md:px-4 mt-auto">
-                    <h1 className="w-full text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] 2xl:text-[14rem] font-black tracking-[-0.03em] leading-none">
+                <div className="w-full mt-auto">
+                    <h1 className="w-full font-black tracking-[-0.03em] leading-none 
+               text-[15vw] whitespace-nowrap">
                         <span className="block hover:text-green-400 transition-colors duration-500 cursor-default">
                             CLIBERDUCHE
                         </span>
