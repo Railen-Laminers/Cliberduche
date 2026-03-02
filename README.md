@@ -10,5 +10,4 @@ Frontend
 Tasks for frontend
 
 Enhancements
-- height and width constraint for all pages critically the hero, navbar, and footer
-- putol yung company name ng footer sa cp ko
+- height and width constraint for all pages critically the hero, and footer

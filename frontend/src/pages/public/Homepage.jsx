@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
-import Navbar from "./Navbar";
+import Navbar from "../../components/Navbar";
 import Intro from "./Intro";
 import Home from "./Home";
 import About from "./About";
 import Contact from "./Contact";
 import Projects from "./Projects";
-import Footer from "./Footer";
+import Footer from "../../components/Footer";
 import BackToTopButton from "../../components/BackToTopButton";
 import SmoothScroll from "../../components/SmoothScroll";
 import NotFound from "./NotFound";
