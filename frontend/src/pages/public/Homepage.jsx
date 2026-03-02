@@ -8,7 +8,6 @@ import About from "./About";
 import Contact from "./Contact";
 import Projects from "./Projects";
 import Footer from "../../components/Footer";
-import BackToTopButton from "../../components/BackToTopButton";
 import SmoothScroll from "../../components/SmoothScroll";
 import NotFound from "./NotFound";
 import "./Homepage.css";
@@ -54,8 +53,6 @@ export default function Homepage() {
                 </main>
 
                 <Footer introDone={introDone} />
-
-                {introDone && <BackToTopButton />}
             </SmoothScroll>
         </div>
     );

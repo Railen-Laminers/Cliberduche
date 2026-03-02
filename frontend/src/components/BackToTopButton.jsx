@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
 
-export default function BackToTopButton() {
+export default function BackToTopButton({ className = "fixed bottom-6 right-6" }) {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -43,9 +43,10 @@ export default function BackToTopButton() {
         <button
             onClick={scrollToTop}
             aria-label="Back to top"
-            className={`fixed bottom-6 right-6 z-40 p-3 rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 transform
-            ${visible ? "opacity-100 scale-100" : "opacity-0 scale-0 pointer-events-none"}
-            hover:bg-green-600 hover:scale-110 active:scale-95`}
+            className={`z-40 p-0 rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 transform flex items-center justify-center w-14 h-14
+                ${visible ? "opacity-100 scale-100" : "opacity-0 scale-0 pointer-events-none"}
+                hover:bg-green-600 hover:scale-110 active:scale-95
+                ${className}`}
         >
             <FaArrowUp className="text-lg" />
         </button>

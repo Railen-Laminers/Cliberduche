@@ -1,6 +1,7 @@
 import React from "react";
 import { FaFacebook, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import BackToTopButton from "./BackToTopButton"; // adjust the import path as needed
 
 export default function Footer() {
     const navigate = useNavigate();
@@ -25,7 +26,6 @@ export default function Footer() {
 
     return (
         <footer className="relative bg-[#081c33] text-white overflow-hidden pt-12 lg:pt-16 px-4">
-
             {/* Angular line decoration */}
             <div className="absolute top-0 right-0 w-1/2 h-96 pointer-events-none overflow-hidden">
                 <svg
@@ -55,12 +55,13 @@ export default function Footer() {
                 </svg>
             </div>
 
-            {/* Main container */}
+            {/* Main container - now includes the BackToTop button */}
             <div className="relative w-full max-w-7xl mx-auto flex flex-col">
+                {/* Back to Top Button */}
+                <BackToTopButton className="absolute top-0 lg:-top-12 right-6 z-40" />
 
                 {/* Top section */}
                 <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-
                     {/* Logo */}
                     <div className="lg:w-2/5 flex items-start">
                         <img
@@ -72,7 +73,6 @@ export default function Footer() {
 
                     {/* Columns */}
                     <div className="lg:w-3/5 grid grid-cols-3 gap-6 md:gap-10">
-
                         {/* Menu */}
                         <div>
                             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
@@ -154,12 +154,13 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
+
                 {/* Large Brand Name */}
-                <div className="w-full mt-40 overflow-hidden"> {/* mt-40 gives extra top space */}
+                <div className="w-full mt-40 overflow-hidden">
                     <h1
                         className="font-black tracking-[-0.04em] leading-none
-           text-[clamp(2.8rem,14vw,12rem)] sm:text-[clamp(3rem,16vw,12rem)]
-           whitespace-nowrap"
+                           text-[clamp(2.8rem,14vw,12rem)] sm:text-[clamp(3rem,16vw,12rem)]
+                           whitespace-nowrap"
                     >
                         <span className="block hover:text-green-400 transition-colors duration-500 cursor-default">
                             CLIBERDUCHE
