@@ -10,6 +10,7 @@ import Projects from "./Projects";
 import Footer from "./Footer";
 import BackToTopButton from "../../components/BackToTopButton";
 import SmoothScroll from "../../components/SmoothScroll";
+import NotFound from "./NotFound";
 import "./Homepage.css";
 
 export default function Homepage() {
@@ -17,12 +18,9 @@ export default function Homepage() {
     const introDone = !introPlaying;
     const { pathname } = useLocation();
 
-    // Teleport user to top on every route change
+    // Scroll to top on route change
     useEffect(() => {
-        // Instantly jump to top
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-
-        // Notify SmoothScroll to reset its internal refs
         const event = new CustomEvent("smooth-scroll-set-target", { detail: 0 });
         window.dispatchEvent(event);
     }, [pathname]);
@@ -46,10 +44,12 @@ export default function Homepage() {
                 <main className={noTopPadding ? "" : "pt-16 md:pt-20"}>
                     <Routes>
                         <Route index element={<Home introDone={introDone} />} />
-                        <Route path="/" element={<Home introDone={introDone} />} />
                         <Route path="/about" element={<About introDone={introDone} />} />
                         <Route path="/projects" element={<Projects introDone={introDone} />} />
                         <Route path="/contact" element={<Contact introDone={introDone} />} />
+
+                        {/* 404 Route */}
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>
 

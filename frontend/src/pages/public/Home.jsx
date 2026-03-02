@@ -71,9 +71,9 @@ const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     );
 };
 
-// Floating infinity icon
+// Floating infinity icon (now accepts onClick)
 const FloatingInfinityIcon = forwardRef(
-    ({ className, floatClass, animClass, iconClass }, ref) => {
+    ({ className, floatClass, animClass, iconClass, onClick }, ref) => {
         const [isHovered, setIsHovered] = useState(false);
         const iconRef = useRef(null);
         const targetRef = useRef({ x: 0, y: 0, rotate: 0 });
@@ -172,6 +172,7 @@ const FloatingInfinityIcon = forwardRef(
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     onMouseMove={handleMouseMove}
+                    onClick={onClick} // Click handler added
                 >
                     <LuInfinity className={iconClass} />
                 </div>
@@ -420,6 +421,19 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
 // ---------- Main Home Component ----------
 export default function Home({ introDone = true }) {
     const navigate = useNavigate();
+    const [infinityClickCount, setInfinityClickCount] = useState(0);
+
+    // Effect to navigate when count reaches 4 (or more)
+    useEffect(() => {
+        if (infinityClickCount >= 4) {
+            navigate("/404"); // will be caught by the "*" route and show NotFound
+            setInfinityClickCount(0);
+        }
+    }, [infinityClickCount, navigate]);
+
+    const handleInfinityClick = useCallback(() => {
+        setInfinityClickCount(prev => prev + 1);
+    }, []);
 
     // ========== ANIMATION CONFIGURATION ==========
     const ANIM_CONFIG = {
@@ -519,12 +533,15 @@ export default function Home({ introDone = true }) {
                         </button>
                     </div>
                 </div>
+
+                {/* Desktop infinity icons (hidden on mobile) */}
                 <FloatingInfinityIcon
                     ref={float1Ref}
                     className="absolute top-1/4 right-6 md:right-12 hidden lg:block"
                     floatClass="animate-float"
                     animClass={float1Anim}
                     iconClass="w-12 h-12 lg:w-16 lg:h-16 text-green-400 opacity-20"
+                    onClick={handleInfinityClick}
                 />
                 <FloatingInfinityIcon
                     ref={float2Ref}
@@ -532,6 +549,16 @@ export default function Home({ introDone = true }) {
                     floatClass="animate-float"
                     animClass={float2Anim}
                     iconClass="w-10 h-10 lg:w-14 lg:h-14 text-white opacity-10"
+                    onClick={handleInfinityClick}
+                />
+
+                {/* Mobile infinity icon (visible only on small screens) */}
+                <FloatingInfinityIcon
+                    className="absolute bottom-1/4 right-6 block lg:hidden"
+                    floatClass="animate-float"
+                    animClass=""
+                    iconClass="w-10 h-10 text-green-400 opacity-30"
+                    onClick={handleInfinityClick}
                 />
             </section>
 
