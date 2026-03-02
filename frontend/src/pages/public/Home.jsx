@@ -494,7 +494,7 @@ export default function Home({ introDone = true }) {
                 {/* Background with BlockReveal */}
                 <div className="absolute inset-0">
                     <div
-                        className="absolute inset-0 bg-cover bg-center md:bg-fixed"
+                        className="absolute inset-0 bg-cover bg-center bg-fixed"
                         style={{
                             backgroundImage: `url(${office})`,
                         }}
@@ -503,6 +503,7 @@ export default function Home({ introDone = true }) {
                     <div className="absolute inset-0 bg-black/30" />
                 </div>
 
+                {/* Centered container – now also holds the floating icons */}
                 <div className="max-w-6xl w-full mx-auto relative z-10 text-left">
                     <h1
                         className="font-bold leading-tight mb-4 sm:mb-6 drop-shadow-lg"
@@ -524,7 +525,6 @@ export default function Home({ introDone = true }) {
                         >
                             Request a Quote
                         </button>
-
                         <button
                             onClick={() => navigate("/projects")}
                             className="w-full sm:w-auto border-2 border-white text-white hover:text-green-400 hover:border-green-400 px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white"
@@ -532,34 +532,33 @@ export default function Home({ introDone = true }) {
                             View Projects
                         </button>
                     </div>
+
+                    {/* Desktop infinity icons (hidden on mobile) */}
+                    <FloatingInfinityIcon
+                        ref={float1Ref}
+                        className="absolute top-1/4 right-0 md:right-0 hidden lg:block"
+                        floatClass="animate-float"
+                        animClass={float1Anim}
+                        iconClass="w-12 h-12 lg:w-16 lg:h-16 text-green-400 opacity-20"
+                        onClick={handleInfinityClick}
+                    />
+                    <FloatingInfinityIcon
+                        ref={float2Ref}
+                        className="absolute bottom-1/4 left-0 animation-delay-1000"
+                        floatClass="animate-float"
+                        animClass={float2Anim}
+                        iconClass="w-10 h-10 lg:w-14 lg:h-14 text-white opacity-30"
+                        onClick={handleInfinityClick}
+                    />
+                    {/* Mobile infinity icon (visible only on small screens) */}
+                    <FloatingInfinityIcon
+                        className="absolute bottom-1/4 right-0 block lg:hidden"
+                        floatClass="animate-float"
+                        animClass=""
+                        iconClass="w-10 h-10 text-green-400 opacity-30"
+                        onClick={handleInfinityClick}
+                    />
                 </div>
-
-                {/* Desktop infinity icons (hidden on mobile) */}
-                <FloatingInfinityIcon
-                    ref={float1Ref}
-                    className="absolute top-1/4 right-6 md:right-12 hidden lg:block"
-                    floatClass="animate-float"
-                    animClass={float1Anim}
-                    iconClass="w-12 h-12 lg:w-16 lg:h-16 text-green-400 opacity-20"
-                    onClick={handleInfinityClick}
-                />
-                <FloatingInfinityIcon
-                    ref={float2Ref}
-                    className="absolute bottom-1/4 left-6 md:left-12 hidden lg:block animation-delay-1000"
-                    floatClass="animate-float"
-                    animClass={float2Anim}
-                    iconClass="w-10 h-10 lg:w-14 lg:h-14 text-white opacity-10"
-                    onClick={handleInfinityClick}
-                />
-
-                {/* Mobile infinity icon (visible only on small screens) */}
-                <FloatingInfinityIcon
-                    className="absolute bottom-1/4 right-6 block lg:hidden"
-                    floatClass="animate-float"
-                    animClass=""
-                    iconClass="w-10 h-10 text-green-400 opacity-30"
-                    onClick={handleInfinityClick}
-                />
             </section>
 
             {/* ========== WHAT WE DO ========== */}
