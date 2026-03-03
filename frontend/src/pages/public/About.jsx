@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import {
   FaBolt,
   FaEye,
-  FaShieldAlt,
+ FaShieldAlt,
   FaCheckCircle,
   FaBalanceScale,
   FaInfinity,
+  FaArrowDown,
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
@@ -330,47 +331,6 @@ export default function About({ introDone = true }) {
         </div>
       </section>
 
-      {/* ========== INSIGHTS & PORTFOLIO (NEW SECTION) ========== */}
-      <section
-        id="insights"
-        className="relative px-6 md:px-10 py-16 md:py-20 bg-white overflow-hidden"
-      >
-        <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
-        <div className="max-w-6xl mx-auto relative z-10">
-          {/* Insights heading */}
-          <div
-            ref={insightsRef}
-            className={`text-center mb-8 transition-all duration-1000 ${insightsAnim}`}
-          >
-            <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Insights</h3>
-            <div className="flex justify-center items-center gap-2 mb-4">
-              <div className="h-px w-16 bg-green-300"></div>
-              <FaInfinity className="text-dark-600 text-2xl" />
-              <div className="h-px w-16 bg-blue-300"></div>
-            </div>
-            <p className="text-gray-600 max-w-3xl mx-auto text-lg">
-              Drawing from years of experience in land development and construction, our insights
-              showcase the practical knowledge, sustainable practices, and innovative approaches
-              that guide every project. We share lessons learned and strategies that help
-              communities, clients, and partners make informed decisions.
-            </p>
-          </div>
-
-          {/* Portfolio card */}
-          <div
-            ref={portfolioRef}
-            className={`transition-all duration-1000 ${portfolioAnim}`}
-          >
-            <PortfolioHero
-              imageUrl="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80"
-              title="Discover Our Work"
-              description="Explore CLIBERDUCHE CORPORATION’s journey—from our foundation in 2018 to our current projects. Learn about our sustainable land development practices, community impact, and how we deliver high-quality materials and construction services across CALABARZON."
-              ctaUrl="https://cliberduche-portfolio.vercel.app/"
-            />
-          </div>
-        </div>
-      </section>
-
       {/* ========== LEADERSHIP & TEAM ========== */}
       <section
         id="leadership"
@@ -409,6 +369,62 @@ export default function About({ introDone = true }) {
                 animConfig={ANIM_CONFIG} // pass config to TeamCard
               />
             ))}
+          </div>
+
+          {/* Subtle cue to next section */}
+          <div className="flex justify-center mt-12">
+            <a
+              href="#insights"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('insights')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 transition-colors duration-300 group"
+            >
+              <span className="text-sm uppercase tracking-wider">Discover Our Work</span>
+              <FaArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform duration-300" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ========== INSIGHTS & PORTFOLIO (NOW AT THE BOTTOM) ========== */}
+      <section
+        id="insights"
+        className="relative px-6 md:px-10 py-16 md:py-20 bg-white overflow-hidden"
+      >
+        <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Insights heading */}
+          <div
+            ref={insightsRef}
+            className={`text-center mb-8 transition-all duration-1000 ${insightsAnim}`}
+          >
+            <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Insights</h3>
+            <div className="flex justify-center items-center gap-2 mb-4">
+              <div className="h-px w-16 bg-green-300"></div>
+              <FaInfinity className="text-dark-600 text-2xl" />
+              <div className="h-px w-16 bg-blue-300"></div>
+            </div>
+            <p className="text-gray-600 max-w-3xl mx-auto text-lg">
+              Drawing from years of experience in land development and construction, our insights
+              showcase the practical knowledge, sustainable practices, and innovative approaches
+              that guide every project. We share lessons learned and strategies that help
+              communities, clients, and partners make informed decisions.
+            </p>
+          </div>
+
+          {/* Portfolio card */}
+          <div
+            ref={portfolioRef}
+            className={`transition-all duration-1000 ${portfolioAnim}`}
+          >
+            <PortfolioHero
+              imageUrl="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80"
+              title="Discover Our Work"
+              description="Explore CLIBERDUCHE CORPORATION’s journey—from our foundation in 2018 to our current projects. Learn about our sustainable land development practices, community impact, and how we deliver high-quality materials and construction services across CALABARZON."
+              ctaUrl="https://cliberduche-portfolio.vercel.app/"
+            />
           </div>
         </div>
       </section>
