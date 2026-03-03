@@ -4,6 +4,7 @@ import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import useScrollAnimation from '../../hooks/useScrollAnimation';
 import logo from '/logo/cliberduche_logo.png';
 import PerspectiveCard from '../../components/PerspectiveCard';
+import BackgroundDecor from '../../components/BackgroundDecor'; // <-- import the decor
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -28,7 +29,15 @@ export default function Login() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] flex items-center justify-center px-4 relative">
-            {/* Fixed Return Home Button - Always at top left */}
+            {/* Background grid pattern (no blur circles) */}
+            <BackgroundDecor
+                pattern="grid"
+                color="green"
+                blurCircles={false}
+                opacity={0.1}
+            />
+
+            {/* Fixed Return Home Button */}
             <Link
                 to="/"
                 className="fixed top-6 left-6 z-40 inline-flex items-center bg-white/90 backdrop-blur-sm text-[#0b2545] hover:text-[#1f7a8c] hover:bg-white transition-all duration-300 group px-4 py-3 rounded-full shadow-lg"
@@ -38,19 +47,16 @@ export default function Login() {
             </Link>
 
             <div className="max-w-md w-full">
-                {/* Removed the inline return home link */}
-
                 {/* Login Card with Perspective */}
                 <PerspectiveCard
                     className={`relative ${loginAnimation}`}
-                    maxRotate={12}      // Maximum tilt angle
-                    defaultScale={1.03} // Slight pop-out effect
+                    maxRotate={12}
+                    defaultScale={1.03}
                 >
                     <div
                         ref={loginRef}
                         className="bg-white/10 backdrop-blur-md rounded-2xl p-6 pt-14 shadow-2xl border border-white/20"
                     >
-
                         {/* Floating Glass Logo */}
                         <div className="absolute -top-9 left-1/2 -translate-x-1/2">
                             <div className="bg-white/30 backdrop-blur-md rounded-full p-3 shadow-lg border border-white/40">
@@ -70,7 +76,6 @@ export default function Login() {
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
-
                             {/* Email */}
                             <div className="relative">
                                 <input
@@ -152,7 +157,6 @@ export default function Login() {
                                 Sign In
                             </button>
                         </form>
-
                     </div>
                 </PerspectiveCard>
             </div>

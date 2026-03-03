@@ -10,5 +10,4 @@ Frontend
 Tasks for frontend
 
 Enhancements
-- height and width constraint for all pages critically the hero, and footer
-- sira yung company name footer sa tablets
+- YUng mga images pa

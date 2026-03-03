@@ -1,7 +1,7 @@
 import React from "react";
 import { FaFacebook, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import BackToTopButton from "./BackToTopButton"; // adjust the import path as needed
+import BackToTopButton from "./BackToTopButton"; 
 
 export default function Footer() {
     const navigate = useNavigate();
@@ -26,42 +26,42 @@ export default function Footer() {
 
     return (
         <footer className="relative bg-[#081c33] text-white overflow-hidden pt-12 lg:pt-16 px-4">
-            {/* Angular line decoration */}
-            <div className="absolute top-0 right-0 w-1/2 h-96 pointer-events-none overflow-hidden">
-                <svg
-                    className="w-full h-full"
-                    viewBox="0 0 600 400"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <line
-                        x1="600"
-                        y1="0"
-                        x2="0"
-                        y2="400"
-                        stroke="white"
-                        strokeWidth="0.5"
-                        opacity="0.2"
-                    />
-                    <line
-                        x1="600"
-                        y1="100"
-                        x2="100"
-                        y2="400"
-                        stroke="white"
-                        strokeWidth="0.5"
-                        opacity="0.1"
-                    />
-                </svg>
-            </div>
-
-            {/* Main container - now includes the BackToTop button */}
+            {/* Main container - limits width and centers content */}
             <div className="relative w-full max-w-7xl mx-auto flex flex-col">
-                {/* Back to Top Button */}
+                {/* Angular line decoration - moved inside container */}
+                <div className="absolute top-0 right-0 w-1/2 h-96 pointer-events-none overflow-hidden z-0">
+                    <svg
+                        className="w-full h-full"
+                        viewBox="0 0 600 400"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <line
+                            x1="600"
+                            y1="0"
+                            x2="0"
+                            y2="400"
+                            stroke="white"
+                            strokeWidth="0.5"
+                            opacity="0.2"
+                        />
+                        <line
+                            x1="600"
+                            y1="100"
+                            x2="100"
+                            y2="400"
+                            stroke="white"
+                            strokeWidth="0.5"
+                            opacity="0.1"
+                        />
+                    </svg>
+                </div>
+
+                {/* Back to Top Button - stays above everything */}
                 <BackToTopButton className="absolute top-0 lg:-top-12 right-6 z-40" />
 
-                {/* Top section */}
-                <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+                {/* Top section (logo + columns) - placed above decoration */}
+                <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 relative z-10">
                     {/* Logo */}
                     <div className="lg:w-2/5 flex items-start">
                         <img
@@ -155,15 +155,15 @@ export default function Footer() {
                     </div>
                 </div>
 
-                {/* Large Brand Name */}
-                <div className="w-full mt-40 overflow-hidden">
+                {/* Large Brand Name - also above decoration */}
+                <div className="w-full mt-40 overflow-hidden relative z-10">
                     <h1
                         className="
-    font-black tracking-[-0.04em] leading-none
-    text-[clamp(2.8rem,14vw,12rem)]  /* mobile + tablet */
-    lg:text-[clamp(3rem,16vw,12rem)] /* only desktop */
-    whitespace-nowrap
-  "
+                            font-black tracking-[-0.04em] leading-none
+                            text-[clamp(2.8rem,14vw,12rem)]
+                            lg:text-[clamp(3rem,16vw,12rem)]
+                            whitespace-nowrap
+                        "
                     >
                         <span className="block hover:text-green-400 transition-colors duration-500 cursor-default">
                             CLIBERDUCHE

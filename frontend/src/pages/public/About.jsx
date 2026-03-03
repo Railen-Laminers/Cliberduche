@@ -252,17 +252,8 @@ export default function About({ introDone = true }) {
                     <div className="flex-1 h-px bg-green-300"></div>
                   </div>
                   <div className="space-y-4 text-gray-700 leading-relaxed pl-4 border-l-4 border-green-400">
-                    <p className="text-lg font-light italic">
-                      “We are a responsible land development company...”
-                    </p>
                     <p>
-                      We provide high-quality backfill materials for land development projects and other
-                      infrastructures, including but not limited to sub-base materials like aggregates,
-                      mixed soil, and boulders. We support sustainable land development by adhering to the
-                      existing environmental regulations of the Philippines. We provide jobs for fellow
-                      Filipinos, which significantly contributes to boosting our country's economy. We are
-                      also keen to deliver excellent value to our partner communities, investors, employees,
-                      and other stakeholders.
+                      “We are a responsible land development company that provides high-quality backfill materials for land development projects and other infrastructures, including but not limited to sub-base materials like aggregates, mixed soil, and boulders. We support sustainable land development by adhering to the existing environmental regulations of the Philippines. We provide jobs for fellow Filipinos, which significantly contributes to boosting our country's economy. We are also keen to deliver excellent value to our partner communities, investors, employees, and other stakeholders.”
                     </p>
                   </div>
                 </div>
@@ -282,15 +273,8 @@ export default function About({ introDone = true }) {
                     <FaEye className="text-blue-600 text-2xl" />
                   </div>
                   <div className="space-y-4 text-gray-700 leading-relaxed pr-4 border-r-4 border-blue-400 text-right">
-                    <p className="text-lg font-light italic">
-                      “Our vision is to be a highly respected, world-class natural resource land
-                      development company...”
-                    </p>
                     <p>
-                      Committed to adhering to international standards in land development operations and
-                      environmental conservation, sustainable projects that cover converting land development
-                      sites into other useful and economic projects in the future, thus converting land
-                      development projects to future commercial and housing projects.
+                      “Our vision is to be a highly respected, world-class natural resource land development company committed to adhering to international standards in land development operations and environmental conservation, sustainable projects that cover converting land development sites into other useful and economic projects in the future, thus converting land development projects to future commercial and housing projects.”ㅤ
                     </p>
                   </div>
                 </div>
@@ -327,8 +311,7 @@ export default function About({ introDone = true }) {
                 </div>
                 <h5 className="font-semibold text-xl mb-2 text-[#0b2545]">Safety</h5>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Safety is our priority on every worksite—before, during, and after project execution—to
-                  protect our people, projects, and communities.
+                  We ensures safety at work site, safety of projects and safety of personnel and thus we ensure safety practices which is the pinnacle, before and after execution of projects.
                 </p>
               </div>
 
@@ -339,8 +322,7 @@ export default function About({ introDone = true }) {
                 </div>
                 <h5 className="font-semibold text-xl mb-2 text-[#0b2545]">Integrity</h5>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  We operate with honesty and accountability, ensuring compliance with industry laws,
-                  maintaining a reliable workforce, and delivering projects on time as promised.
+                  We ensure compliance with existing laws covering the construction industry, reliable workforce and our timely delivery of projects.
                 </p>
               </div>
             </div>

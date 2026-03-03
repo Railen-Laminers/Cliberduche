@@ -1,6 +1,13 @@
 // Contact.jsx
 import React, { useState, useEffect } from "react";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaInfinity } from "react-icons/fa";
+import {
+    FaPhone,
+    FaEnvelope,
+    FaMapMarkerAlt,
+    FaInfinity,
+    FaCheckCircle,
+    FaTimes,
+} from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import Map from "./Map";
 import BackgroundDecor from "../../components/BackgroundDecor";
@@ -22,6 +29,9 @@ export default function Contact({ introDone = true }) {
         message: "",
         privacyAccepted: false,
     });
+
+    // State for success modal
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -45,6 +55,8 @@ export default function Contact({ introDone = true }) {
             message: "",
             privacyAccepted: false,
         });
+        // Show success modal
+        setShowSuccessModal(true);
     };
 
     // Dynamic viewport height (same as Home page)
@@ -78,15 +90,15 @@ export default function Contact({ introDone = true }) {
             className="relative p-6 md:px-10 bg-white overflow-hidden flex flex-col justify-center"
             style={{ minHeight: "calc(var(--vh, 1vh) * 100)" }}
         >
-            <BackgroundDecor pattern="grid" color="green" opacity={0.05} blurCircles={false} />
+            <BackgroundDecor pattern="grid" color="green" opacity={0.10} blurCircles={false} />
 
             <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-16 items-center relative z-10">
-                {/* LEFT COLUMN – COMPANY INFO & MAP */}
+                {/* LEFT COLUMN – COMPANY INFO & MAP (unchanged) */}
                 <div
                     ref={infoRef}
                     className={`flex flex-col text-gray-800 transition-all duration-1000 ${infoAnim}`}
                 >
-                    {/* Heading – uses headingVisible */}
+                    {/* Heading */}
                     <div ref={headingRef} className={`mb-8 transition-all duration-1000 ${headingAnim}`}>
                         <div style={fadeUpStyle(headingVisible, 0)} className="flex items-center gap-4 mb-2">
                             <div className="h-px w-16 bg-green-300"></div>
@@ -95,7 +107,7 @@ export default function Contact({ introDone = true }) {
                         </div>
                     </div>
 
-                    {/* Address block – staggered with paragraphStagger */}
+                    {/* Address block */}
                     <div className="space-y-6 mb-8" style={fadeUpStyle(infoVisible, 0 * ANIM_CONFIG.paragraphStagger)}>
                         <div>
                             <h4 className="text-lg font-semibold text-green-800 mb-1">Cabuyao Office</h4>
@@ -112,7 +124,7 @@ export default function Contact({ introDone = true }) {
                         </div>
                     </div>
 
-                    {/* Core services – next stagger */}
+                    {/* Core services */}
                     <div className="mb-8" style={fadeUpStyle(infoVisible, 1 * ANIM_CONFIG.paragraphStagger)}>
                         <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
                             Core Services
@@ -127,7 +139,7 @@ export default function Contact({ introDone = true }) {
                         </ul>
                     </div>
 
-                    {/* Founded / incorporated – next stagger */}
+                    {/* Founded / incorporated */}
                     <div
                         className="flex space-x-8 text-sm text-gray-600 mb-10"
                         style={fadeUpStyle(infoVisible, 2 * ANIM_CONFIG.paragraphStagger)}
@@ -136,7 +148,7 @@ export default function Contact({ introDone = true }) {
                         <p><span className="font-medium">Incorporated:</span> November 28, 2018</p>
                     </div>
 
-                    {/* Map – last stagger */}
+                    {/* Map */}
                     <div style={fadeUpStyle(infoVisible, 3 * ANIM_CONFIG.paragraphStagger)}>
                         <div className="rounded-sm overflow-hidden border border-gray-200 shadow-sm">
                             <Map />
@@ -145,13 +157,13 @@ export default function Contact({ introDone = true }) {
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN – FORM */}
+                {/* RIGHT COLUMN – FORM (unchanged) */}
                 <div
                     ref={formRef}
                     className={`transition-all duration-1000 ${formAnim}`}
                     style={fadeUpStyle(formVisible, 0)}
                 >
-                    <div className="bg-white rounded-2xl p-8">
+                    <div className="bg-transparent rounded-2xl p-8">
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <h4 className="text-xl font-light text-gray-800 border-b border-gray-200 pb-3">
                                 Send us a message
@@ -290,6 +302,54 @@ export default function Contact({ introDone = true }) {
                     </div>
                 </div>
             </div>
+
+            {/* ========== MINIMALIST SUCCESS MODAL ========== */}
+            {showSuccessModal && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4"
+                    onClick={() => setShowSuccessModal(false)} // close on overlay click
+                >
+                    <div
+                        className="bg-white rounded-sm shadow-xl max-w-sm w-full p-6 relative animate-fadeIn"
+                        onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
+                    >
+                        {/* Close icon (optional) */}
+                        <button
+                            onClick={() => setShowSuccessModal(false)}
+                            className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
+                            aria-label="Close modal"
+                        >
+                            <FaTimes className="w-5 h-5" />
+                        </button>
+
+                        {/* Success content */}
+                        <div className="text-center">
+                            <FaCheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+                            <h3 className="text-2xl font-semibold text-gray-800 mb-2">Message Sent!</h3>
+                            <p className="text-gray-600 mb-6">
+                                Thank you for reaching out. We’ll get back to you as soon as possible.
+                            </p>
+                            <button
+                                onClick={() => setShowSuccessModal(false)}
+                                className="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                            >
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Add a tiny fade-in animation for the modal */}
+            <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.2s ease-out;
+        }
+      `}</style>
         </section>
     );
 }
