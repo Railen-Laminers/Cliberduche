@@ -8,13 +8,8 @@ import ScrollReveal from "../../components/ScrollReveal";
 import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
 
-// Icons
+// Icons – only those actually used in the component
 import {
-    FaTruckLoading,
-    FaMountain,
-    FaClipboardList,
-    FaTools,
-    FaProjectDiagram,
     FaInfinity,
     FaPhoneAlt,
     FaLeaf,
@@ -172,7 +167,7 @@ const FloatingInfinityIcon = forwardRef(
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     onMouseMove={handleMouseMove}
-                    onClick={onClick} // Click handler added
+                    onClick={onClick}
                 >
                     <LuInfinity className={iconClass} />
                 </div>
@@ -183,98 +178,49 @@ const FloatingInfinityIcon = forwardRef(
 
 FloatingInfinityIcon.displayName = "FloatingInfinityIcon";
 
-// Original services data
-const services = [
-    {
-        title: "Backfill & Land Sourcing",
-        description:
-            "Supply of high-quality backfilling materials including sub-base, aggregates, boulders, and other land resources based on client specifications.",
-        icon: <FaTruckLoading className="w-8 h-8" />,
-        type: "core",
-        image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    },
-    {
-        title: "Land Development",
-        description:
-            "Comprehensive land development services such as clearing, cutting and peeling, leveling works, and preparation for construction-ready sites.",
-        icon: <FaMountain className="w-8 h-8" />,
-        type: "core",
-        image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    },
-    {
-        title: "Site Management",
-        description:
-            "Professional on-site supervision ensuring efficient coordination, safety compliance, and smooth execution of construction activities.",
-        icon: <FaClipboardList className="w-8 h-8" />,
-        type: "core",
-        image:
-            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    },
-    {
-        title: "Equipment Leasing",
-        description:
-            "Reliable leasing of construction equipment to support various project requirements, improving efficiency and operational flexibility.",
-        icon: <FaTools className="w-8 h-8" />,
-        type: "core",
-        image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    },
-    {
-        title: "Project Management Consultation",
-        description:
-            "Expert consultation services providing planning, coordination, and execution support for construction and land development projects.",
-        icon: <FaProjectDiagram className="w-8 h-8" />,
-        type: "specialized",
-        image:
-            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    },
-];
-
-// Enriched services data
+// ---------- Constant of Services ----------
 const allServices = [
     {
-        ...services[0],
+        title: "Backfill & Land Sourcing",
         subDescription: "Premium backfilling materials for stable foundations.",
         fullDescription:
             "We supply high-quality sub-base, aggregates, boulders, and other land resources tailored to client specifications. Our materials meet rigorous standards to ensure long-lasting results.",
         outcome:
             "Projects benefit from reduced settlement, improved load-bearing capacity, and cost efficiency.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.pexels.com/photos/95687/pexels-photo-95687.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
     },
     {
-        ...services[1],
+        title: "Land Development",
         subDescription: "Comprehensive site preparation and development.",
         fullDescription:
             "From clearing and cutting to leveling and grading, we transform raw land into construction-ready sites. Our team uses advanced equipment and techniques to handle projects of any scale.",
         outcome:
             "Sites are delivered on time, fully compliant with regulations, and optimized for subsequent construction.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.pexels.com/photos/36226266/pexels-photo-36226266.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
     },
     {
-        ...services[2],
+        title: "Site Management",
         subDescription: "Professional on‑site supervision and coordination.",
         fullDescription:
             "We provide experienced site managers who oversee daily operations, ensure safety compliance, coordinate subcontractors, and maintain project schedules.",
         outcome: "Smoother workflows, fewer delays, and enhanced safety on every project.",
         image:
-            "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.pexels.com/photos/544965/pexels-photo-544965.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
     },
     {
-        ...services[3],
+        title: "Equipment Leasing",
         subDescription: "Reliable machinery for your project needs.",
         fullDescription:
             "We offer a wide range of construction equipment for lease – from excavators to compactors – all well‑maintained and delivered to your site.",
         outcome:
             "Cost‑effective access to top‑quality equipment without the capital investment.",
         image:
-            "https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "https://images.pexels.com/photos/38070/pexels-photo-38070.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
     },
     {
-        ...services[4],
+        title: "Project Management Consultation",
         subDescription: "Expert guidance from planning to execution.",
         fullDescription:
             "Our consultants work alongside your team to plan, coordinate, and oversee every phase of your project, ensuring alignment with budget, timeline, and quality goals.",
