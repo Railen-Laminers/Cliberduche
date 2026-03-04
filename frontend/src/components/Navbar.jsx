@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaTimes, FaBars, FaArrowUp } from "react-icons/fa";
+import gsap from "gsap";
 import logo from "/logo/cliberduche_logo.png";
 
 export default function Navbar({ introDone = false }) {
@@ -8,17 +9,21 @@ export default function Navbar({ introDone = false }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isTop, setIsTop] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isAtBottom, setIsAtBottom] = useState(false); // new state
+  const [isAtBottom, setIsAtBottom] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Refs for GSAP animations
+  const desktopNavRef = useRef(null);
+  const animationRan = useRef(false);
+
+  // Scroll and resize detection
   useEffect(() => {
     const handleScrollAndResize = () => {
       const currentScrollPos = window.scrollY;
       setIsScrolled(currentScrollPos > 50);
       setIsTop(currentScrollPos < 10);
 
-      // Bottom detection (within 50px of the bottom)
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
@@ -29,7 +34,7 @@ export default function Navbar({ introDone = false }) {
 
     window.addEventListener("scroll", handleScrollAndResize);
     window.addEventListener("resize", handleScrollAndResize);
-    handleScrollAndResize(); // initial call
+    handleScrollAndResize();
 
     return () => {
       window.removeEventListener("scroll", handleScrollAndResize);
@@ -37,10 +42,50 @@ export default function Navbar({ introDone = false }) {
     };
   }, []);
 
+  // Load state after intro
   useEffect(() => {
-    if (introDone) setTimeout(() => setIsLoaded(true), 300);
+    if (introDone) {
+      setTimeout(() => setIsLoaded(true), 300);
+    }
   }, [introDone]);
 
+  // GSAP sequential animation for desktop nav container and links
+  useEffect(() => {
+    if (isLoaded && !animationRan.current) {
+      const navLinks = desktopNavRef.current?.children;
+
+      // Set initial state
+      gsap.set(desktopNavRef.current, { opacity: 0, y: -20 });
+      gsap.set(navLinks, { opacity: 0, y: 20 });
+
+      // Animate container first
+      gsap.to(desktopNavRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        onComplete: () => {
+          // Animate links sequentially after container animation
+          gsap.to(navLinks, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: "power2.out",
+          });
+        },
+      });
+
+      animationRan.current = true;
+    }
+
+    return () => {
+      gsap.killTweensOf(desktopNavRef.current?.children);
+      gsap.killTweensOf(desktopNavRef.current);
+    };
+  }, [isLoaded]);
+
+  // Prevent body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
@@ -48,6 +93,7 @@ export default function Navbar({ introDone = false }) {
     };
   }, [isOpen]);
 
+  // Close on Escape key
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -56,6 +102,7 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
+  // Close mobile menu on window resize (lg breakpoint)
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsOpen(false);
@@ -63,6 +110,20 @@ export default function Navbar({ introDone = false }) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Optional: ensure navbar logo has no conflicting transitions right after intro
+  useEffect(() => {
+    if (isLoaded) {
+      const logoEl = document.getElementById("nav-logo");
+      if (logoEl) {
+        logoEl.style.transition = "none";
+        logoEl.getBoundingClientRect();
+        setTimeout(() => {
+          logoEl.style.transition = "";
+        }, 100);
+      }
+    }
+  }, [isLoaded]);
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -73,30 +134,24 @@ export default function Navbar({ introDone = false }) {
 
   const isActive = (path) => location.pathname === path;
 
-  const desktopLinkClass = (path) => {
-    return isActive(path)
-      ? "text-green-400"
-      : "text-white hover:text-green-400";
-  };
+  const desktopLinkClass = (path) =>
+    isActive(path) ? "text-green-400" : "text-white hover:text-green-400";
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 transition-transform duration-300 ease-in-out ${
-          isLoaded ? "opacity-100" : "opacity-0"
-        }`}
+        className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 transition-transform duration-300 ease-in-out ${isLoaded ? "opacity-100" : "opacity-0"
+          }`}
         style={{ transform: isAtBottom ? "translateY(-100%)" : "translateY(0)" }}
       >
-        {/* Inner container: wider max-width and smaller padding */}
         <div
           className={`max-w-screen-2xl mx-auto flex items-center justify-between px-4 lg:px-8 h-20 transition-all duration-300 bg-transparent text-white mt-4`}
         >
-          {/* Logo - fades in/out */}
+          {/* Logo */}
           <button
             onClick={() => navigate("/")}
-            className={`flex items-center gap-3 group transition-opacity duration-300 ${
-              isTop ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
+            className={`flex items-center gap-3 group transition-opacity duration-300 ${isTop ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
             aria-label="Go to homepage"
             disabled={!isTop}
           >
@@ -108,8 +163,11 @@ export default function Navbar({ introDone = false }) {
             />
           </button>
 
-          {/* Desktop Navigation - Floating */}
-          <nav className="hidden lg:flex items-center gap-2 bg-[#081c33]/80 backdrop-blur-sm border border-white/10 px-6 py-2 rounded-sm shadow-2xl">
+          {/* Desktop Navigation */}
+          <nav
+            ref={desktopNavRef}
+            className="hidden lg:flex items-center gap-2 bg-[#081c33]/80 backdrop-blur-sm border border-white/10 px-6 py-2 rounded-sm shadow-2xl"
+          >
             {navItems.map((item) => {
               const isContact = item.label === "Contact";
 
@@ -119,6 +177,7 @@ export default function Navbar({ introDone = false }) {
                     <Link
                       to={item.path}
                       className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2 group ml-2"
+                      style={{ opacity: 0, transform: "translateY(20px)" }} // initial hidden
                     >
                       <span>{item.label}</span>
                       <FaArrowUp className="w-3 h-3 rotate-45 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -129,14 +188,16 @@ export default function Navbar({ introDone = false }) {
                       className={`relative px-4 py-2 font-medium transition-all duration-300 group flex items-center gap-1 ${desktopLinkClass(
                         item.path
                       )}`}
+                      style={{ opacity: 0, transform: "translateY(20px)" }} // initial hidden
                     >
                       <span className="relative z-10 text-sm tracking-[0.3em] uppercase">
                         {item.label}
                       </span>
                       <FaArrowUp
-                        className={`w-3 h-3 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${
-                          isActive(item.path) ? "text-green-400" : "text-white group-hover:text-green-400"
-                        }`}
+                        className={`w-3 h-3 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${isActive(item.path)
+                          ? "text-green-400"
+                          : "text-white group-hover:text-green-400"
+                          }`}
                       />
                     </Link>
                   )}
@@ -157,22 +218,18 @@ export default function Navbar({ introDone = false }) {
         </div>
       </header>
 
-      {/* Mobile Full-Screen Overlay - now with floating glass effect */}
+      {/* Mobile Full-Screen Overlay (updated to match desktop styling) */}
       <div
-        className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-500 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setIsOpen(false)} // Close when clicking backdrop
+        className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-500 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+        onClick={() => setIsOpen(false)}
       >
-        {/* Invisible backdrop for click-outside */}
         <div className="absolute inset-0 bg-transparent" />
 
-        {/* Sliding panel with glass effect */}
         <div
-          className={`absolute right-0 top-0 h-full w-full sm:w-[400px] bg-[#081c33]/80 backdrop-blur-sm border-l border-white/10 shadow-2xl transition-transform duration-500 ease-out ${
-            isOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-          onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside panel
+          className={`absolute right-0 top-0 h-full w-full sm:w-[400px] bg-[#081c33]/80 backdrop-blur-sm border-l border-white/10 shadow-2xl transition-transform duration-500 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-6 border-b border-white/10">
@@ -194,62 +251,54 @@ export default function Navbar({ introDone = false }) {
             </button>
           </div>
 
-          {/* Navigation Items */}
-          <nav className="flex-1 flex flex-col justify-center px-6 md:px-12">
-            {navItems.map((item, index) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setIsOpen(false)}
-                className={`group py-6 md:py-8 border-b border-white/10 transition-all duration-500 ease-out ${
-                  isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
-                style={{
-                  transitionDelay: isOpen ? `${index * 100 + 200}ms` : "0ms",
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`text-4xl md:text-6xl font-bold tracking-tight transition-colors duration-300 ${
-                      isActive(item.path) ? "text-green-400" : "text-white group-hover:text-green-400"
+          {/* Navigation Items - now styled like desktop */}
+          <nav className="flex-1 flex flex-col justify-start px-6 py-8 space-y-2">
+            {navItems.map((item, index) => {
+              const isContact = item.label === "Contact";
+              const activeClass = isActive(item.path) ? "text-green-400" : "text-white";
+
+              return (
+                <div
+                  key={item.path}
+                  className={`transition-all duration-500 ease-out ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
                     }`}
-                  >
-                    {item.label.toUpperCase()}
-                  </span>
-                  <span
-                    className={`transform transition-all duration-300 ${
-                      isOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
-                    }`}
-                    style={{
-                      transitionDelay: isOpen ? `${index * 100 + 400}ms` : "0ms",
-                    }}
-                  >
-                    <svg
-                      width="40"
-                      height="40"
-                      viewBox="0 0 40 40"
-                      fill="none"
-                      className="text-slate-400 group-hover:text-green-400 transition-colors duration-300"
+                  style={{
+                    transitionDelay: isOpen ? `${index * 100 + 200}ms` : "0ms",
+                  }}
+                >
+                  {isContact ? (
+                    <Link
+                      to={item.path}
+                      onClick={() => setIsOpen(false)}
+                      className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg inline-flex items-center gap-2 group"
                     >
-                      <path
-                        d="M8 20H32M32 20L24 12M32 20L24 28"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                      <span className="text-sm tracking-[0.3em] uppercase">{item.label}</span>
+                      <FaArrowUp className="w-4 h-4 rotate-45 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
+                  ) : (
+                    <Link
+                      to={item.path}
+                      onClick={() => setIsOpen(false)}
+                      className={`group flex items-center justify-between w-full px-6 py-3 rounded-sm transition-all duration-300 hover:bg-white/5 ${activeClass}`}
+                    >
+                      <span className="text-sm tracking-[0.3em] uppercase">{item.label}</span>
+                      <FaArrowUp
+                        className={`w-4 h-4 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${isActive(item.path)
+                          ? "text-green-400"
+                          : "text-white group-hover:text-green-400"
+                          }`}
                       />
-                    </svg>
-                  </span>
+                    </Link>
+                  )}
                 </div>
-              </Link>
-            ))}
+              );
+            })}
           </nav>
 
           {/* Footer */}
           <div
-            className={`px-6 py-6 border-t border-white/10 transition-all duration-500 delay-700 ${
-              isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`px-6 py-6 border-t border-white/10 transition-all duration-500 delay-700 ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
           >
             <p className="text-slate-400 text-sm">© 2026 Cliberduche. All rights reserved.</p>
           </div>

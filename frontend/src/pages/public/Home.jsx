@@ -7,13 +7,7 @@ import { LetterReveal, BlockReveal } from "../../components/RevealAnimations";
 import ScrollReveal from "../../components/ScrollReveal";
 import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
-
-// Icons – only those actually used in the component
-import {
-    FaInfinity,
-    FaPhoneAlt,
-    FaLeaf,
-} from "react-icons/fa";
+import { FaInfinity, FaPhoneAlt, FaLeaf } from "react-icons/fa";
 
 // ---------- CountUp Component ----------
 const CountUp = ({ end, duration = 2000, suffix = "" }) => {
@@ -37,24 +31,19 @@ const CountUp = ({ end, duration = 2000, suffix = "" }) => {
 
     useEffect(() => {
         if (!isVisible) return;
-
         let startTime;
         let rafId;
-
         const animate = (timestamp) => {
             if (!startTime) startTime = timestamp;
             const progress = Math.min((timestamp - startTime) / duration, 1);
             setCount(Math.floor(progress * end));
-
             if (progress < 1) {
                 rafId = requestAnimationFrame(animate);
             } else {
                 setCount(end);
             }
         };
-
         rafId = requestAnimationFrame(animate);
-
         return () => cancelAnimationFrame(rafId);
     }, [isVisible, end, duration]);
 
@@ -66,7 +55,7 @@ const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     );
 };
 
-// Floating infinity icon (now accepts onClick)
+// ---------- Floating Infinity Icon (with hover effect and click counter) ----------
 const FloatingInfinityIcon = forwardRef(
     ({ className, floatClass, animClass, iconClass, onClick }, ref) => {
         const [isHovered, setIsHovered] = useState(false);
@@ -178,7 +167,7 @@ const FloatingInfinityIcon = forwardRef(
 
 FloatingInfinityIcon.displayName = "FloatingInfinityIcon";
 
-// ---------- Constant of Services ----------
+// ---------- Services Data ----------
 const allServices = [
     {
         title: "Backfill & Land Sourcing",
@@ -231,7 +220,7 @@ const allServices = [
     },
 ];
 
-// Animated Service Section
+// ---------- Animated Service Section ----------
 const AnimatedServiceSection = ({ service, index, animConfig }) => {
     const [sectionRef, , isVisible] = useScrollAnimation(0.3, true, 0);
     return (
@@ -250,7 +239,6 @@ const AnimatedServiceSection = ({ service, index, animConfig }) => {
 // Mobile: Always Image TOP / Content BOTTOM
 function ServiceFullViewportSection({ service, index, active, animConfig }) {
     const numberStr = (index + 1).toString().padStart(2, "0");
-    // Use paragraphStagger from config to create narrative flow
     const delays = [
         0,
         animConfig.paragraphStagger,
@@ -260,15 +248,12 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
         animConfig.paragraphStagger * 5,
     ];
 
-    // Layout logic: Even = Image Right, Odd = Image Left
     const isEvenIndex = index % 2 === 0;
     const desktopFlexClass = isEvenIndex ? "md:flex-row-reverse" : "md:flex-row";
 
     return (
         <section className="relative w-full bg-white overflow-hidden">
             <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
-
-            {/* Centered container with max width and border */}
             <div className="max-w-7xl mx-auto w-full border border-gray-200">
                 <div className={`flex flex-col ${desktopFlexClass}`}>
                     {/* IMAGE SECTION */}
@@ -369,10 +354,9 @@ export default function Home({ introDone = true }) {
     const navigate = useNavigate();
     const [infinityClickCount, setInfinityClickCount] = useState(0);
 
-    // Effect to navigate when count reaches 4 (or more)
     useEffect(() => {
         if (infinityClickCount >= 4) {
-            navigate("/404"); // will be caught by the "*" route and show NotFound
+            navigate("/404");
             setInfinityClickCount(0);
         }
     }, [infinityClickCount, navigate]);
@@ -381,7 +365,6 @@ export default function Home({ introDone = true }) {
         setInfinityClickCount(prev => prev + 1);
     }, []);
 
-    // ========== ANIMATION CONFIGURATION ==========
     const ANIM_CONFIG = {
         duration: "0.8s",
         easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
@@ -389,7 +372,6 @@ export default function Home({ introDone = true }) {
         paragraphStagger: 0.4,
     };
 
-    // Reusable fade‑up style
     const fadeUpStyle = (visible, delay) => ({
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(20px)",
@@ -397,16 +379,15 @@ export default function Home({ introDone = true }) {
         transitionDelay: `${delay}s`,
     });
 
-    // Scroll animation refs with visibility
     const [buttonsRef, buttonsAnim] = useScrollAnimation(0.1, introDone);
     const [float1Ref, float1Anim] = useScrollAnimation(0.1, introDone);
     const [float2Ref, float2Anim] = useScrollAnimation(0.1, introDone);
-    const [introRef, introAnim, introVisible] = useScrollAnimation(0.1, introDone);
+    const [introRef, introAnim] = useScrollAnimation(0.1, introDone);
     const [mvHeadingRef, mvHeadingAnim] = useScrollAnimation(0.1, introDone);
-    const [whatWeDoHeadingRef, whatWeDoHeadingAnim, whatWeDoHeadingVisible] = useScrollAnimation(0.1, introDone);
-    const [coreServicesRef, coreServicesAnim, coreServicesVisible] = useScrollAnimation(0.1, introDone);
-    const [whyRef, whyAnim, whyVisible] = useScrollAnimation(0.1, introDone);
-    const [ctaContentRef, ctaContentAnim, ctaContentVisible] = useScrollAnimation(0.1, introDone);
+    const [whatWeDoHeadingRef, whatWeDoHeadingVisible] = useScrollAnimation(0.1, introDone);
+    const [coreServicesRef, coreServicesVisible] = useScrollAnimation(0.1, introDone);
+    const [whyRef, whyVisible] = useScrollAnimation(0.1, introDone);
+    const [ctaContentRef, ctaContentVisible] = useScrollAnimation(0.1, introDone);
 
     const [headingRevealed, setHeadingRevealed] = useState(false);
 
@@ -437,19 +418,15 @@ export default function Home({ introDone = true }) {
                 className="relative text-white px-4 sm:px-6 md:px-10 lg:px-16 overflow-hidden transition-all duration-1000 flex items-center"
                 style={{ minHeight: "calc(var(--vh, 1vh) * 100)" }}
             >
-                {/* Background with BlockReveal */}
+                {/* Background with image always visible */}
                 <div className="absolute inset-0">
                     <div
                         className="absolute inset-0 bg-cover bg-center bg-fixed"
-                        style={{
-                            backgroundImage: `url(${office})`,
-                        }}
+                        style={{ backgroundImage: `url(${office})` }}
                     />
-                    <BlockReveal active={headingRevealed} rows={8} cols={12} />
                     <div className="absolute inset-0 bg-black/30" />
                 </div>
 
-                {/* Centered container – now also holds the floating icons */}
                 <div className="max-w-6xl w-full mx-auto relative z-10 text-left">
                     <h1
                         className="font-bold leading-tight mb-4 sm:mb-6 drop-shadow-lg"
@@ -479,10 +456,10 @@ export default function Home({ introDone = true }) {
                         </button>
                     </div>
 
-                    {/* Desktop infinity icons (hidden on mobile) */}
+                    {/* Desktop infinity icons */}
                     <FloatingInfinityIcon
                         ref={float1Ref}
-                        className="absolute top-1/4 right-0 md:right-0 hidden lg:block"
+                        className="absolute top-1/4 right-0 hidden lg:block"
                         floatClass="animate-float"
                         animClass={float1Anim}
                         iconClass="w-12 h-12 lg:w-16 lg:h-16 text-green-400 opacity-20"
@@ -496,7 +473,7 @@ export default function Home({ introDone = true }) {
                         iconClass="w-10 h-10 lg:w-14 lg:h-14 text-white opacity-30"
                         onClick={handleInfinityClick}
                     />
-                    {/* Mobile infinity icon (visible only on small screens) */}
+                    {/* Mobile infinity icon */}
                     <FloatingInfinityIcon
                         className="absolute bottom-1/4 right-0 block lg:hidden"
                         floatClass="animate-float"
@@ -531,20 +508,13 @@ export default function Home({ introDone = true }) {
                     >
                         What We Do
                     </h2>
-                    {/* Keep ScrollReveal as requested */}
-                    <ScrollReveal
-                        baseOpacity={0.1}
-                        enableBlur
-                        baseRotation={3}
-                        blurStrength={4}
-                    >
-                        At Cliberduche, we turn
-                        vision into reality through a comprehensive range of construction and land
-                        development services. Backed by years of experience and an unwavering
-                        commitment to excellence, we deliver trust on every project — from material
-                        sourcing and site development to expert consultation. Our integrated
-                        approach ensures that your project is built on a solid foundation, literally
-                        and figuratively.
+                    <ScrollReveal baseOpacity={0.1} enableBlur baseRotation={3} blurStrength={4}>
+                        At Cliberduche, we turn vision into reality through a comprehensive range of
+                        construction and land development services. Backed by years of experience and
+                        an unwavering commitment to excellence, we deliver trust on every project —
+                        from material sourcing and site development to expert consultation. Our
+                        integrated approach ensures that your project is built on a solid foundation,
+                        literally and figuratively.
                     </ScrollReveal>
                 </div>
             </section>
@@ -552,7 +522,7 @@ export default function Home({ introDone = true }) {
             {/* ========== OUR CORE SERVICES HEADER ========== */}
             <section
                 ref={coreServicesRef}
-                className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-white transition-all duration-1000 ${coreServicesAnim} overflow-hidden`}
+                className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-white transition-all duration-1000 overflow-hidden`}
             >
                 <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
@@ -589,7 +559,7 @@ export default function Home({ introDone = true }) {
             {/* ========== STATS ========== */}
             <section
                 ref={whyRef}
-                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 ${whyAnim} overflow-hidden`}
+                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 overflow-hidden`}
             >
                 <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
@@ -680,7 +650,7 @@ export default function Home({ introDone = true }) {
                 <BackgroundDecor pattern="grid" color="gray" opacity={0.05} blurCircles={false} />
                 <div
                     ref={ctaContentRef}
-                    className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000 ${ctaContentAnim}`}
+                    className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000`}
                 >
                     <h3
                         style={fadeUpStyle(ctaContentVisible, 0)}
