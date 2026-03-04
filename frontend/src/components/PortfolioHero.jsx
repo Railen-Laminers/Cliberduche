@@ -47,7 +47,6 @@ export default function PortfolioHero({
                                 >
                                     <a
                                         href={ctaUrl}
-                                        target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-3 bg-white text-black px-6 py-4 rounded-sm font-semibold uppercase tracking-wide shadow hover:bg-green-500 hover:text-white transition-colors duration-200"
                                     >

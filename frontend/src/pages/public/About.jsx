@@ -486,7 +486,7 @@ export default function About({ introDone = true }) {
               imageUrl="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80"
               title="Discover Our Work"
               description="Explore CLIBERDUCHE CORPORATION’s journey—from our foundation in 2018 to our current projects. Learn about our sustainable land development practices, community impact, and how we deliver high-quality materials and construction services across CALABARZON."
-              ctaUrl="https://cliberduche-portfolio.vercel.app/"
+              ctaUrl="/projects"
             />
           </div>
         </div>
