@@ -10,11 +10,12 @@ export default function Navbar({ introDone = false }) {
   const [isTop, setIsTop] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Refs for GSAP animations
   const desktopNavRef = useRef(null);
+  const burgerRef = useRef(null);
   const animationRan = useRef(false);
 
   // Scroll and resize detection
@@ -42,6 +43,16 @@ export default function Navbar({ introDone = false }) {
     };
   }, []);
 
+  // Detect mobile/tablet
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Load state after intro
   useEffect(() => {
     if (introDone) {
@@ -49,23 +60,20 @@ export default function Navbar({ introDone = false }) {
     }
   }, [introDone]);
 
-  // GSAP sequential animation for desktop nav container and links
+  // GSAP sequential animation
   useEffect(() => {
     if (isLoaded && !animationRan.current) {
       const navLinks = desktopNavRef.current?.children;
 
-      // Set initial state
       gsap.set(desktopNavRef.current, { opacity: 0, y: -20 });
       gsap.set(navLinks, { opacity: 0, y: 20 });
 
-      // Animate container first
       gsap.to(desktopNavRef.current, {
         opacity: 1,
         y: 0,
         duration: 0.5,
         ease: "power2.out",
         onComplete: () => {
-          // Animate links sequentially after container animation
           gsap.to(navLinks, {
             opacity: 1,
             y: 0,
@@ -73,6 +81,15 @@ export default function Navbar({ introDone = false }) {
             stagger: 0.15,
             ease: "power2.out",
           });
+
+          if (burgerRef.current) {
+            gsap.to(burgerRef.current, {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+            });
+          }
         },
       });
 
@@ -82,10 +99,11 @@ export default function Navbar({ introDone = false }) {
     return () => {
       gsap.killTweensOf(desktopNavRef.current?.children);
       gsap.killTweensOf(desktopNavRef.current);
+      if (burgerRef.current) gsap.killTweensOf(burgerRef.current);
     };
   }, [isLoaded]);
 
-  // Prevent body scroll when mobile menu is open
+  // Prevent body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
@@ -93,7 +111,7 @@ export default function Navbar({ introDone = false }) {
     };
   }, [isOpen]);
 
-  // Close on Escape key
+  // Close on Escape
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -102,7 +120,7 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  // Close mobile menu on window resize (lg breakpoint)
+  // Close mobile menu on resize to lg
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsOpen(false);
@@ -111,7 +129,7 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Optional: ensure navbar logo has no conflicting transitions right after intro
+  // Optional logo transition reset
   useEffect(() => {
     if (isLoaded) {
       const logoEl = document.getElementById("nav-logo");
@@ -133,9 +151,10 @@ export default function Navbar({ introDone = false }) {
   ];
 
   const isActive = (path) => location.pathname === path;
-
   const desktopLinkClass = (path) =>
     isActive(path) ? "text-green-400" : "text-white hover:text-green-400";
+
+  const hideLogo = (isMobile && isOpen) || !isTop;
 
   return (
     <>
@@ -144,16 +163,14 @@ export default function Navbar({ introDone = false }) {
           }`}
         style={{ transform: isAtBottom ? "translateY(-100%)" : "translateY(0)" }}
       >
-        <div
-          className={`max-w-screen-2xl mx-auto flex items-center justify-between px-4 lg:px-8 h-20 transition-all duration-300 bg-transparent text-white mt-4`}
-        >
+        <div className="max-w-screen-2xl mx-auto flex items-center justify-between px-4 lg:px-8 h-20 transition-all duration-300 bg-transparent text-white mt-4">
           {/* Logo */}
           <button
             onClick={() => navigate("/")}
-            className={`flex items-center gap-3 group transition-opacity duration-300 ${isTop ? "opacity-100" : "opacity-0 pointer-events-none"
+            className={`flex items-center gap-3 group transition-opacity duration-300 ${hideLogo ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
             aria-label="Go to homepage"
-            disabled={!isTop}
+            disabled={hideLogo}
           >
             <img
               id="nav-logo"
@@ -177,7 +194,7 @@ export default function Navbar({ introDone = false }) {
                     <Link
                       to={item.path}
                       className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center gap-2 group ml-2"
-                      style={{ opacity: 0, transform: "translateY(20px)" }} // initial hidden
+                      style={{ opacity: 0, transform: "translateY(20px)" }}
                     >
                       <span>{item.label}</span>
                       <FaArrowUp className="w-3 h-3 rotate-45 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -188,15 +205,15 @@ export default function Navbar({ introDone = false }) {
                       className={`relative px-4 py-2 font-medium transition-all duration-300 group flex items-center gap-1 ${desktopLinkClass(
                         item.path
                       )}`}
-                      style={{ opacity: 0, transform: "translateY(20px)" }} // initial hidden
+                      style={{ opacity: 0, transform: "translateY(20px)" }}
                     >
                       <span className="relative z-10 text-sm tracking-[0.3em] uppercase">
                         {item.label}
                       </span>
                       <FaArrowUp
                         className={`w-3 h-3 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${isActive(item.path)
-                          ? "text-green-400"
-                          : "text-white group-hover:text-green-400"
+                            ? "text-green-400"
+                            : "text-white group-hover:text-green-400"
                           }`}
                       />
                     </Link>
@@ -206,10 +223,12 @@ export default function Navbar({ introDone = false }) {
             })}
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button with inline hidden style */}
           <button
+            ref={burgerRef}
             onClick={() => setIsOpen(true)}
             className="lg:hidden relative z-50 w-12 h-12 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-sm transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+            style={{ opacity: 0, transform: "translateY(20px)" }} // 👈 hidden until GSAP animates
             aria-label="Open menu"
             aria-expanded={isOpen}
           >
@@ -218,7 +237,7 @@ export default function Navbar({ introDone = false }) {
         </div>
       </header>
 
-      {/* Mobile Full-Screen Overlay (updated to match desktop styling) */}
+      {/* Mobile Full-Screen Overlay (unchanged) */}
       <div
         className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-500 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           }`}
@@ -251,7 +270,7 @@ export default function Navbar({ introDone = false }) {
             </button>
           </div>
 
-          {/* Navigation Items - now styled like desktop */}
+          {/* Navigation Items */}
           <nav className="flex-1 flex flex-col justify-start px-6 py-8 space-y-2">
             {navItems.map((item, index) => {
               const isContact = item.label === "Contact";
@@ -284,8 +303,8 @@ export default function Navbar({ introDone = false }) {
                       <span className="text-sm tracking-[0.3em] uppercase">{item.label}</span>
                       <FaArrowUp
                         className={`w-4 h-4 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${isActive(item.path)
-                          ? "text-green-400"
-                          : "text-white group-hover:text-green-400"
+                            ? "text-green-400"
+                            : "text-white group-hover:text-green-400"
                           }`}
                       />
                     </Link>
