@@ -9,15 +9,6 @@ import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
 import { FaInfinity, FaPhoneAlt, FaLeaf } from "react-icons/fa";
 
-// ---------- Subtle Section Divider ----------
-const SectionDivider = () => (
-    <div className="flex items-center justify-center gap-4 my-8 opacity-30">
-        <div className="h-px w-24 bg-gradient-to-r from-transparent via-green-300 to-transparent"></div>
-        <FaInfinity className="text-green-400 text-xl" />
-        <div className="h-px w-24 bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
-    </div>
-);
-
 // ---------- Testimonials Data ----------
 const testimonials = [
     {
@@ -389,17 +380,33 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
 // ---------- Main Home Component ----------
 export default function Home({ introDone = true }) {
     const navigate = useNavigate();
-    const [infinityClickCount, setInfinityClickCount] = useState(0);
 
+    // Separate click counters for left and right infinity icons
+    const [leftClickCount, setLeftClickCount] = useState(0);
+    const [rightClickCount, setRightClickCount] = useState(0);
+
+    // Left icon → 4 clicks → 404 page
     useEffect(() => {
-        if (infinityClickCount >= 4) {
+        if (leftClickCount >= 4) {
             navigate("/404");
-            setInfinityClickCount(0);
+            setLeftClickCount(0);
         }
-    }, [infinityClickCount, navigate]);
+    }, [leftClickCount, navigate]);
 
-    const handleInfinityClick = useCallback(() => {
-        setInfinityClickCount(prev => prev + 1);
+    // Right icon → 4 clicks → login page
+    useEffect(() => {
+        if (rightClickCount >= 4) {
+            navigate("/login");
+            setRightClickCount(0);
+        }
+    }, [rightClickCount, navigate]);
+
+    const handleLeftClick = useCallback(() => {
+        setLeftClickCount(prev => prev + 1);
+    }, []);
+
+    const handleRightClick = useCallback(() => {
+        setRightClickCount(prev => prev + 1);
     }, []);
 
     const ANIM_CONFIG = {
@@ -425,7 +432,6 @@ export default function Home({ introDone = true }) {
     const [coreServicesRef, coreServicesVisible] = useScrollAnimation(0.1, introDone);
     const [whyRef, whyVisible] = useScrollAnimation(0.1, introDone);
     const [ctaContentRef, ctaContentVisible] = useScrollAnimation(0.1, introDone);
-    // New ref for testimonials
     const [testimonialsRef, testimonialsVisible] = useScrollAnimation(0.1, introDone);
 
     const [headingRevealed, setHeadingRevealed] = useState(false);
@@ -502,15 +508,15 @@ export default function Home({ introDone = true }) {
                         floatClass="animate-float"
                         animClass={float1Anim}
                         iconClass="w-12 h-12 lg:w-16 lg:h-16 text-green-400 opacity-20"
-                        onClick={handleInfinityClick}
+                        onClick={handleRightClick}   // right icon
                     />
                     <FloatingInfinityIcon
                         ref={float2Ref}
-                        className="absolute bottom-1/4 left-0 animation-delay-1000"
+                        className="absolute bottom-1/4 left-0 animation-delay-1000 hidden lg:block"
                         floatClass="animate-float"
                         animClass={float2Anim}
                         iconClass="w-10 h-10 lg:w-14 lg:h-14 text-white opacity-30"
-                        onClick={handleInfinityClick}
+                        onClick={handleLeftClick}    // left icon
                     />
                     {/* Mobile infinity icon */}
                     <FloatingInfinityIcon
@@ -518,7 +524,7 @@ export default function Home({ introDone = true }) {
                         floatClass="animate-float"
                         animClass=""
                         iconClass="w-10 h-10 text-green-400 opacity-30"
-                        onClick={handleInfinityClick}
+                        onClick={handleRightClick}   // right icon on mobile as well
                     />
                 </div>
             </section>
@@ -594,9 +600,6 @@ export default function Home({ introDone = true }) {
                     animConfig={ANIM_CONFIG}
                 />
             ))}
-
-            {/* Subtle visual cue between Services and Stats */}
-            <SectionDivider />
 
             {/* ========== STATS ========== */}
             <section
@@ -677,9 +680,6 @@ export default function Home({ introDone = true }) {
                     </div>
                 </div>
             </section>
-
-            {/* Subtle visual cue between Stats and Testimonials */}
-            <SectionDivider />
 
             {/* ========== TESTIMONIALS (Minimalist, no cards) ========== */}
             <section
