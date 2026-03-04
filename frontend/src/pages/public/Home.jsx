@@ -9,6 +9,8 @@ import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
 import { FaInfinity, FaPhoneAlt, FaLeaf } from "react-icons/fa";
 
+import silang_img_1 from "/projects/silangCavite_2021/2021_img_1.png";
+
 // ---------- Testimonials Data ----------
 const testimonials = [
     {
@@ -214,8 +216,7 @@ const allServices = [
             "From clearing and cutting to leveling and grading, we transform raw land into construction-ready sites. Our team uses advanced equipment and techniques to handle projects of any scale.",
         outcome:
             "Sites are delivered on time, fully compliant with regulations, and optimized for subsequent construction.",
-        image:
-            "https://images.pexels.com/photos/36226266/pexels-photo-36226266.jpeg?auto=compress&cs=tinysrgb&w=800&q=80",
+        image: silang_img_1,
     },
     {
         title: "Site Management",
