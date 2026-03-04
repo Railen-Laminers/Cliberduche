@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   FaBolt,
   FaEye,
- FaShieldAlt,
+  FaShieldAlt,
   FaCheckCircle,
   FaBalanceScale,
   FaInfinity,
@@ -12,15 +12,17 @@ import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
 import BackgroundDecor from "../../components/BackgroundDecor";
 import PortfolioHero from "../../components/PortfolioHero";
+import ChromaGrid from "../../components/ChromaGrid";
+
+import northport_img from "/projects/northport_ongoing/northport_img_1.png";
 
 export default function About({ introDone = true }) {
   // ========== ANIMATION CONFIGURATION ==========
-  // Adjust these values to control speed and staggering
   const ANIM_CONFIG = {
-    duration: "0.8s",           // was 1.2s – shorter = faster fade
-    easing: "cubic-bezier(0.25, 0.1, 0.25, 1)", // easing curve
-    staggerBase: 0.6,           // was 0.2 – delay between team cards
-    paragraphStagger: 0.6,      // delay between paragraphs / list items
+    duration: "0.8s",
+    easing: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+    staggerBase: 0.6,
+    paragraphStagger: 0.6,
   };
 
   // Scroll animation refs
@@ -49,12 +51,86 @@ export default function About({ introDone = true }) {
     }
   }, [introDone]);
 
-  // Reusable fade‑up style with configurable duration, easing, and delay
   const fadeUpStyle = (visible, delay) => ({
     opacity: visible ? 1 : 0,
     transform: visible ? "translateY(0)" : "translateY(20px)",
     transition: `opacity ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}, transform ${ANIM_CONFIG.duration} ${ANIM_CONFIG.easing}`,
     transitionDelay: `${delay}s`,
+  });
+
+  // ========== REAL TEAM DATA ==========
+  const realTeamMembers = [
+    {
+      name: "John Climaco",
+      title: "Founder & CEO",
+      brief:
+        "Founder with over 20 years in construction. Built Cliberduche from the ground up, driven by a vision to provide for his family without leaving the country.",
+      imageUrl:
+        "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+    },
+    {
+      name: "Maria Climaco",
+      title: "Director",
+      brief:
+        "The founder’s spouse, now a director overseeing operations and community relations. Ensures that family values and sustainable practices guide every project.",
+      imageUrl:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+    },
+    {
+      name: "Pedro Climaco",
+      title: "Director",
+      brief:
+        "The founder’s brother, a seasoned engineer who manages project execution and site safety. Committed to delivering precision and quality on every site.",
+      imageUrl:
+        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+    },
+    {
+      name: "Ana Santos",
+      title: "Project Manager",
+      brief:
+        "Coordinates large-scale developments. Certified in environmental compliance, she ensures projects meet both client expectations and regulatory standards.",
+      imageUrl:
+        "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+    },
+    {
+      name: "Carlos Reyes",
+      title: "Operations Manager",
+      brief:
+        "Oversees daily operations and logistics. With 15 years in construction management, he ensures efficient resource allocation and project timelines are met.",
+      imageUrl:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+    },
+    {
+      name: "Luisa Fernandez",
+      title: "Site Engineer",
+      brief:
+        "Supervises on-site construction activities, ensuring quality control and adherence to safety standards. Experienced in geotechnical assessments.",
+      imageUrl:
+        "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+    },
+  ];
+
+  // ========== TRANSFORM TEAM DATA FOR CHROMA GRID ==========
+  const teamColors = ["#4F46E5", "#10B981", "#F59E0B", "#EF4444"]; // indigo, green, orange, red
+
+  const teamDataForChroma = realTeamMembers.map((member, index) => {
+    const color = teamColors[index % teamColors.length];
+    const handle =
+      "@" +
+      member.name
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/[^a-z0-9]/g, "");
+    return {
+      image: member.imageUrl,
+      title: member.name,
+      subtitle: member.title,
+      handle: handle,
+      brief: member.brief,          // brief is now included
+      borderColor: color,
+      gradient: `linear-gradient(145deg, ${color}, #000)`,
+      url: "", // optional external link
+    };
   });
 
   return (
@@ -75,7 +151,7 @@ export default function About({ introDone = true }) {
             <LetterReveal
               active={textRevealed}
               lines={["CLIBERDUCHE", "CORPORATION"]}
-              letterDelay={0.05}  // you can also adjust this (e.g., 0.03 for faster)
+              letterDelay={0.05}
             />
           </h1>
         </div>
@@ -185,7 +261,7 @@ export default function About({ introDone = true }) {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 md:h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
               <img
-                src="https://images.unsplash.com/photo-1580723843692-137caf37ad17?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3lkbmV5JTIwaGFyYm91ciUyMGJyaWRnZXxlbnwwfHwwfHx8MA%3D%3D"
+                src={northport_img}
                 alt="Bridge construction project"
                 className="absolute inset-0 w-full h-full object-cover"
               />
@@ -355,21 +431,8 @@ export default function About({ introDone = true }) {
             </p>
           </div>
 
-          {/* Team grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
-            {realTeamMembers.map((member, index) => (
-              <TeamCard
-                key={index}
-                name={member.name}
-                title={member.title}
-                brief={member.brief}
-                imageUrl={member.imageUrl}
-                visible={leadershipVisible}
-                delay={(index % 4) * ANIM_CONFIG.staggerBase}
-                animConfig={ANIM_CONFIG} // pass config to TeamCard
-              />
-            ))}
-          </div>
+          {/* ===== CHROMA GRID with brief ===== */}
+          <ChromaGrid items={teamDataForChroma} />
 
           {/* Subtle cue to next section */}
           <div className="flex justify-center mt-12">
@@ -388,7 +451,7 @@ export default function About({ introDone = true }) {
         </div>
       </section>
 
-      {/* ========== INSIGHTS & PORTFOLIO (NOW AT THE BOTTOM) ========== */}
+      {/* ========== INSIGHTS & PORTFOLIO ========== */}
       <section
         id="insights"
         className="relative px-6 md:px-10 py-16 md:py-20 bg-white overflow-hidden"
@@ -429,88 +492,5 @@ export default function About({ introDone = true }) {
         </div>
       </section>
     </>
-  );
-}
-
-// ========== TEAM DATA ==========
-const realTeamMembers = [
-  {
-    name: "John Climaco",
-    title: "Founder & CEO",
-    brief:
-      "Founder with over 20 years in construction. Built Cliberduche from the ground up, driven by a vision to provide for his family without leaving the country.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-  },
-  {
-    name: "Maria Climaco",
-    title: "Director",
-    brief:
-      "The founder’s spouse, now a director overseeing operations and community relations. Ensures that family values and sustainable practices guide every project.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-  },
-  {
-    name: "Pedro Climaco",
-    title: "Director",
-    brief:
-      "The founder’s brother, a seasoned engineer who manages project execution and site safety. Committed to delivering precision and quality on every site.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-  },
-  {
-    name: "Ana Santos",
-    title: "Project Manager",
-    brief:
-      "Coordinates large-scale developments. Certified in environmental compliance, she ensures projects meet both client expectations and regulatory standards.",
-    imageUrl:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-  },
-];
-
-// ========== TeamCard component ==========
-function TeamCard({ name, title, brief, imageUrl, visible, delay, animConfig }) {
-  return (
-    <div className="relative group overflow-hidden h-[500px] w-full transition-all duration-500 ease-in-out">
-      <div className="absolute inset-0">
-        <img src={imageUrl} alt={name} className="w-full h-full object-cover object-center" />
-        <BlockReveal active={visible} rows={6} cols={8} />
-      </div>
-      <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-6 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <h4
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: `opacity ${animConfig.duration} ${animConfig.easing}, transform ${animConfig.duration} ${animConfig.easing}`,
-            transitionDelay: `${delay}s`,
-          }}
-          className="text-white font-semibold text-xl mb-2"
-        >
-          {name}
-        </h4>
-        <p
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: `opacity ${animConfig.duration} ${animConfig.easing}, transform ${animConfig.duration} ${animConfig.easing}`,
-            transitionDelay: `${delay + 0.15}s`,
-          }}
-          className="text-gray-200 text-base mb-3"
-        >
-          {title}
-        </p>
-        <p
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? "translateY(0)" : "translateY(20px)",
-            transition: `opacity ${animConfig.duration} ${animConfig.easing}, transform ${animConfig.duration} ${animConfig.easing}`,
-            transitionDelay: `${delay + 0.3}s`,
-          }}
-          className="text-gray-300 text-sm"
-        >
-          {brief}
-        </p>
-      </div>
-    </div>
   );
 }
