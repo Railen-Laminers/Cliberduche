@@ -533,12 +533,12 @@ export default function Home({ introDone = true }) {
                     </h2>
                     {/* Keep ScrollReveal as requested */}
                     <ScrollReveal
-                        enableBlur={false}
-                        baseOpacity={0.2}
-                        baseRotation={5}
-                        staggerStep={0.1}
+                        baseOpacity={0.1}
+                        enableBlur
+                        baseRotation={3}
+                        blurStrength={4}
                     >
-                        At <span className="text-green-700 font-bold">Cliberduche</span>, we turn
+                        At Cliberduche, we turn
                         vision into reality through a comprehensive range of construction and land
                         development services. Backed by years of experience and an unwavering
                         commitment to excellence, we deliver trust on every project — from material
