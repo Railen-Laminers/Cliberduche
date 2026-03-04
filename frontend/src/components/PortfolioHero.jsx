@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // <-- Import Link for SPA routing
 import MagneticButton from "./MagneticButton"; // adjust import path as needed
 
 /**
@@ -36,7 +37,7 @@ export default function PortfolioHero({
                                     {description}
                                 </p>
 
-                                {/* Magnetic CTA button */}
+                                {/* Magnetic CTA button with Link */}
                                 <MagneticButton
                                     magnetStrength={2}
                                     padding={100}
@@ -45,9 +46,8 @@ export default function PortfolioHero({
                                     wrapperClassName="inline-block"
                                     innerClassName=""
                                 >
-                                    <a
-                                        href={ctaUrl}
-                                        rel="noopener noreferrer"
+                                    <Link
+                                        to={ctaUrl} // <-- SPA routing
                                         className="inline-flex items-center gap-3 bg-white text-black px-6 py-4 rounded-sm font-semibold uppercase tracking-wide shadow hover:bg-green-500 hover:text-white transition-colors duration-200"
                                     >
                                         {/* link icon */}
@@ -66,7 +66,7 @@ export default function PortfolioHero({
                                             />
                                         </svg>
                                         <span>VIEW OUR PORTFOLIO</span>
-                                    </a>
+                                    </Link>
                                 </MagneticButton>
                             </div>
                         </div>
