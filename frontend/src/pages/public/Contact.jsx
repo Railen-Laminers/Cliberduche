@@ -130,11 +130,10 @@ export default function Contact({ introDone = true }) {
                             Core Services
                         </h4>
                         <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
-                            <li>Supply of high‑quality backfill materials (sub‑base, aggregates, boulders)</li>
-                            <li>Land development – clearing, cutting & peeling, levelling, pipe laying</li>
-                            <li>Infrastructure construction – bridges, concrete roads, gutters, ripraps, slope protection</li>
-                            <li>General Engineering and Civil Works</li>
-                            <li>Equipment leasing</li>
+                            <li>Backfill & Land Sourcing</li>
+                            <li>Land Development</li>
+                            <li>Site Management</li>
+                            <li>Equipment Leasing</li>
                             <li>Project Management Consultation</li>
                         </ul>
                     </div>

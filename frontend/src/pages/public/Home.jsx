@@ -9,6 +9,43 @@ import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
 import { FaInfinity, FaPhoneAlt, FaLeaf } from "react-icons/fa";
 
+// ---------- Subtle Section Divider ----------
+const SectionDivider = () => (
+    <div className="flex items-center justify-center gap-4 my-8 opacity-30">
+        <div className="h-px w-24 bg-gradient-to-r from-transparent via-green-300 to-transparent"></div>
+        <FaInfinity className="text-green-400 text-xl" />
+        <div className="h-px w-24 bg-gradient-to-r from-transparent via-blue-300 to-transparent"></div>
+    </div>
+);
+
+// ---------- Testimonials Data ----------
+const testimonials = [
+    {
+        id: 1,
+        name: "John Doe",
+        role: "Project Manager, ABC Construction",
+        quote:
+            "Cliberduche delivered top‑quality backfill materials ahead of schedule. Their team’s professionalism and attention to detail made a huge difference on our site.",
+        avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    },
+    {
+        id: 2,
+        name: "Jane Smith",
+        role: "Owner, Smith Developers",
+        quote:
+            "We’ve used their land development services for three projects now. Always reliable, always within budget. Highly recommended!",
+        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    },
+    {
+        id: 3,
+        name: "Michael Lee",
+        role: "Site Supervisor, Urban Builders",
+        quote:
+            "The equipment leasing process was seamless – well‑maintained machinery and excellent support. We’ll definitely rent from them again.",
+        avatar: "https://randomuser.me/api/portraits/men/62.jpg",
+    },
+];
+
 // ---------- CountUp Component ----------
 const CountUp = ({ end, duration = 2000, suffix = "" }) => {
     const [count, setCount] = useState(0);
@@ -388,6 +425,8 @@ export default function Home({ introDone = true }) {
     const [coreServicesRef, coreServicesVisible] = useScrollAnimation(0.1, introDone);
     const [whyRef, whyVisible] = useScrollAnimation(0.1, introDone);
     const [ctaContentRef, ctaContentVisible] = useScrollAnimation(0.1, introDone);
+    // New ref for testimonials
+    const [testimonialsRef, testimonialsVisible] = useScrollAnimation(0.1, introDone);
 
     const [headingRevealed, setHeadingRevealed] = useState(false);
 
@@ -556,6 +595,9 @@ export default function Home({ introDone = true }) {
                 />
             ))}
 
+            {/* Subtle visual cue between Services and Stats */}
+            <SectionDivider />
+
             {/* ========== STATS ========== */}
             <section
                 ref={whyRef}
@@ -632,6 +674,75 @@ export default function Home({ introDone = true }) {
                                 </p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Subtle visual cue between Stats and Testimonials */}
+            <SectionDivider />
+
+            {/* ========== TESTIMONIALS (Minimalist, no cards) ========== */}
+            <section
+                ref={testimonialsRef}
+                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 overflow-hidden`}
+            >
+                <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
+                <div className="max-w-7xl mx-auto relative z-10">
+                    {/* Section Header */}
+                    <div className="text-center mb-16">
+                        <h2
+                            style={fadeUpStyle(testimonialsVisible, 0)}
+                            className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4"
+                        >
+                            What Our Clients Say
+                        </h2>
+                        <div
+                            style={fadeUpStyle(testimonialsVisible, ANIM_CONFIG.paragraphStagger)}
+                            className="flex justify-center items-center gap-2"
+                        >
+                            <div className="h-px w-16 bg-green-300"></div>
+                            <FaInfinity className="text-dark-600 text-2xl" />
+                            <div className="h-px w-16 bg-blue-300"></div>
+                        </div>
+                    </div>
+
+                    {/* Testimonials Grid - Minimalist */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
+                        {testimonials.map((testimonial, index) => (
+                            <div
+                                key={testimonial.id}
+                                style={fadeUpStyle(
+                                    testimonialsVisible,
+                                    (index + 1) * ANIM_CONFIG.paragraphStagger
+                                )}
+                                className="relative"
+                            >
+                                {/* Large quotation mark as background element */}
+                                <div className="absolute -top-6 -left-4 text-8xl font-serif text-gray-200 select-none z-0">
+                                    “
+                                </div>
+                                <div className="relative z-10">
+                                    <p className="text-gray-700 text-lg leading-relaxed mb-6 italic">
+                                        {testimonial.quote}
+                                    </p>
+                                    <div className="flex items-center">
+                                        {testimonial.avatar && (
+                                            <img
+                                                src={testimonial.avatar}
+                                                alt={testimonial.name}
+                                                className="w-12 h-12 rounded-full mr-4 object-cover"
+                                            />
+                                        )}
+                                        <div>
+                                            <h4 className="font-bold text-[#0b2545]">
+                                                {testimonial.name}
+                                            </h4>
+                                            <p className="text-sm text-gray-500">{testimonial.role}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
