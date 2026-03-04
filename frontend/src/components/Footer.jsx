@@ -1,7 +1,7 @@
 import React from "react";
 import { FaFacebook, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import BackToTopButton from "./BackToTopButton"; 
+import BackToTopButton from "./BackToTopButton";
 
 export default function Footer() {
     const navigate = useNavigate();
@@ -121,15 +121,15 @@ export default function Footer() {
                             <div className="space-y-3">
                                 <a
                                     href="mailto:contact@cliberduche.com"
-                                    className="text-xs sm:text-sm text-white hover:text-green-400 transition-colors duration-300 block"
+                                    className="text-xs sm:text-sm text-white hover:text-green-400 transition-colors duration-300 block break-words"
                                 >
-                                    E@EMAIL.COM
+                                    cliberduche.corp@yahoo.com
                                 </a>
                                 <a
                                     href="tel:+1234567890"
                                     className="text-xs sm:text-sm text-white hover:text-green-400 transition-colors duration-300 block"
                                 >
-                                    +1 (234) 567-890
+                                    +63 49 546-6107
                                 </a>
                             </div>
 

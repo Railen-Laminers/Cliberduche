@@ -1,13 +1,6 @@
 // Contact.jsx
 import React, { useState, useEffect } from "react";
-import {
-    FaPhone,
-    FaEnvelope,
-    FaMapMarkerAlt,
-    FaInfinity,
-    FaCheckCircle,
-    FaTimes,
-} from "react-icons/fa";
+import { FaPhone, FaEnvelope, FaInfinity, FaCheckCircle, FaTimes, FaClock } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import Map from "./Map";
 import BackgroundDecor from "../../components/BackgroundDecor";
@@ -116,10 +109,13 @@ export default function Contact({ introDone = true }) {
                                 3rd floor CBD Building, Brgy. Pulo, National Highway, Cabuyao City, Laguna
                             </p>
                             <p className="text-sm text-gray-600 mt-2 flex items-center gap-2">
-                                <FaPhone className="text-green-600 w-3 h-3" /> (+63) 999 999 9999
+                                <FaPhone className="text-green-600 w-3 h-3" /> +63 49 546-6107
                             </p>
                             <p className="text-sm text-gray-600 flex items-center gap-2">
-                                <FaEnvelope className="text-green-600 w-3 h-3" /> info@cliberduche.com
+                                <FaEnvelope className="text-green-600 w-3 h-3" /> cliberduche.corp@yahoo.com
+                            </p>
+                            <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
+                                <FaClock className="text-green-600 w-3 h-3" /> Mon-Fri 8AM - 6PM
                             </p>
                         </div>
                     </div>
