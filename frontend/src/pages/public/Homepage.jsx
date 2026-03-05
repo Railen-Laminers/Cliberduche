@@ -24,9 +24,7 @@ export default function Homepage() {
         window.dispatchEvent(event);
     }, [pathname]);
 
-    useEffect(() => {
-        document.body.style.overflow = introPlaying ? "hidden" : "auto";
-    }, [introPlaying]);
+  
 
     const isHome = pathname === "/";
     const noTopPadding = isHome || pathname === "/projects" || pathname === "/about";

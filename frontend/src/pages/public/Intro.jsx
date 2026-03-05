@@ -12,17 +12,19 @@ export default function Intro({ title, onFinish }) {
   const logoWrapperRef = useRef(null);
 
   useEffect(() => {
-    // Split text into letters
+    // Split text into letters — h1 is opacity:0 so no flash, but layout space is preserved
     const letters = titleRef.current.innerText.split("");
     titleRef.current.innerHTML = letters
       .map((letter) => `<span class="letter">${letter}</span>`)
       .join("");
 
-    // Set initial states
+    // Make h1 visible — letters are opacity:0 so still hidden, GSAP animates them in
+    gsap.set(titleRef.current, { opacity: 1 });
     gsap.set(titleRef.current.querySelectorAll(".letter"), { opacity: 0, y: 80 });
-    gsap.set(logoWrapperRef.current, { clipPath: "inset(0 0 100% 0)" });
+
+    gsap.set(logoWrapperRef.current, { visibility: "visible", clipPath: "inset(0 0 100% 0)" });
     gsap.set(logoRef.current, { opacity: 0, scale: 0.8, rotateY: -45 });
-    gsap.set(progress.current, { width: 0 });
+    gsap.set(progress.current, { width: 0, visibility: "visible" });
 
     // Loading counter
     let obj = { val: 0 };
@@ -122,10 +124,11 @@ export default function Intro({ title, onFinish }) {
       >
         <div className="intro-grid" />
 
-        {/* Logo wrapper for mask reveal */}
+        {/* visibility:hidden preserves layout space before GSAP runs */}
         <div
           ref={logoWrapperRef}
           className="overflow-hidden mb-6 relative z-10"
+          style={{ visibility: "hidden" }}
         >
           <img
             ref={logoRef}
@@ -135,19 +138,22 @@ export default function Intro({ title, onFinish }) {
           />
         </div>
 
-        {/* Title */}
+        {/* opacity:0 hides text before split, layout space preserved via line-height */}
         <h1
           ref={titleRef}
           className="text-3xl md:text-4xl font-semibold tracking-wide relative z-10 text-[#0b2545]"
+          style={{ opacity: 0 }}
         >
           {title}
         </h1>
 
         {/* Loading bar */}
         <div className="w-40 h-[2px] bg-gray-300 mt-6 overflow-hidden relative z-10">
+          {/* visibility:hidden preserves layout space, no full-width flash */}
           <div
             ref={progress}
             className="h-full bg-[#0b2545]"
+            style={{ visibility: "hidden" }}
           />
         </div>
 
