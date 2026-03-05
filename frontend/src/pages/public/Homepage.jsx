@@ -24,6 +24,10 @@ export default function Homepage() {
         window.dispatchEvent(event);
     }, [pathname]);
 
+    useEffect(() => {
+        document.body.style.overflow = introPlaying ? "hidden" : "auto";
+    }, [introPlaying]);
+
     const isHome = pathname === "/";
     const noTopPadding = isHome || pathname === "/projects" || pathname === "/about";
 
@@ -34,7 +38,6 @@ export default function Homepage() {
             <SmoothScroll ease={0.08} className="smooth-scroll">
                 {introPlaying && (
                     <Intro
-                        logoSrc="/logo/cliberduche_logo.png"
                         title="Cliberduche"
                         onFinish={() => setIntroPlaying(false)}
                     />
