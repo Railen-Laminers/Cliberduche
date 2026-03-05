@@ -5,13 +5,10 @@
 /* Apply the font tokens globally and set headings to use the display font */
 @layer base {
 
-    /* Use Inter for body and small text by default */
     body {
         @apply font-body;
-        /* you can keep your base colors here if you want as well */
     }
 
-    /* Use Libre Caslon Display for headings */
     h1,
     h2,
     h3,
@@ -19,43 +16,56 @@
     h5,
     h6 {
         @apply font-heading;
-        /* adjust letter-spacing for display headings if needed */
     }
 
-    /* Optional: scale down font-size for small elements if you want consistent rendering */
     small,
     .text-xs {
         @apply text-sm;
     }
 }
 
-/* Scrollbar width */
+/* Modern Scrollbar */
+
 ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
 }
 
-/* Track (background) */
+/* Track */
 ::-webkit-scrollbar-track {
     background: #0b2545;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Thumb (draggable part) */
-::-webkit-scrollbar-thumb {
-    background: #1f7a8c;
     border-radius: 10px;
-    border: 3px solid #0b2545;
-    transition: background 0.3s ease, transform 0.2s ease;
 }
 
-/* Thumb hover */
+/* Thumb */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg,
+            #1f7a8c,
+            #176072);
+    border-radius: 10px;
+    border: 2px solid #0b2545;
+    transition: all 0.3s ease;
+}
+
+/* Hover thumb */
 ::-webkit-scrollbar-thumb:hover {
-    background: #2ab39b;
-    transform: scale(1.05);
+    background: linear-gradient(180deg,
+            #2ab39b,
+            #1f7a8c);
 }
 
-/* Optional: Corner (where vertical and horizontal meet) */
+/* Active drag */
+::-webkit-scrollbar-thumb:active {
+    background: #2ab39b;
+}
+
+/* Scrollbar corner */
 ::-webkit-scrollbar-corner {
     background: #0b2545;
+}
+
+/* Firefox support */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #1f7a8c #0b2545;
 }
