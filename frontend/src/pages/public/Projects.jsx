@@ -36,10 +36,10 @@ const fadeUpStyle = (visible, delay) => ({
 // ---------- DragIndicator (mobile) ----------
 const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) => {
   return (
-    <div className="flex flex-col items-center gap-2">   {/* removed absolute/transform classes */}
+    <div className="flex flex-col items-center gap-2">
       <div className={`flex items-center gap-1.5 transition-transform duration-200 ${isDragging ? 'scale-95' : 'animate-bounce-subtle'}`}>
         <FaChevronLeft
-          className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset > 20 ? 'opacity-30 scale-90' : 'opacity-100'}`}
+          className={`text-gray-900/60 dark:text-gray-100/60 transition-all duration-200 ${isDragging && dragOffset > 20 ? 'opacity-30 scale-90' : 'opacity-100'}`}
           size={14}
         />
         <div className="flex items-center gap-1.5 px-2">
@@ -53,8 +53,8 @@ const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) =>
               <div
                 key={idx}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${isActive
-                  ? 'bg-[#1f7a8c] scale-110 shadow-sm'
-                  : `bg-[#0b2545]/30 ${distance === 1 ? 'scale-90' : 'scale-75'}`
+                  ? 'bg-cyan-700 dark:bg-cyan-300 scale-110 shadow-sm'
+                  : `bg-gray-900/30 dark:bg-gray-100/30 ${distance === 1 ? 'scale-90' : 'scale-75'}`
                   }`}
                 style={{
                   transform: `scale(${isActive ? 1.1 : 1 - distance * 0.1})`,
@@ -65,11 +65,11 @@ const DragIndicator = ({ isDragging, dragOffset, totalSlides, currentSlide }) =>
           })}
         </div>
         <FaChevronRight
-          className={`text-[#0b2545]/60 transition-all duration-200 ${isDragging && dragOffset < -20 ? 'opacity-30 scale-90' : 'opacity-100'}`}
+          className={`text-gray-900/60 dark:text-gray-100/60 transition-all duration-200 ${isDragging && dragOffset < -20 ? 'opacity-30 scale-90' : 'opacity-100'}`}
           size={14}
         />
       </div>
-      <span className="text-[10px] text-[#0b2545]/50 font-medium tracking-wide">
+      <span className="text-[10px] text-gray-900/50 dark:text-gray-100/50 font-medium tracking-wide">
         {isDragging ? 'Release to navigate' : 'Swipe to explore'}
       </span>
     </div>
@@ -83,7 +83,7 @@ const CarouselProjectItem = ({ project, index, onClick, active }) => {
     <div className="w-full flex-shrink-0 px-6 md:px-10 py-6">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-8 items-stretch">
-          {/* Image column - same as list items */}
+          {/* Image column */}
           <div className="h-auto">
             <PerspectiveCard enableTilt maxRotate={6} className="rounded-2xl overflow-hidden shadow-lg h-full">
               <div onClick={onClick} className="cursor-pointer relative h-64 md:h-80 group">
@@ -93,7 +93,7 @@ const CarouselProjectItem = ({ project, index, onClick, active }) => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <BlockReveal active={active} rows={6} cols={8} />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0b2545] via-transparent to-transparent opacity-70" />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-70" />
                 <div className={`absolute top-4 right-4 ${isOngoing ? 'bg-green-400' : 'bg-blue-500'} text-white px-3 py-1 rounded-full text-sm font-bold shadow-md`}>
                   {isOngoing ? 'ONGOING' : 'COMPLETED'}
                 </div>
@@ -101,32 +101,32 @@ const CarouselProjectItem = ({ project, index, onClick, active }) => {
             </PerspectiveCard>
           </div>
 
-          {/* Text column - same as list items */}
+          {/* Text column */}
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-4">
               <div
                 style={fadeUpStyle(active, 0 * ANIM_CONFIG.paragraphStagger)}
-                className="text-[#1f7a8c] font-bold text-lg"
+                className="text-cyan-700 dark:text-cyan-300 font-bold text-lg"
               >
                 0{index + 1}
               </div>
               <div
                 style={fadeUpStyle(active, 0.1 * ANIM_CONFIG.paragraphStagger)}
-                className="h-px flex-1 bg-gradient-to-r from-[#1f7a8c] to-transparent"
+                className="h-px flex-1 bg-gradient-to-r from-cyan-700 dark:from-cyan-400 to-transparent"
               />
             </div>
 
             <h3
               onClick={onClick}
               style={fadeUpStyle(active, 0.2 * ANIM_CONFIG.paragraphStagger)}
-              className="text-2xl md:text-3xl font-bold mb-4 cursor-pointer hover:text-[#1f7a8c] transition-colors"
+              className="text-2xl md:text-3xl font-bold mb-4 cursor-pointer hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors text-gray-900 dark:text-gray-100"
             >
               {project.title}
             </h3>
 
             <p
               style={fadeUpStyle(active, 0.3 * ANIM_CONFIG.paragraphStagger)}
-              className="text-gray-600 mb-6 leading-relaxed text-base md:text-lg"
+              className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed text-base md:text-lg"
             >
               {project.description}
             </p>
@@ -134,14 +134,14 @@ const CarouselProjectItem = ({ project, index, onClick, active }) => {
             <div className="grid grid-cols-2 gap-4 mb-6">
               <div
                 style={fadeUpStyle(active, 0.4 * ANIM_CONFIG.paragraphStagger)}
-                className="flex items-center gap-2 text-[#1f7a8c]"
+                className="flex items-center gap-2 text-cyan-700 dark:text-cyan-300"
               >
                 <FaCalendarAlt className="text-lg" />
                 <span className="font-medium">{project.year}</span>
               </div>
               <div
                 style={fadeUpStyle(active, 0.5 * ANIM_CONFIG.paragraphStagger)}
-                className="flex items-center gap-2 text-green-700"
+                className="flex items-center gap-2 text-green-700 dark:text-green-400"
               >
                 <FaImages className="text-lg" />
                 <span>{project.images.length} photos</span>
@@ -149,7 +149,7 @@ const CarouselProjectItem = ({ project, index, onClick, active }) => {
               {project.area && (
                 <div
                   style={fadeUpStyle(active, 0.6 * ANIM_CONFIG.paragraphStagger)}
-                  className="flex items-center gap-2 text-gray-500 col-span-2"
+                  className="flex items-center gap-2 text-gray-500 dark:text-gray-400 col-span-2"
                 >
                   <FaMapMarkerAlt className="text-lg" />
                   <span>{project.area}</span>
@@ -160,15 +160,15 @@ const CarouselProjectItem = ({ project, index, onClick, active }) => {
             {project.partnerLogos && project.partnerLogos.length > 0 && (
               <div
                 style={fadeUpStyle(active, 0.7 * ANIM_CONFIG.paragraphStagger)}
-                className="pt-4 mt-4 border-t border-gray-100"
+                className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-gray-700">Partners:</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Partners:</span>
                   <div className="flex -space-x-2 flex-wrap">
                     {project.partnerLogos.map((logo, idx) => (
                       <div
                         key={idx}
-                        className="w-10 h-10 rounded-full bg-gray-100 border-2 border-white overflow-hidden flex-shrink-0"
+                        className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 border-2 border-white dark:border-gray-800 overflow-hidden flex-shrink-0"
                       >
                         <img
                           src={logo}
@@ -239,22 +239,22 @@ const CarouselView = ({
         />
       </div>
 
-      {/* Desktop navigation buttons (unchanged) */}
+      {/* Desktop navigation buttons */}
       <div className="hidden md:flex items-center justify-center gap-6 py-8 md:py-10">
         <div className="w-12 h-px bg-green-400 hidden md:block" />
         <button
           onClick={() => goToSlide(currentSlide - 1)}
           disabled={isFirst}
-          className="w-12 h-12 flex items-center justify-center bg-white border border-gray-200 text-[#0b2545] rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+          className="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white dark:hover:bg-gray-700 hover:shadow-xl active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
           aria-label="Previous project"
         >
           <FaChevronLeft className="text-2xl" />
         </button>
-        <FaInfinity className="text-2xl text-black-600" />
+        <FaInfinity className="text-2xl text-gray-600 dark:text-gray-400" />
         <button
           onClick={() => goToSlide(currentSlide + 1)}
           disabled={isLast}
-          className="w-12 h-12 flex items-center justify-center bg-white border border-gray-200 text-[#0b2545] rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
+          className="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white dark:hover:bg-gray-700 hover:shadow-xl active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
           aria-label="Next project"
         >
           <FaChevronRight className="text-2xl" />
@@ -265,7 +265,7 @@ const CarouselView = ({
   );
 };
 
-// ---------- Animated list item for completed projects (unchanged) ----------
+// ---------- Animated list item for completed projects ----------
 const AnimatedProjectListItem = ({ project, index, onClick }) => {
   const [itemRef, itemAnim, itemVisible] = useScrollAnimation(0.1, true);
   const isOngoing = project.category === 'ongoing';
@@ -284,7 +284,7 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <BlockReveal active={itemVisible} rows={6} cols={8} />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0b2545] via-transparent to-transparent opacity-70" />
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-70" />
             <div className={`absolute top-4 right-4 ${isOngoing ? 'bg-green-400' : 'bg-blue-500'} text-white px-3 py-1 rounded-full text-sm font-bold shadow-md`}>
               {isOngoing ? 'ONGOING' : 'COMPLETED'}
             </div>
@@ -295,27 +295,27 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
           <div className="flex items-center gap-3 mb-4">
             <div
               style={fadeUpStyle(itemVisible, 0 * ANIM_CONFIG.paragraphStagger)}
-              className="text-[#1f7a8c] font-bold text-lg"
+              className="text-cyan-700 dark:text-cyan-300 font-bold text-lg"
             >
               0{index + 1}
             </div>
             <div
               style={fadeUpStyle(itemVisible, 0.1 * ANIM_CONFIG.paragraphStagger)}
-              className="h-px flex-1 bg-gradient-to-r from-[#1f7a8c] to-transparent"
+              className="h-px flex-1 bg-gradient-to-r from-cyan-700 dark:from-cyan-400 to-transparent"
             />
           </div>
 
           <h3
             onClick={onClick}
             style={fadeUpStyle(itemVisible, 0.2 * ANIM_CONFIG.paragraphStagger)}
-            className="text-2xl font-bold mb-4 cursor-pointer group-hover:text-[#1f7a8c] transition-colors"
+            className="text-2xl font-bold mb-4 cursor-pointer group-hover:text-cyan-700 dark:group-hover:text-cyan-300 transition-colors text-gray-900 dark:text-gray-100"
           >
             {project.title}
           </h3>
 
           <p
             style={fadeUpStyle(itemVisible, 0.3 * ANIM_CONFIG.paragraphStagger)}
-            className="text-gray-600 mb-6 leading-relaxed"
+            className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed"
           >
             {project.description}
           </p>
@@ -323,14 +323,14 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div
               style={fadeUpStyle(itemVisible, 0.4 * ANIM_CONFIG.paragraphStagger)}
-              className="flex items-center gap-2 text-[#1f7a8c]"
+              className="flex items-center gap-2 text-cyan-700 dark:text-cyan-300"
             >
               <FaCalendarAlt className="text-lg" />
               <span className="font-medium">{project.year}</span>
             </div>
             <div
               style={fadeUpStyle(itemVisible, 0.5 * ANIM_CONFIG.paragraphStagger)}
-              className="flex items-center gap-2 text-green-700"
+              className="flex items-center gap-2 text-green-700 dark:text-green-400"
             >
               <FaImages className="text-lg" />
               <span>{project.images.length} photos</span>
@@ -338,7 +338,7 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
             {project.area && (
               <div
                 style={fadeUpStyle(itemVisible, 0.6 * ANIM_CONFIG.paragraphStagger)}
-                className="flex items-center gap-2 text-gray-500 col-span-2"
+                className="flex items-center gap-2 text-gray-500 dark:text-gray-400 col-span-2"
               >
                 <FaMapMarkerAlt className="text-lg" />
                 <span>{project.area}</span>
@@ -349,15 +349,15 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
           {project.partnerLogos && project.partnerLogos.length > 0 && (
             <div
               style={fadeUpStyle(itemVisible, 0.7 * ANIM_CONFIG.paragraphStagger)}
-              className="pt-4 border-t border-gray-100"
+              className="pt-4 border-t border-gray-200 dark:border-gray-700"
             >
               <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700">Partners:</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Partners:</span>
                 <div className="flex -space-x-2 flex-wrap">
                   {project.partnerLogos.map((logo, idx) => (
                     <div
                       key={idx}
-                      className="w-10 h-10 rounded-full bg-gray-100 border-2 border-white overflow-hidden flex-shrink-0"
+                      className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 border-2 border-white dark:border-gray-800 overflow-hidden flex-shrink-0"
                     >
                       <img src={logo} alt="Partner" className="w-full h-full object-contain p-1" />
                     </div>
@@ -372,7 +372,7 @@ const AnimatedProjectListItem = ({ project, index, onClick }) => {
   );
 };
 
-// ---------- CompletedList (unchanged) ----------
+// ---------- CompletedList ----------
 const CompletedList = ({ completedProjects, openProject }) => {
   const [headingRef, headingAnim, headingVisible] = useScrollAnimation(0.1, true);
 
@@ -385,22 +385,22 @@ const CompletedList = ({ completedProjects, openProject }) => {
           <div className="flex items-center gap-4 mb-8 justify-end">
             <h3
               style={fadeUpStyle(headingVisible, 0)}
-              className="text-2xl md:text-3xl font-bold text-[#0b2545]"
+              className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100"
             >
               Completed Projects
             </h3>
             <FaInfinity
               style={fadeUpStyle(headingVisible, 0.1 * ANIM_CONFIG.staggerBase)}
-              className="text-blue-600 text-2xl"
+              className="text-blue-600 dark:text-blue-400 text-2xl"
             />
             <div
               style={fadeUpStyle(headingVisible, 0.2 * ANIM_CONFIG.staggerBase)}
-              className="h-px w-16 bg-blue-300"
+              className="h-px w-16 bg-blue-300 dark:bg-blue-600"
             />
           </div>
         </div>
 
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {completedProjects.map((project, index) => (
             <AnimatedProjectListItem
               key={project.id}
@@ -415,12 +415,12 @@ const CompletedList = ({ completedProjects, openProject }) => {
   );
 };
 
-// ---------- ExpandedView (unchanged) ----------
+// ---------- ExpandedView ----------
 const ExpandedView = ({ allProjects, openProject }) => {
   return (
     <div className="relative bg-transparent px-6 md:px-10 py-16 md:py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {allProjects.map((project, index) => (
             <AnimatedProjectListItem
               key={project.id}
@@ -462,7 +462,7 @@ const CarouselWithCompleted = ({
   );
 };
 
-// ---------- Main Projects component (unchanged except for minor adjustments) ----------
+// ---------- Main Projects component ----------
 export default function Projects({ introDone = true }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeProject, setActiveProject] = useState(null);
@@ -570,7 +570,7 @@ export default function Projects({ introDone = true }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, viewMode, currentSlide, ongoingProjects.length]);
 
-  // Drag to navigate carousel (updated to work with new carousel structure)
+  // Drag to navigate carousel
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel || isOpen || viewMode !== 'carousel') return;
@@ -612,7 +612,7 @@ export default function Projects({ introDone = true }) {
       e.preventDefault();
       const delta = clientX - dragStartX.current;
       const maxSlides = ongoingProjects.length;
-      const slideWidth = carousel.clientWidth; // width of carousel container
+      const slideWidth = carousel.clientWidth;
 
       let offset = delta;
       if (currentSlide === 0 && delta > 0) offset = delta / 3;
@@ -709,8 +709,8 @@ export default function Projects({ introDone = true }) {
   }, [viewMode]);
 
   return (
-    <div className="bg-transparent text-[#0b2545] overflow-x-hidden">
-      {/* Hero section (updated with dark overlay) */}
+    <div className="bg-transparent text-gray-900 dark:text-gray-100 overflow-x-hidden">
+      {/* Hero section (mobile) */}
       <div className="relative min-h-screen overflow-hidden lg:hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed"
@@ -732,6 +732,7 @@ export default function Projects({ introDone = true }) {
         </div>
       </div>
 
+      {/* Hero section (desktop) */}
       <div className="hidden lg:flex flex-col md:flex-row min-h-screen md:h-screen">
         <div className="relative w-full md:w-1/2 h-96 md:h-full order-2 md:order-1 overflow-hidden">
           <div
@@ -746,8 +747,8 @@ export default function Projects({ introDone = true }) {
         <div className="relative w-full md:w-1/2 flex flex-col order-1 md:order-2 overflow-hidden">
           <div className="hidden md:block flex-1" />
           <div className="relative z-10 pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12">
-            <div className="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">Projects</div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0b2545] leading-tight">
+            <div className="text-sm tracking-[0.3em] uppercase text-gray-600 dark:text-gray-400 mb-3">Projects</div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
               <LetterReveal
                 active={textRevealed}
                 lines={["Building Progress, ", "Delivering", "Excellence"]}
@@ -759,7 +760,7 @@ export default function Projects({ introDone = true }) {
         </div>
       </div>
 
-      {/* Projects header (unchanged) */}
+      {/* Projects header */}
       <div ref={projectsSectionRef} className="relative bg-transparent pt-16 pb-8 px-6 md:px-10 overflow-hidden">
         <div ref={headerRef} className={`max-w-7xl mx-auto relative z-10 transition-all duration-1000 ${headerAnim}`}>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
@@ -768,15 +769,15 @@ export default function Projects({ introDone = true }) {
                 <>
                   <div
                     style={fadeUpStyle(headerVisible, 0)}
-                    className="h-px w-16 bg-green-300"
+                    className="h-px w-16 bg-green-300 dark:bg-green-600"
                   ></div>
                   <FaInfinity
                     style={fadeUpStyle(headerVisible, 0.1 * ANIM_CONFIG.staggerBase)}
-                    className="text-green-600 text-2xl"
+                    className="text-green-600 dark:text-green-400 text-2xl"
                   />
                   <h2
                     style={fadeUpStyle(headerVisible, 0.2 * ANIM_CONFIG.staggerBase)}
-                    className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight"
+                    className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
                   >
                     Current developments
                   </h2>
@@ -785,15 +786,15 @@ export default function Projects({ introDone = true }) {
                 <>
                   <div
                     style={fadeUpStyle(headerVisible, 0)}
-                    className="h-px w-16 bg-blue-300"
+                    className="h-px w-16 bg-blue-300 dark:bg-blue-600"
                   ></div>
                   <FaInfinity
                     style={fadeUpStyle(headerVisible, 0.1 * ANIM_CONFIG.staggerBase)}
-                    className="text-blue-600 text-2xl"
+                    className="text-blue-600 dark:text-blue-400 text-2xl"
                   />
                   <h2
                     style={fadeUpStyle(headerVisible, 0.2 * ANIM_CONFIG.staggerBase)}
-                    className="text-3xl md:text-4xl font-bold text-[#0b2545] leading-tight"
+                    className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 leading-tight"
                   >
                     Complete portfolio
                   </h2>
@@ -808,7 +809,7 @@ export default function Projects({ introDone = true }) {
                 <MagneticButton
                   onClick={() => switchView('expanded')}
                   wrapperClassName="inline-block"
-                  innerClassName="px-6 md:px-8 py-3 md:py-3 bg-[#0b2545] text-white rounded-sm hover:bg-[#1f3a5f] transition-colors text-sm md:text-sm font-medium"
+                  innerClassName="px-6 md:px-8 py-3 md:py-3 bg-gray-900 dark:bg-gray-800 text-white rounded-sm hover:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-sm md:text-sm font-medium"
                   role="button"
                   tabIndex={0}
                 >
@@ -818,7 +819,7 @@ export default function Projects({ introDone = true }) {
                 <MagneticButton
                   onClick={() => switchView('carousel')}
                   wrapperClassName="inline-block"
-                  innerClassName="px-6 md:px-8 py-3 md:py-3 bg-[#0b2545] text-white rounded-sm hover:bg-[#1f3a5f] transition-colors text-sm md:text-sm font-medium"
+                  innerClassName="px-6 md:px-8 py-3 md:py-3 bg-gray-900 dark:bg-gray-800 text-white rounded-sm hover:bg-gray-800 dark:hover:bg-gray-700 transition-colors text-sm md:text-sm font-medium"
                   role="button"
                   tabIndex={0}
                 >
@@ -832,7 +833,7 @@ export default function Projects({ introDone = true }) {
             style={fadeUpStyle(headerVisible, 0.4 * ANIM_CONFIG.staggerBase)}
             className="mt-4 max-w-3xl"
           >
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
               Explore our portfolio of ongoing and completed projects that showcase our commitment to quality, innovation, and sustainable development across the region.
             </p>
           </div>
@@ -862,7 +863,7 @@ export default function Projects({ introDone = true }) {
         )}
       </div>
 
-      {/* Modal (unchanged) */}
+      {/* Modal */}
       {isOpen && activeProject && (
         <div
           className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
@@ -872,81 +873,81 @@ export default function Projects({ introDone = true }) {
             <div
               ref={modalRef}
               onClick={(e) => e.stopPropagation()}
-              className="modal-content bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
+              className="modal-content bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]"
             >
               <button
                 onClick={closeModal}
-                className="absolute top-4 right-4 z-50 bg-white/90 hover:bg-gray-100 text-[#0b2545] p-2.5 rounded-full shadow-md transition-colors"
+                className="absolute top-4 right-4 z-50 bg-white/90 dark:bg-gray-800/90 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100 p-2.5 rounded-full shadow-md transition-colors"
                 aria-label="Close modal"
               >
                 <FaTimes className="text-xl" />
               </button>
 
-              <div className="modal-image-section relative md:w-2/3 h-80 md:h-auto bg-gray-50 border-b md:border-b-0 md:border-r border-gray-200">
+              <div className="modal-image-section relative md:w-2/3 h-80 md:h-auto bg-gray-50 dark:bg-gray-700 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700">
                 {activeProject.images.map((img, idx) => (
                   <img
                     key={img}
                     src={img}
                     alt={`${activeProject.title} view ${idx + 1}`}
-                    className={`absolute inset-0 w-full h-full object-contain bg-white p-4 transition-opacity duration-500 ${idx === activeIndex ? "opacity-100" : "opacity-0"}`}
+                    className={`absolute inset-0 w-full h-full object-contain bg-white dark:bg-gray-800 p-4 transition-opacity duration-500 ${idx === activeIndex ? "opacity-100" : "opacity-0"}`}
                     loading={idx === 0 ? "eager" : "lazy"}
                   />
                 ))}
                 <button
                   onClick={() => navigateImage(-1)}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/90 backdrop-blur-sm text-[#0b2545] rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-900 dark:text-gray-100 rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white dark:hover:bg-gray-700 hover:shadow-xl active:scale-95"
                   aria-label="Previous image"
                 >
                   <FaChevronLeft className="text-2xl" />
                 </button>
                 <button
                   onClick={() => navigateImage(1)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/90 backdrop-blur-sm text-[#0b2545] rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-900 dark:text-gray-100 rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-white dark:hover:bg-gray-700 hover:shadow-xl active:scale-95"
                   aria-label="Next image"
                 >
                   <FaChevronRight className="text-2xl" />
                 </button>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 text-[#0b2545] px-4 py-1.5 rounded-full text-sm font-medium shadow-md">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 px-4 py-1.5 rounded-full text-sm font-medium shadow-md">
                   {activeIndex + 1} / {activeProject.images.length}
                 </div>
               </div>
 
               <div className="modal-details-section p-6 md:p-8 w-full md:w-1/3 overflow-y-auto">
-                <h3 className="text-2xl font-bold text-[#0b2545] mb-2">{activeProject.title}</h3>
-                <p className="text-gray-700 mb-6">{activeProject.description}</p>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{activeProject.title}</h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-6">{activeProject.description}</p>
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   {activeProject.year && (
-                    <div className="flex items-start gap-3 bg-gray-50 p-3 rounded-lg">
-                      <div className="mt-1 p-1.5 bg-[#1f7a8c]/10 rounded-lg">
-                        <FaCalendarAlt className="text-[#1f7a8c]" />
+                    <div className="flex items-start gap-3 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                      <div className="mt-1 p-1.5 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
+                        <FaCalendarAlt className="text-cyan-700 dark:text-cyan-300" />
                       </div>
                       <div>
-                        <div className="text-xs text-gray-500">Completion Year</div>
-                        <div className="text-sm font-semibold text-[#0b2545]">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Completion Year</div>
+                        <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                           {activeProject.year}
                         </div>
                       </div>
                     </div>
                   )}
-                  <div className="flex items-start gap-3 bg-gray-50 p-3 rounded-lg">
-                    <div className="mt-1 p-1.5 bg-green-100 rounded-lg">
-                      <FaImages className="text-green-700" />
+                  <div className="flex items-start gap-3 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                    <div className="mt-1 p-1.5 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                      <FaImages className="text-green-700 dark:text-green-400" />
                     </div>
                     <div>
-                      <div className="text-xs text-gray-500">Total Images</div>
-                      <div className="text-sm font-semibold text-[#0b2545]">
+                      <div className="text-xs text-gray-500 dark:text-gray-400">Total Images</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {activeProject.images.length}
                       </div>
                     </div>
                   </div>
                   {activeProject.area && (
-                    <div className="flex items-start gap-3 bg-gray-50 p-3 rounded-lg col-span-2">
-                      <div className="mt-1 p-1.5 bg-gray-200 rounded-lg">
-                        <FaMapMarkerAlt className="text-gray-600" />
+                    <div className="flex items-start gap-3 bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg col-span-2">
+                      <div className="mt-1 p-1.5 bg-gray-200 dark:bg-gray-600 rounded-lg">
+                        <FaMapMarkerAlt className="text-gray-600 dark:text-gray-400" />
                       </div>
                       <div>
-                        <div className="text-xs text-gray-500">Location</div>
-                        <div className="text-sm font-semibold text-[#0b2545]">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Location</div>
+                        <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                           {activeProject.area}
                         </div>
                       </div>
@@ -956,14 +957,14 @@ export default function Projects({ introDone = true }) {
 
                 {(activeProject.partnerLogos || []).length > 0 && (
                   <div className="mb-6">
-                    <div className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
-                      <FaHardHat className="text-green-600" /> Project Partners
+                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                      <FaHardHat className="text-green-600 dark:text-green-400" /> Project Partners
                     </div>
                     <div className="flex flex-wrap gap-3">
                       {activeProject.partnerLogos.map((logo, index) => (
                         <div
                           key={index}
-                          className="bg-gray-50 border border-gray-200 rounded-xl p-2.5"
+                          className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl p-2.5"
                         >
                           <img src={logo} alt="Partner logo" className="h-8 w-auto object-contain" />
                         </div>
@@ -972,14 +973,14 @@ export default function Projects({ introDone = true }) {
                   </div>
                 )}
 
-                <div className="pt-4 border-t border-gray-100">
-                  <div className="text-xs font-medium text-gray-500 mb-2">Project Gallery</div>
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Project Gallery</div>
                   <div ref={thumbnailRef} className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
                     {activeProject.images.map((img, index) => (
                       <button
                         key={index}
                         onClick={() => setActiveIndex(index)}
-                        className={`flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${index === activeIndex ? "border-[#1f7a8c]" : "border-transparent hover:border-gray-300"
+                        className={`flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all ${index === activeIndex ? "border-cyan-700 dark:border-cyan-300" : "border-transparent hover:border-gray-300 dark:hover:border-gray-600"
                           }`}
                         style={{ width: "72px", height: "54px" }}
                         aria-label={`View image ${index + 1}`}
@@ -1019,6 +1020,9 @@ export default function Projects({ introDone = true }) {
           .modal-image-section {
             height: 250px;
             border-bottom: 1px solid #e5e7eb;
+          }
+          .dark .modal-image-section {
+            border-bottom-color: #374151;
           }
           .modal-details-section {
             max-height: 60vh;

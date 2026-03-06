@@ -281,7 +281,7 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
 
     return (
         <section className="relative w-full bg-transparent overflow-hidden">
-            <div className="max-w-7xl mx-auto w-full border border-gray-200">
+            <div className="max-w-7xl mx-auto w-full border border-gray-200 dark:border-gray-700">
                 <div className={`flex flex-col ${desktopFlexClass}`}>
                     {/* IMAGE SECTION */}
                     <div className="relative w-full md:w-2/5 h-56 sm:h-64 md:h-auto min-h-[200px] md:min-h-0 overflow-hidden order-1 md:order-none">
@@ -299,7 +299,7 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
                         <div className="max-w-xl mx-auto md:mx-0">
                             {/* Service Number Badge */}
                             <div
-                                className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-100 text-green-700 font-bold text-base sm:text-xl mb-3 sm:mb-4 transition-all duration-700 ease-out"
+                                className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 font-bold text-base sm:text-xl mb-3 sm:mb-4 transition-all duration-700 ease-out"
                                 style={{
                                     opacity: active ? 1 : 0,
                                     transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -311,7 +311,7 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
 
                             {/* Service Title */}
                             <h3
-                                className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#0b2545] mt-1 sm:mt-2 mb-3 sm:mb-4 transition-all duration-700 ease-out"
+                                className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mt-1 sm:mt-2 mb-3 sm:mb-4 transition-all duration-700 ease-out"
                                 style={{
                                     opacity: active ? 1 : 0,
                                     transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -323,7 +323,7 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
 
                             {/* Sub Description */}
                             <p
-                                className="text-base sm:text-lg text-gray-700 font-medium mb-3 sm:mb-4 text-justify transition-all duration-700 ease-out"
+                                className="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium mb-3 sm:mb-4 text-justify transition-all duration-700 ease-out"
                                 style={{
                                     opacity: active ? 1 : 0,
                                     transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -335,7 +335,7 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
 
                             {/* Full Description */}
                             <p
-                                className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-6 text-justify transition-all duration-700 ease-out"
+                                className="text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed mb-4 sm:mb-6 text-justify transition-all duration-700 ease-out"
                                 style={{
                                     opacity: active ? 1 : 0,
                                     transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -346,9 +346,9 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
                             </p>
 
                             {/* Outcome Section */}
-                            <div className="border-t border-gray-200 pt-3 sm:pt-4">
+                            <div className="border-t border-gray-200 dark:border-gray-700 pt-3 sm:pt-4">
                                 <h4
-                                    className="text-lg sm:text-xl font-semibold text-[#0b2545] mb-1 sm:mb-2 transition-all duration-700 ease-out"
+                                    className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2 transition-all duration-700 ease-out"
                                     style={{
                                         opacity: active ? 1 : 0,
                                         transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -358,7 +358,7 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
                                     Outcome
                                 </h4>
                                 <p
-                                    className="text-sm sm:text-base text-gray-600 text-justify transition-all duration-700 ease-out"
+                                    className="text-sm sm:text-base text-gray-600 dark:text-gray-400 text-justify transition-all duration-700 ease-out"
                                     style={{
                                         opacity: active ? 1 : 0,
                                         transform: active ? 'translateY(0)' : 'translateY(20px)',
@@ -489,7 +489,7 @@ export default function Home({ introDone = true }) {
                     >
                         <button
                             onClick={() => navigate("/contact")}
-                            className="w-full sm:w-auto bg-green-400 hover:bg-green-500 text-[#0b2545] px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300"
+                            className="w-full sm:w-auto bg-green-400 hover:bg-green-500 text-[#0b2545] dark:text-gray-900 px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-3 rounded-sm font-semibold text-sm sm:text-base md:text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-green-300"
                         >
                             Request a Quote
                         </button>
@@ -540,15 +540,15 @@ export default function Home({ introDone = true }) {
                         className={`text-center transition-all duration-1000 ${mvHeadingAnim}`}
                     >
                         <div className="flex justify-center items-center gap-2 mb-4">
-                            <div className="h-px w-16 bg-green-300"></div>
-                            <FaInfinity className="text-black-600 text-2xl" />
-                            <div className="h-px w-16 bg-blue-300"></div>
+                            <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+                            <FaInfinity className="text-gray-600 dark:text-gray-400 text-2xl" />
+                            <div className="h-px w-16 bg-blue-300 dark:bg-blue-600"></div>
                         </div>
                     </div>
                     <h2
                         ref={whatWeDoHeadingRef}
                         style={fadeUpStyle(whatWeDoHeadingVisible, 0)}
-                        className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-6"
+                        className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6"
                     >
                         What We Do
                     </h2>
@@ -570,18 +570,18 @@ export default function Home({ introDone = true }) {
             >
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="flex items-center gap-4 mb-4">
-                        <div className="h-px w-16 bg-green-300"></div>
-                        <FaInfinity className="text-green-600 text-2xl" />
+                        <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+                        <FaInfinity className="text-green-600 dark:text-green-400 text-2xl" />
                         <h3
                             style={fadeUpStyle(coreServicesVisible, 0)}
-                            className="text-4xl font-bold text-[#0b2545]"
+                            className="text-4xl font-bold text-gray-900 dark:text-gray-100"
                         >
                             Our Core Services
                         </h3>
                     </div>
                     <p
                         style={fadeUpStyle(coreServicesVisible, ANIM_CONFIG.paragraphStagger)}
-                        className="text-gray-600 text-lg max-w-3xl"
+                        className="text-gray-600 dark:text-gray-400 text-lg max-w-3xl"
                     >
                         The foundation of our work — essential services we execute with precision,
                         reliability, and proven expertise.
@@ -608,7 +608,7 @@ export default function Home({ introDone = true }) {
                     <div className="text-center mb-16">
                         <h2
                             style={fadeUpStyle(whyVisible, 0)}
-                            className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4"
+                            className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4"
                         >
                             Our Impact by Numbers
                         </h2>
@@ -616,9 +616,9 @@ export default function Home({ introDone = true }) {
                             style={fadeUpStyle(whyVisible, ANIM_CONFIG.paragraphStagger)}
                             className="flex justify-center items-center gap-2"
                         >
-                            <div className="h-px w-16 bg-green-300"></div>
-                            <FaInfinity className="text-dark-600 text-2xl" />
-                            <div className="h-px w-16 bg-blue-300"></div>
+                            <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+                            <FaInfinity className="text-gray-600 dark:text-gray-400 text-2xl" />
+                            <div className="h-px w-16 bg-blue-300 dark:bg-blue-600"></div>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 items-start">
@@ -626,13 +626,13 @@ export default function Home({ introDone = true }) {
                             style={fadeUpStyle(whyVisible, 0 * ANIM_CONFIG.staggerBase)}
                             className="relative pl-6 border-l-8 border-green-600"
                         >
-                            <h4 className="text-7xl font-bold text-green-600 mb-2 leading-none">
+                            <h4 className="text-7xl font-bold text-green-600 dark:text-green-400 mb-2 leading-none">
                                 <CountUp end={new Date().getFullYear() - 2018} suffix="+" />
                             </h4>
-                            <h5 className="text-2xl font-bold text-[#0b2545] mb-3">
+                            <h5 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
                                 Years of Proven Experience
                             </h5>
-                            <p className="text-gray-600 text-base">
+                            <p className="text-gray-600 dark:text-gray-400 text-base">
                                 Since 2018, we have successfully supported land development and
                                 construction projects across CALABARZON with reliable execution.
                             </p>
@@ -641,15 +641,15 @@ export default function Home({ introDone = true }) {
                             style={fadeUpStyle(whyVisible, 1 * ANIM_CONFIG.staggerBase)}
                             className="text-center"
                         >
-                            <div className="inline-flex items-center justify-center w-40 h-40 rounded-full border-4 border-blue-600/30 bg-blue-50 mb-4">
-                                <span className="text-6xl font-bold text-blue-600">
+                            <div className="inline-flex items-center justify-center w-40 h-40 rounded-full border-4 border-blue-600/30 bg-blue-50 dark:bg-blue-900/20 mb-4">
+                                <span className="text-6xl font-bold text-blue-600 dark:text-blue-400">
                                     <CountUp end={14} suffix="M" />
                                 </span>
                             </div>
-                            <h5 className="text-2xl font-bold text-[#0b2545] mb-3">
+                            <h5 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
                                 Cubic Meters of Material
                             </h5>
-                            <p className="text-gray-600 text-base">
+                            <p className="text-gray-600 dark:text-gray-400 text-base">
                                 Company‑owned land ensures abundant supply and cost efficiency for
                                 projects of any scale.
                             </p>
@@ -658,17 +658,17 @@ export default function Home({ introDone = true }) {
                             style={fadeUpStyle(whyVisible, 2 * ANIM_CONFIG.staggerBase)}
                             className="relative"
                         >
-                            <div className="absolute top-0 right-0 text-green-100 text-9xl select-none">
+                            <div className="absolute top-0 right-0 text-green-100 dark:text-green-900/30 text-9xl select-none">
                                 <FaLeaf />
                             </div>
                             <div className="relative z-10">
-                                <h4 className="text-7xl font-bold text-green-600 mb-2">
+                                <h4 className="text-7xl font-bold text-green-600 dark:text-green-400 mb-2">
                                     <CountUp end={100} suffix="%" />
                                 </h4>
-                                <h5 className="text-2xl font-bold text-[#0b2545] mb-3">
+                                <h5 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
                                     Eco‑Compliant Operations
                                 </h5>
-                                <p className="text-gray-600 text-base">
+                                <p className="text-gray-600 dark:text-gray-400 text-base">
                                     We strictly adhere to environmental regulations and sustainable
                                     development practices.
                                 </p>
@@ -688,7 +688,7 @@ export default function Home({ introDone = true }) {
                     <div className="text-center mb-16">
                         <h2
                             style={fadeUpStyle(testimonialsVisible, 0)}
-                            className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4"
+                            className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4"
                         >
                             What Our Clients Say
                         </h2>
@@ -696,9 +696,9 @@ export default function Home({ introDone = true }) {
                             style={fadeUpStyle(testimonialsVisible, ANIM_CONFIG.paragraphStagger)}
                             className="flex justify-center items-center gap-2"
                         >
-                            <div className="h-px w-16 bg-green-300"></div>
-                            <FaInfinity className="text-dark-600 text-2xl" />
-                            <div className="h-px w-16 bg-blue-300"></div>
+                            <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+                            <FaInfinity className="text-gray-600 dark:text-gray-400 text-2xl" />
+                            <div className="h-px w-16 bg-blue-300 dark:bg-blue-600"></div>
                         </div>
                     </div>
 
@@ -714,11 +714,11 @@ export default function Home({ introDone = true }) {
                                 className="relative"
                             >
                                 {/* Large quotation mark as background element */}
-                                <div className="absolute -top-6 -left-4 text-8xl font-serif text-gray-200 select-none z-0">
+                                <div className="absolute -top-6 -left-4 text-8xl font-serif text-gray-200 dark:text-gray-700 select-none z-0">
                                     “
                                 </div>
                                 <div className="relative z-10">
-                                    <p className="text-gray-700 text-lg leading-relaxed mb-6 italic">
+                                    <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-6 italic">
                                         {testimonial.quote}
                                     </p>
                                     <div className="flex items-center">
@@ -730,10 +730,10 @@ export default function Home({ introDone = true }) {
                                             />
                                         )}
                                         <div>
-                                            <h4 className="font-bold text-[#0b2545]">
+                                            <h4 className="font-bold text-gray-900 dark:text-gray-100">
                                                 {testimonial.name}
                                             </h4>
-                                            <p className="text-sm text-gray-500">{testimonial.role}</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -767,7 +767,7 @@ export default function Home({ introDone = true }) {
                     </h3>
                     <p
                         style={fadeUpStyle(ctaContentVisible, ANIM_CONFIG.paragraphStagger)}
-                        className="text-xl text-gray-200 mb-8"
+                        className="text-xl text-gray-200 dark:text-gray-300 mb-8"
                     >
                         Let's discuss how our services can bring your vision to life.
                     </p>

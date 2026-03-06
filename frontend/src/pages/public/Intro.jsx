@@ -102,7 +102,6 @@ export default function Intro({ title, onFinish }) {
       <style>{`
         .letter { display: inline-block; }
 
-        /* Animated intro grid with big green + small blue */
         .intro-grid {
           position: absolute;
           inset: 0;
@@ -110,10 +109,10 @@ export default function Intro({ title, onFinish }) {
           z-index: 0;
 
           background-image:
-            linear-gradient(to right, rgba(22, 163, 74, 0.20) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(22, 163, 74, 0.20) 1px, transparent 1px),
-            linear-gradient(to right, rgba(37, 99, 235, 0.06) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+            linear-gradient(to right, var(--grid-green) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--grid-green) 1px, transparent 1px),
+            linear-gradient(to right, var(--grid-blue) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--grid-blue) 1px, transparent 1px);
 
           background-size:
             160px 160px,
@@ -122,7 +121,6 @@ export default function Intro({ title, onFinish }) {
             20px 20px;
 
           background-repeat: repeat;
-
           animation: gridMove 8s linear infinite;
         }
 
@@ -134,7 +132,8 @@ export default function Intro({ title, onFinish }) {
 
       <div
         ref={container}
-        className="intro-container fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#f4faf7] perspective-1000"
+        // 👇 Changed dark background from gray-900 to gray-800 for better transition visibility
+        className="intro-container fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#f4faf7] dark:bg-gray-800 perspective-1000"
       >
         <div className="intro-grid" />
 
@@ -155,18 +154,18 @@ export default function Intro({ title, onFinish }) {
         {/* opacity:0 hides text before split, layout space preserved via line-height */}
         <h1
           ref={titleRef}
-          className="text-3xl md:text-4xl font-semibold tracking-wide relative z-10 text-[#0b2545]"
+          className="text-3xl md:text-4xl font-semibold tracking-wide relative z-10 text-[#0b2545] dark:text-gray-100"
           style={{ opacity: 0 }}
         >
           {title}
         </h1>
 
         {/* Loading bar */}
-        <div className="w-40 h-[2px] bg-gray-300 mt-6 overflow-hidden relative z-10">
+        <div className="w-40 h-[2px] bg-gray-300 dark:bg-gray-600 mt-6 overflow-hidden relative z-10">
           {/* visibility:hidden preserves layout space, no full-width flash */}
           <div
             ref={progress}
-            className="h-full bg-[#0b2545]"
+            className="h-full bg-[#0b2545] dark:bg-gray-300"
             style={{ visibility: "hidden" }}
           />
         </div>
@@ -174,7 +173,7 @@ export default function Intro({ title, onFinish }) {
         {/* Loading counter */}
         <div
           ref={counter}
-          className="mt-4 text-sm tracking-widest text-gray-500 relative z-10"
+          className="mt-4 text-sm tracking-widest text-gray-500 dark:text-gray-400 relative z-10"
         >
           0
         </div>

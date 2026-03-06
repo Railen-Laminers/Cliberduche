@@ -233,19 +233,22 @@ export default function Contact({ introDone = true }) {
         const isError = touched[fieldName] && errors[fieldName];
         const isValid = touched[fieldName] && !errors[fieldName] && formData[fieldName];
         return {
-            inputClass: `peer w-full px-4 pt-6 pb-2 rounded-sm bg-gray-50 border text-gray-800 outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${isError
-                    ? "border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100"
+            inputClass: `peer w-full px-4 pt-6 pb-2 rounded-sm bg-gray-50 dark:bg-gray-800 border text-gray-900 dark:text-gray-100 outline-none transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
+                isError
+                    ? "border-red-300 dark:border-red-600 focus:border-red-400 dark:focus:border-red-500 focus:ring-2 focus:ring-red-100 dark:focus:ring-red-900/30"
                     : isValid
-                        ? "border-green-300 focus:border-green-400 focus:ring-2 focus:ring-green-100"
-                        : "border-gray-200 focus:border-green-400 focus:ring-2 focus:ring-green-100"
-                }`,
-            labelClass: `absolute left-4 transition-all duration-300 pointer-events-none ${formData[fieldName] ? "top-1 text-xs" : "top-4 text-base peer-focus:top-1 peer-focus:text-xs"
-                } ${isError
-                    ? "text-red-600"
+                        ? "border-green-300 dark:border-green-600 focus:border-green-400 dark:focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:focus:ring-green-900/30"
+                        : "border-gray-200 dark:border-gray-700 focus:border-green-400 dark:focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:focus:ring-green-900/30"
+            }`,
+            labelClass: `absolute left-4 transition-all duration-300 pointer-events-none ${
+                formData[fieldName] ? "top-1 text-xs" : "top-4 text-base peer-focus:top-1 peer-focus:text-xs"
+            } ${
+                isError
+                    ? "text-red-600 dark:text-red-400"
                     : isValid
-                        ? "text-green-600"
-                        : "text-gray-500 peer-focus:text-green-600"
-                }`,
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-gray-500 dark:text-gray-400 peer-focus:text-green-600 dark:peer-focus:text-green-400"
+            }`,
         };
     };
 
@@ -264,44 +267,43 @@ export default function Contact({ introDone = true }) {
             style={{ minHeight: "calc(var(--vh, 1vh) * 100)" }}
         >
             <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-16 items-center relative z-10">
-                {/* LEFT COLUMN – unchanged */}
+                {/* LEFT COLUMN */}
                 <div
                     ref={infoRef}
-                    className={`flex flex-col text-gray-800 transition-all duration-1000 ${infoAnim}`}
+                    className={`flex flex-col text-gray-900 dark:text-gray-100 transition-all duration-1000 ${infoAnim}`}
                 >
-                    {/* ... (same as before) */}
                     <div ref={headingRef} className={`mb-8 transition-all duration-1000 ${headingAnim}`}>
                         <div style={fadeUpStyle(headingVisible, 0)} className="flex items-center gap-4 mb-2">
-                            <div className="h-px w-16 bg-green-300"></div>
-                            <FaInfinity className="text-green-600 text-2xl" />
-                            <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">Contact Us</h3>
+                            <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+                            <FaInfinity className="text-green-600 dark:text-green-400 text-2xl" />
+                            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">Contact Us</h3>
                         </div>
                     </div>
 
                     <div className="space-y-6 mb-8" style={fadeUpStyle(infoVisible, 0 * ANIM_CONFIG.paragraphStagger)}>
                         <div>
-                            <h4 className="text-lg font-semibold text-green-800 mb-1">Cabuyao Office</h4>
-                            <p className="text-sm text-gray-600">4025</p>
-                            <p className="text-sm text-gray-600">
+                            <h4 className="text-lg font-semibold text-green-800 dark:text-green-400 mb-1">Cabuyao Office</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">4025</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
                                 3rd floor CBD Building, Brgy. Pulo, National Highway, Cabuyao City, Laguna
                             </p>
-                            <p className="text-sm text-gray-600 mt-2 flex items-center gap-2">
-                                <FaPhone className="text-green-600 w-3 h-3" /> +63 49 546-6107
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 flex items-center gap-2">
+                                <FaPhone className="text-green-600 dark:text-green-400 w-3 h-3" /> +63 49 546-6107
                             </p>
-                            <p className="text-sm text-gray-600 flex items-center gap-2">
-                                <FaEnvelope className="text-green-600 w-3 h-3" /> cliberduche.corp@yahoo.com
+                            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                                <FaEnvelope className="text-green-600 dark:text-green-400 w-3 h-3" /> cliberduche.corp@yahoo.com
                             </p>
-                            <p className="text-sm text-gray-600 flex items-center gap-2 mt-1">
-                                <FaClock className="text-green-600 w-3 h-3" /> Mon-Fri 8AM - 6PM
+                            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 mt-1">
+                                <FaClock className="text-green-600 dark:text-green-400 w-3 h-3" /> Mon-Fri 8AM - 6PM
                             </p>
                         </div>
                     </div>
 
                     <div className="mb-8" style={fadeUpStyle(infoVisible, 1 * ANIM_CONFIG.paragraphStagger)}>
-                        <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                        <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">
                             Core Services
                         </h4>
-                        <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700">
+                        <ul className="list-disc pl-5 space-y-1 text-sm text-gray-700 dark:text-gray-300">
                             <li>Backfill & Land Sourcing</li>
                             <li>Land Development</li>
                             <li>Site Management</li>
@@ -311,7 +313,7 @@ export default function Contact({ introDone = true }) {
                     </div>
 
                     <div
-                        className="flex space-x-8 text-sm text-gray-600 mb-10"
+                        className="flex space-x-8 text-sm text-gray-600 dark:text-gray-400 mb-10"
                         style={fadeUpStyle(infoVisible, 2 * ANIM_CONFIG.paragraphStagger)}
                     >
                         <p><span className="font-medium">Founded:</span> 2018</p>
@@ -319,10 +321,10 @@ export default function Contact({ introDone = true }) {
                     </div>
 
                     <div style={fadeUpStyle(infoVisible, 3 * ANIM_CONFIG.paragraphStagger)}>
-                        <div className="rounded-sm overflow-hidden border border-gray-200 shadow-sm">
+                        <div className="rounded-sm overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
                             <Map />
                         </div>
-                        <p className="text-xs text-gray-400 mt-2 text-right">MAP</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2 text-right">MAP</p>
                     </div>
                 </div>
 
@@ -334,12 +336,12 @@ export default function Contact({ introDone = true }) {
                 >
                     <div className="bg-transparent rounded-2xl p-8">
                         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                            <h4 className="text-xl font-light text-gray-800 border-b border-gray-200 pb-3">
+                            <h4 className="text-xl font-light text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700 pb-3">
                                 Send us a message
                             </h4>
 
                             {submitError && (
-                                <div className="p-3 bg-red-50 border border-red-200 rounded-sm text-red-700 text-sm flex items-start gap-2">
+                                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-sm text-red-700 dark:text-red-300 text-sm flex items-start gap-2">
                                     <FaExclamationCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                                     <span className="whitespace-pre-wrap">{submitError}</span>
                                 </div>
@@ -364,11 +366,11 @@ export default function Contact({ introDone = true }) {
                                         Subject *
                                     </label>
                                     {touched.subject && !errors.subject && formData.subject && (
-                                        <FaCheck className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />
+                                        <FaCheck className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 dark:text-green-400 w-4 h-4" />
                                     )}
                                 </div>
                                 {touched.subject && errors.subject && (
-                                    <p className="text-xs text-gray-500 italic mt-1">{errors.subject}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-1">{errors.subject}</p>
                                 )}
                             </div>
 
@@ -391,11 +393,11 @@ export default function Contact({ introDone = true }) {
                                         Name *
                                     </label>
                                     {touched.name && !errors.name && formData.name && (
-                                        <FaCheck className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />
+                                        <FaCheck className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 dark:text-green-400 w-4 h-4" />
                                     )}
                                 </div>
                                 {touched.name && errors.name && (
-                                    <p className="text-xs text-gray-500 italic mt-1">{errors.name}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-1">{errors.name}</p>
                                 )}
                             </div>
 
@@ -418,11 +420,11 @@ export default function Contact({ introDone = true }) {
                                         Email Address *
                                     </label>
                                     {touched.email && !errors.email && formData.email && (
-                                        <FaCheck className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 w-4 h-4" />
+                                        <FaCheck className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 dark:text-green-400 w-4 h-4" />
                                     )}
                                 </div>
                                 {touched.email && errors.email && (
-                                    <p className="text-xs text-gray-500 italic mt-1">{errors.email}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-1">{errors.email}</p>
                                 )}
                             </div>
 
@@ -445,26 +447,26 @@ export default function Contact({ introDone = true }) {
                                         Message *
                                     </label>
                                     {touched.message && !errors.message && formData.message && (
-                                        <FaCheck className="absolute right-3 top-6 text-green-500 w-4 h-4" />
+                                        <FaCheck className="absolute right-3 top-6 text-green-500 dark:text-green-400 w-4 h-4" />
                                     )}
                                 </div>
                                 {touched.message && errors.message && (
-                                    <p className="text-xs text-gray-500 italic mt-1">{errors.message}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-1">{errors.message}</p>
                                 )}
                             </div>
 
                             {/* Human verification row */}
                             <div className="flex items-center justify-between gap-4">
-                                <span className="text-sm text-gray-600">Human verification</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-400">Human verification</span>
                                 {captchaPassed ? (
-                                    <span className="flex items-center gap-2 text-green-600 text-sm">
+                                    <span className="flex items-center gap-2 text-green-600 dark:text-green-400 text-sm">
                                         <FaCheckCircle /> Verified
                                     </span>
                                 ) : (
                                     <button
                                         type="button"
                                         onClick={() => setShowCaptchaModal(true)}
-                                        className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-sm transition-colors border border-gray-300"
+                                        className="text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-sm transition-colors border border-gray-300 dark:border-gray-600"
                                     >
                                         Verify
                                     </button>
@@ -473,7 +475,7 @@ export default function Contact({ introDone = true }) {
 
                             {/* Required note & Privacy checkbox */}
                             <div className="space-y-3">
-                                <p className="text-xs text-gray-400">* Required</p>
+                                <p className="text-xs text-gray-400 dark:text-gray-500">* Required</p>
                                 <div>
                                     <label
                                         className={`flex items-start space-x-3 cursor-pointer ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
@@ -486,20 +488,22 @@ export default function Contact({ introDone = true }) {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             disabled={isSubmitting}
-                                            className={`mt-1 w-4 h-4 rounded-sm focus:ring-2 disabled:cursor-not-allowed transition-all duration-200 ${isPrivacyError
-                                                    ? "border-2 border-red-400 text-red-600 focus:ring-red-100"
-                                                    : "border border-gray-300 text-green-600 focus:ring-green-500"
-                                                }`}
+                                            className={`mt-1 w-4 h-4 rounded-sm focus:ring-2 disabled:cursor-not-allowed transition-all duration-200 ${
+                                                isPrivacyError
+                                                    ? "border-2 border-red-400 dark:border-red-500 text-red-600 dark:text-red-400 focus:ring-red-100 dark:focus:ring-red-900/30"
+                                                    : "border border-gray-300 dark:border-gray-600 text-green-600 dark:text-green-400 focus:ring-green-500 dark:focus:ring-green-400"
+                                            }`}
                                         />
                                         <span
-                                            className={`text-xs leading-tight ${isPrivacyError ? "text-red-600" : "text-gray-600"
-                                                }`}
+                                            className={`text-xs leading-tight ${
+                                                isPrivacyError ? "text-red-600 dark:text-red-400" : "text-gray-600 dark:text-gray-400"
+                                            }`}
                                         >
                                             Privacy Policy – I agree to send my information and be contacted.
                                         </span>
                                     </label>
                                     {touched.privacyAccepted && errors.privacyAccepted && (
-                                        <p className="text-xs text-gray-500 italic mt-1">{errors.privacyAccepted}</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-1">{errors.privacyAccepted}</p>
                                     )}
                                 </div>
                             </div>
@@ -515,7 +519,7 @@ export default function Contact({ introDone = true }) {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting || !captchaPassed}
-                                        className={`bg-green-700 hover:bg-green-800 text-white py-3 px-8 rounded-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-green-700`}
+                                        className={`bg-green-700 dark:bg-green-600 hover:bg-green-800 dark:hover:bg-green-700 text-white py-3 px-8 rounded-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-green-700 dark:disabled:hover:bg-green-600`}
                                     >
                                         {isSubmitting ? (
                                             <>
@@ -559,18 +563,18 @@ export default function Contact({ introDone = true }) {
                     onClick={() => setShowCaptchaModal(false)}
                 >
                     <div
-                        className="bg-white rounded-lg shadow-xl max-w-sm w-full p-6 relative"
+                        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-sm w-full p-6 relative"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             onClick={() => setShowCaptchaModal(false)}
-                            className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute top-3 right-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                             aria-label="Close"
                         >
                             <FaTimes className="w-5 h-5" />
                         </button>
-                        <h3 className="text-lg font-medium text-gray-800 mb-2">Verification</h3>
-                        <p className="text-sm text-gray-500 mb-4">
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Verification</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                             Click the animation that stops moving first.
                         </p>
                         <MicroAnimationCaptcha onSuccess={handleCaptchaSuccess} />
@@ -578,37 +582,37 @@ export default function Contact({ introDone = true }) {
                 </div>
             )}
 
-            {/* Success Modal (unchanged) */}
+            {/* Success Modal */}
             {showSuccessModal && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4"
                     onClick={() => setShowSuccessModal(false)}
                 >
                     <div
-                        className="bg-white rounded-sm shadow-xl max-w-sm w-full p-6 relative animate-fadeIn"
+                        className="bg-white dark:bg-gray-800 rounded-sm shadow-xl max-w-sm w-full p-6 relative animate-fadeIn"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             onClick={() => setShowSuccessModal(false)}
-                            className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute top-3 right-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                             aria-label="Close modal"
                             disabled={isSubmitting}
                         >
                             <FaTimes className="w-5 h-5" />
                         </button>
                         <div className="text-center">
-                            <FaCheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                            <h3 className="text-2xl font-semibold text-gray-800 mb-2">Message Sent!</h3>
-                            <p className="text-gray-600 mb-6">
+                            <FaCheckCircle className="w-16 h-16 text-green-600 dark:text-green-400 mx-auto mb-4" />
+                            <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Message Sent!</h3>
+                            <p className="text-gray-600 dark:text-gray-400 mb-6">
                                 Thank you for reaching out. We'll get back to you as soon as possible.
                                 <br />
-                                <span className="text-sm text-green-600">
+                                <span className="text-sm text-green-600 dark:text-green-400">
                                     A confirmation email has been sent to your inbox.
                                 </span>
                             </p>
                             <button
                                 onClick={() => setShowSuccessModal(false)}
-                                className="bg-green-700 hover:bg-green-800 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                                className="bg-green-700 dark:bg-green-600 hover:bg-green-800 dark:hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                             >
                                 OK
                             </button>

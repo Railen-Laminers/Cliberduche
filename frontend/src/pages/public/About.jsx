@@ -192,8 +192,8 @@ export default function About({ introDone = true }) {
         <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2">
           <div className="hidden md:block flex-1" />
           <div className="pt-20 md:pt-0 pb-16 md:pb-20 px-6 md:px-12">
-            <div className="text-sm tracking-[0.3em] uppercase text-gray-600 mb-3">About</div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0b2545] leading-tight">
+            <div className="text-sm tracking-[0.3em] uppercase text-gray-600 dark:text-gray-400 mb-3">About</div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
               <LetterReveal
                 active={textRevealed}
                 lines={["CLIBERDUCHE", "CORPORATION"]}
@@ -215,11 +215,11 @@ export default function About({ introDone = true }) {
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div>
               <div className="flex items-center gap-4 mb-4">
-                <div className="h-px w-16 bg-green-300"></div>
-                <FaInfinity className="text-green-600 text-2xl" />
-                <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">The Company</h3>
+                <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+                <FaInfinity className="text-green-600 dark:text-green-400 text-2xl" />
+                <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">The Company</h3>
               </div>
-              <div className="space-y-6 text-gray-600 leading-relaxed">
+              <div className="space-y-6 text-gray-600 dark:text-gray-400 leading-relaxed">
                 <p style={fadeUpStyle(companyVisible, 0 * ANIM_CONFIG.paragraphStagger)}>
                   Established in 2018, CLIBERDUCHE CORPORATION was born out of the dream of a person
                   to provide the best for his family without leaving the country anymore. This person
@@ -230,7 +230,7 @@ export default function About({ introDone = true }) {
                 <p style={fadeUpStyle(companyVisible, 1 * ANIM_CONFIG.paragraphStagger)}>
                   <strong>CLIBERDUCHE</strong> stands for the surnames of the founder and co-founders:
                 </p>
-                <ul style={fadeUpStyle(companyVisible, 2 * ANIM_CONFIG.paragraphStagger)} className="list-disc list-inside pl-4 space-y-1 text-gray-700">
+                <ul style={fadeUpStyle(companyVisible, 2 * ANIM_CONFIG.paragraphStagger)} className="list-disc list-inside pl-4 space-y-1 text-gray-700 dark:text-gray-300">
                   <li>CLImaco</li>
                   <li>BERonilla</li>
                   <li>PiaDUCHE</li>
@@ -287,11 +287,11 @@ export default function About({ introDone = true }) {
             </div>
             <div className="order-1 md:order-2">
               <div className="flex items-center gap-4 mb-4 justify-end md:justify-start">
-                <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545]">Projects & Expertise</h3>
-                <FaInfinity className="text-blue-600 text-2xl" />
-                <div className="h-px w-16 bg-blue-300"></div>
+                <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">Projects & Expertise</h3>
+                <FaInfinity className="text-blue-600 dark:text-blue-400 text-2xl" />
+                <div className="h-px w-16 bg-blue-300 dark:bg-blue-600"></div>
               </div>
-              <div className="space-y-6 text-gray-600 leading-relaxed text-left">
+              <div className="space-y-6 text-gray-600 dark:text-gray-400 leading-relaxed text-left">
                 <p style={fadeUpStyle(projectsVisible, 0 * ANIM_CONFIG.paragraphStagger)}>
                   CLIBERDUCHE CORPORATION handles a diverse range of projects—from small-scale to large
                   commercial and industrial developments. We specialize in supplying backfilling materials,
@@ -321,11 +321,11 @@ export default function About({ introDone = true }) {
           {/* Heading */}
           <div ref={mvHeadingRef} className={`text-center transition-all duration-1000 ${mvHeadingAnim}`}>
             <div className="flex justify-center items-center gap-2 mb-4">
-              <div className="h-px w-16 bg-green-300"></div>
-              <FaInfinity className="text-black-600 text-2xl" />
-              <div className="h-px w-16 bg-blue-300"></div>
+              <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+              <FaInfinity className="text-gray-600 dark:text-gray-400 text-2xl" />
+              <div className="h-px w-16 bg-blue-300 dark:bg-blue-600"></div>
             </div>
-            <p className="text-gray-600 mb-12 max-w-3xl mx-auto text-lg">
+            <p className="text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto text-lg">
               Guided by purpose, driven by excellence, and grounded in values that define how the
               company serves clients, communities, and partners.
             </p>
@@ -336,16 +336,16 @@ export default function About({ introDone = true }) {
             {/* Mission */}
             <div ref={missionRef} className={`transition-all duration-1000 ${missionAnim}`}>
               <div style={fadeUpStyle(missionVisible, 0)} className="relative">
-                <div className="absolute -top-8 -left-4 text-8xl font-black text-green-100 select-none z-0">
+                <div className="absolute -top-8 -left-4 text-8xl font-black text-green-100 dark:text-green-900/30 select-none z-0">
                   M
                 </div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4">
-                    <FaBolt className="text-green-600 text-2xl" />
-                    <h4 className="text-3xl font-bold text-[#0b2545]">Mission</h4>
-                    <div className="flex-1 h-px bg-green-300"></div>
+                    <FaBolt className="text-green-600 dark:text-green-400 text-2xl" />
+                    <h4 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Mission</h4>
+                    <div className="flex-1 h-px bg-green-300 dark:bg-green-600"></div>
                   </div>
-                  <div className="space-y-4 text-gray-700 leading-relaxed pl-4 border-l-4 border-green-400">
+                  <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed pl-4 border-l-4 border-green-400 dark:border-green-600">
                     <p>
                       “We are a responsible land development company that provides high-quality backfill materials for land development projects and other infrastructures, including but not limited to sub-base materials like aggregates, mixed soil, and boulders. We support sustainable land development by adhering to the existing environmental regulations of the Philippines. We provide jobs for fellow Filipinos, which significantly contributes to boosting our country's economy. We are also keen to deliver excellent value to our partner communities, investors, employees, and other stakeholders.”
                     </p>
@@ -357,16 +357,16 @@ export default function About({ introDone = true }) {
             {/* Vision */}
             <div ref={visionRef} className={`transition-all duration-1000 delay-200 ${visionAnim}`}>
               <div style={fadeUpStyle(visionVisible, 0)} className="relative">
-                <div className="absolute -top-8 -right-4 text-8xl font-black text-blue-100 select-none z-0">
+                <div className="absolute -top-8 -right-4 text-8xl font-black text-blue-100 dark:text-blue-900/30 select-none z-0">
                   V
                 </div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-3 mb-4 justify-end">
-                    <div className="flex-1 h-px bg-blue-300"></div>
-                    <h4 className="text-3xl font-bold text-[#0b2545]">Vision</h4>
-                    <FaEye className="text-blue-600 text-2xl" />
+                    <div className="flex-1 h-px bg-blue-300 dark:bg-blue-600"></div>
+                    <h4 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Vision</h4>
+                    <FaEye className="text-blue-600 dark:text-blue-400 text-2xl" />
                   </div>
-                  <div className="space-y-4 text-gray-700 leading-relaxed pr-4 border-r-4 border-blue-400 text-right">
+                  <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed pr-4 border-r-4 border-blue-400 dark:border-blue-600 text-right">
                     <p>
                       “Our vision is to be a highly respected, world-class natural resource land development company committed to adhering to international standards in land development operations and environmental conservation, sustainable projects that cover converting land development sites into other useful and economic projects in the future, thus converting land development projects to future commercial and housing projects.”ㅤ
                     </p>
@@ -379,20 +379,20 @@ export default function About({ introDone = true }) {
           {/* Core Values */}
           <div ref={valuesRef} className={`transition-all duration-1000 ${valuesAnim}`}>
             <div className="flex items-center gap-4 mb-10">
-              <div className="h-px w-16 bg-green-300"></div>
-              <FaInfinity className="text-green-600 text-2xl" />
-              <h4 className="text-2xl md:text-3xl font-bold text-[#0b2545]">Core Values</h4>
-              <div className="flex-1 h-px bg-blue-300"></div>
+              <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+              <FaInfinity className="text-green-600 dark:text-green-400 text-2xl" />
+              <h4 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">Core Values</h4>
+              <div className="flex-1 h-px bg-blue-300 dark:bg-blue-600"></div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 md:gap-12">
               {/* Quality */}
               <div style={fadeUpStyle(valuesVisible, 0 * ANIM_CONFIG.staggerBase)} className="text-center md:text-left">
-                <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 rounded-full text-green-600">
+                <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 dark:text-green-400">
                   <FaCheckCircle className="w-7 h-7" />
                 </div>
-                <h5 className="font-semibold text-xl mb-2 text-[#0b2545]">Quality</h5>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <h5 className="font-semibold text-xl mb-2 text-gray-900 dark:text-gray-100">Quality</h5>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   We ensure projects are of high quality and align with local standards to remain
                   competitive in national and local markets.
                 </p>
@@ -400,22 +400,22 @@ export default function About({ introDone = true }) {
 
               {/* Safety */}
               <div style={fadeUpStyle(valuesVisible, 1 * ANIM_CONFIG.staggerBase)} className="text-center md:text-left">
-                <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 rounded-full text-green-600">
+                <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 dark:text-green-400">
                   <FaShieldAlt className="w-7 h-7" />
                 </div>
-                <h5 className="font-semibold text-xl mb-2 text-[#0b2545]">Safety</h5>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <h5 className="font-semibold text-xl mb-2 text-gray-900 dark:text-gray-100">Safety</h5>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   We ensures safety at work site, safety of projects and safety of personnel and thus we ensure safety practices which is the pinnacle, before and after execution of projects.
                 </p>
               </div>
 
               {/* Integrity */}
               <div style={fadeUpStyle(valuesVisible, 2 * ANIM_CONFIG.staggerBase)} className="text-center md:text-left">
-                <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 rounded-full text-green-600">
+                <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 dark:text-green-400">
                   <FaBalanceScale className="w-7 h-7" />
                 </div>
-                <h5 className="font-semibold text-xl mb-2 text-[#0b2545]">Integrity</h5>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <h5 className="font-semibold text-xl mb-2 text-gray-900 dark:text-gray-100">Integrity</h5>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   We ensure compliance with existing laws covering the construction industry, reliable workforce and our timely delivery of projects.
                 </p>
               </div>
@@ -432,13 +432,13 @@ export default function About({ introDone = true }) {
       >
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Our Team</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Our Team</h2>
             <div className="flex justify-center items-center gap-2 mb-4">
-              <div className="h-px w-16 bg-green-300"></div>
-              <FaInfinity className="text-dark-600 text-2xl" />
-              <div className="h-px w-16 bg-blue-300"></div>
+              <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+              <FaInfinity className="text-gray-600 dark:text-gray-400 text-2xl" />
+              <div className="h-px w-16 bg-blue-300 dark:bg-blue-600"></div>
             </div>
-            <p className="text-gray-600 max-w-3xl mx-auto text-lg">
+            <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-lg">
               Meet the people behind Cliberduche. Founded in 2018 by <strong>John Climaco</strong>,
               our leadership combines decades of construction experience with a deep commitment to
               integrity and sustainable development. Today, together with his family and a dedicated
@@ -457,7 +457,7 @@ export default function About({ introDone = true }) {
                 e.preventDefault();
                 document.getElementById('insights')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 transition-colors duration-300 group"
+              className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-300 group"
             >
               <span className="text-sm uppercase tracking-wider">Discover Our Work</span>
               <FaArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform duration-300" />
@@ -477,13 +477,13 @@ export default function About({ introDone = true }) {
             ref={insightsRef}
             className={`text-center mb-8 transition-all duration-1000 ${insightsAnim}`}
           >
-            <h3 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Insights</h3>
+            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Insights</h3>
             <div className="flex justify-center items-center gap-2 mb-4">
-              <div className="h-px w-16 bg-green-300"></div>
-              <FaInfinity className="text-dark-600 text-2xl" />
-              <div className="h-px w-16 bg-blue-300"></div>
+              <div className="h-px w-16 bg-green-300 dark:bg-green-600"></div>
+              <FaInfinity className="text-gray-600 dark:text-gray-400 text-2xl" />
+              <div className="h-px w-16 bg-blue-300 dark:bg-blue-600"></div>
             </div>
-            <p className="text-gray-600 max-w-3xl mx-auto text-lg">
+            <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-lg">
               Drawing from years of experience in land development and construction, our insights
               showcase the practical knowledge, sustainable practices, and innovative approaches
               that guide every project. We share lessons learned and strategies that help

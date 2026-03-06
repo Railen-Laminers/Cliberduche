@@ -2,11 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Apply the font tokens globally and set headings to use the display font */
+/* Apply the font tokens globally and set base text colors */
 @layer base {
-
     body {
-        @apply font-body;
+        @apply font-body text-gray-900 dark:text-gray-100;
     }
 
     h1,
@@ -24,73 +23,125 @@
     }
 }
 
-/* Modern Scrollbar */
+:root {
+    --grid-green: rgba(22, 163, 74, 0.20);
+    --grid-blue: rgba(37, 99, 235, 0.06);
+}
 
+.dark {
+    --grid-green: rgba(255, 255, 255, 0.06);
+    --grid-blue: rgba(200, 220, 255, 0.05);
+}
+
+
+/* ===== MODERN SCROLLBAR (light & dark) ===== */
+
+/* Light mode scrollbar */
 ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
     background: #0b2545;
+    /* dark blue track – stays same or you can change */
     border-radius: 10px;
 }
 
-/* Thumb */
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg,
-            #1f7a8c,
-            #176072);
+    background: linear-gradient(180deg, #1f7a8c, #176072);
     border-radius: 10px;
     border: 2px solid #0b2545;
     transition: all 0.3s ease;
 }
 
-/* Hover thumb */
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg,
-            #2ab39b,
-            #1f7a8c);
+    background: linear-gradient(180deg, #2ab39b, #1f7a8c);
 }
 
-/* Active drag */
 ::-webkit-scrollbar-thumb:active {
     background: #2ab39b;
 }
 
-/* Scrollbar corner */
 ::-webkit-scrollbar-corner {
     background: #0b2545;
 }
 
-/* Firefox support */
+/* Firefox light mode */
 * {
     scrollbar-width: thin;
     scrollbar-color: #1f7a8c #0b2545;
 }
 
-/* ===== FIXED GRID BACKGROUND ===== */
+/* Dark mode scrollbar overrides */
+.dark ::-webkit-scrollbar-track {
+    background: #1a2a3a;
+    /* lighter/darker? adjust to taste */
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #3a9b9c, #2a7a8c);
+    border-color: #1a2a3a;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #4abfb0, #3a9b9c);
+}
+
+.dark ::-webkit-scrollbar-thumb:active {
+    background: #4abfb0;
+}
+
+.dark ::-webkit-scrollbar-corner {
+    background: #1a2a3a;
+}
+
+/* Firefox dark mode */
+.dark * {
+    scrollbar-color: #3a9b9c #1a2a3a;
+}
+
+/* ===== FIXED GRID BACKGROUND (theme‑aware) ===== */
 .grid-bg {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
 
+    /* Light mode grid lines (green & blue) */
     background-image:
-        /* BIG OUTER GRID (GREEN) - subtle */
         linear-gradient(to right, rgba(22, 163, 74, 0.08) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(22, 163, 74, 0.08) 1px, transparent 1px),
-
-        /* SMALL INNER GRID (BLUE) - still soft */
         linear-gradient(to right, rgba(37, 99, 235, 0.06) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
 
     background-size:
-        160px 160px, /* big tiles */
         160px 160px,
-        20px 20px,   /* small tiles */
+        160px 160px,
+        20px 20px,
         20px 20px;
 
     background-repeat: repeat;
+}
+
+/* Dark mode grid lines – softer white/gray */
+.dark .grid-bg {
+    background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(to right, rgba(200, 220, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(200, 220, 255, 0.05) 1px, transparent 1px);
+}
+
+
+/* ===== SMOOTH THEME TRANSITIONS ===== */
+* {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
+
+/* Disable transitions briefly on page load to avoid flicker */
+.no-transition * {
+    transition: none !important;
 }

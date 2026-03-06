@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * BlockReveal – covers an area with a grid of white cells that fade out sequentially.
+ * BlockReveal – covers an area with a grid of white/black cells that fade out sequentially.
  * @param {Object} props
  * @param {boolean} props.active - When true, cells fade out (revealing content behind).
  * @param {number} props.rows - Number of rows in the grid (default 8).
@@ -24,7 +24,7 @@ export const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
                 return (
                     <div
                         key={i}
-                        className="w-full h-full bg-white transition-opacity duration-700 ease-out"
+                        className="w-full h-full bg-white dark:bg-gray-900 transition-opacity duration-700 ease-out"
                         style={{
                             opacity: active ? 0 : 1,
                             transitionDelay: delay,
@@ -38,10 +38,7 @@ export const BlockReveal = ({ active, rows = 8, cols = 12 }) => {
 
 /**
  * LetterReveal – animates each letter of the given lines from top to bottom.
- * @param {Object} props
- * @param {boolean} props.active - When true, letters fade in sequentially.
- * @param {string[]} props.lines - Array of text lines (e.g., ["CLIBERDUCHE", "CORPORATION"]).
- * @param {number} props.letterDelay - Delay increment per letter (default 0.05s).
+ * (No changes needed – text colors are controlled by parent components.)
  */
 export const LetterReveal = ({ active, lines, letterDelay = 0.05 }) => {
     // Flatten all letters across lines and words with their positions
