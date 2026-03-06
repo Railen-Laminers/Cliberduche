@@ -17,10 +17,9 @@ export default function Navbar({ introDone = false }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Keep a boolean dragging state for UI toggles (this doesn't carry the per-frame value).
+  // keep a small boolean for UI toggles (not per-frame)
   const [isDragging, setIsDragging] = useState(false);
-
-  // Small "display" value of drag for React-driven UI that needs to update (throttled to RAF).
+  // throttled React-friendly display of the drag value (updated via RAF)
   const [displayDragY, setDisplayDragY] = useState(0);
 
   const navigate = useNavigate();
@@ -38,22 +37,15 @@ export default function Navbar({ introDone = false }) {
 
   // ---------- Motion values for smooth dragging ----------
   const dragY = useMotionValue(0);
-  // chainHeight = chainLength + dragY
   const chainHeight = useTransform(dragY, (v) => chainLength + v);
-
-  // subtle box shadow that grows with pull
   const bulbShadow = useTransform(
     dragY,
     (v) => `0px ${6 + v * 0.3}px ${14 + v * 0.3}px rgba(0,0,0,0.28)`
   );
-
-  // inner bar scale for the bulb (three bars)
   const innerBarScaleX = useTransform(dragY, (v) => 1 + v * 0.02);
-
-  // Rotate/swing effect for a natural feel
   const bulbRotate = useTransform(dragY, (v) => (v > 0 ? Math.min(8, v * 0.08) : 0));
 
-  // Subscribe to dragY for a throttled React-facing display value (one RAF update per frame max).
+  // subscribe to dragY for throttled React display updates
   useEffect(() => {
     let raf = null;
     const handler = (v) => {
@@ -70,7 +62,7 @@ export default function Navbar({ introDone = false }) {
     };
   }, [dragY]);
 
-  // ---------- rest of original logic (scroll/resize/intros/GSAP...) ----------
+  // Scroll & resize detection
   useEffect(() => {
     const handleScrollAndResize = () => {
       const currentScrollPos = window.scrollY;
@@ -93,6 +85,7 @@ export default function Navbar({ introDone = false }) {
     };
   }, []);
 
+  // Detect mobile/tablet
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -102,12 +95,14 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Load state after intro
   useEffect(() => {
     if (introDone) {
       setTimeout(() => setIsLoaded(true), 300);
     }
   }, [introDone]);
 
+  // GSAP sequential animation
   useEffect(() => {
     if (isLoaded && !animationRan.current) {
       const navLinks = desktopNavRef.current?.children;
@@ -150,6 +145,7 @@ export default function Navbar({ introDone = false }) {
     };
   }, [isLoaded]);
 
+  // Prevent body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
@@ -157,6 +153,7 @@ export default function Navbar({ introDone = false }) {
     };
   }, [isOpen]);
 
+  // Close on Escape
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -165,6 +162,7 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
+  // Close mobile menu on resize to lg
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsOpen(false);
@@ -173,7 +171,7 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ---------- Drag handlers using MotionValue ----------
+  // Drag handlers using MotionValue
   const handleDragStart = () => {
     setIsDragging(true);
   };
@@ -181,17 +179,13 @@ export default function Navbar({ introDone = false }) {
   const handleDragEnd = (event, info) => {
     setIsDragging(false);
     const finalDragY = Math.max(0, info.offset.y);
-
-    // trigger theme toggle if pulled far enough
     if (finalDragY > 8) {
       toggleTheme();
     }
-
-    // smooth spring animation back to 0
+    // smooth spring-back
     animate(dragY, 0, { type: "spring", stiffness: 420, damping: 36, mass: 0.6 });
   };
 
-  // ---------- navigation data ----------
   const navItems = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About" },
@@ -207,7 +201,7 @@ export default function Navbar({ introDone = false }) {
 
   const hideLogo = (isMobile && isOpen) || !isTop;
 
-  // ---------- Chain component (re-usable) ----------
+  // Chain component (re-usable)
   const ChainComponent = ({ isMobile = false }) => (
     <div
       className={`flex flex-col items-center ${isMobile
@@ -216,11 +210,10 @@ export default function Navbar({ introDone = false }) {
         } z-10`}
       ref={isMobile ? mobileChainRef : navBarRef}
     >
-      {/* Chain (height driven by motion value) */}
+      {/* Chain */}
       <motion.div
         className="w-1 bg-gradient-to-b from-gray-400 to-gray-600 dark:from-gray-500 dark:to-gray-300 rounded-full shadow-sm relative"
         style={{
-          // chainHeight is a MotionValue -> motion will map it to style
           height: chainHeight,
           transformOrigin: "top center",
         }}
@@ -231,7 +224,6 @@ export default function Navbar({ introDone = false }) {
           mass: 0.6,
         }}
       >
-        {/* segments: use a fixed maximum number of small segments; opacity enters when dragging */}
         <div className="absolute inset-0 flex flex-col justify-evenly pointer-events-none">
           {Array.from({ length: Math.max(0, Math.floor((chainLength + 80) / 4)) }).map((_, i) => (
             <div
@@ -254,7 +246,6 @@ export default function Navbar({ introDone = false }) {
         dragMomentum={false}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-        // set the MotionValue directly on drag (no React setState here)
         onDrag={(e, info) => {
           const v = Math.max(0, info.offset.y);
           dragY.set(v);
@@ -262,7 +253,6 @@ export default function Navbar({ introDone = false }) {
         whileHover={{ scale: 1.05 }}
         whileTap={{ cursor: "grabbing" }}
         className="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 dark:from-green-300 dark:to-green-500 rounded-full shadow-lg border-2 border-green-500 dark:border-green-400 transition-shadow duration-200 relative overflow-hidden cursor-grab active:cursor-grabbing"
-        // apply motion-driven styles for shadow / rotate
         style={{
           top: -20,
           boxShadow: bulbShadow,
@@ -287,7 +277,10 @@ export default function Navbar({ introDone = false }) {
           </div>
         </div>
 
-        {/* Sun / Moon icon area */}
+        {/* Sun and Moon icons:
+            - Sun: stroke-only version (as requested)
+            - Moon: filled version for visibility
+        */}
         <AnimatePresence mode="wait">
           {isDarkMode ? (
             <motion.div
@@ -299,14 +292,14 @@ export default function Navbar({ introDone = false }) {
               className="absolute inset-0 flex items-center justify-center bg-green-500/90 dark:bg-green-400/90 rounded-full backdrop-blur-sm"
               style={{ rotate: chainPulled ? -180 : 0 }}
             >
+              {/* Filled moon for strong contrast */}
               <svg
                 width="12"
                 height="12"
                 viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-gray-800 dark:text-gray-200"
+                fill="currentColor"
+                className="text-white"
+                aria-hidden
               >
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
               </svg>
@@ -321,6 +314,7 @@ export default function Navbar({ introDone = false }) {
               className="absolute inset-0 flex items-center justify-center bg-green-500/90 dark:bg-green-400/90 rounded-full backdrop-blur-sm"
               style={{ rotate: chainPulled ? -180 : 0 }}
             >
+              {/* Stroke-only sun (original style) */}
               <svg
                 width="12"
                 height="12"
@@ -329,6 +323,7 @@ export default function Navbar({ introDone = false }) {
                 stroke="currentColor"
                 strokeWidth="2"
                 className="text-gray-800 dark:text-gray-200"
+                aria-hidden
               >
                 <circle cx="12" cy="12" r="5" />
                 <line x1="12" y1="1" x2="12" y2="3" />
@@ -344,7 +339,7 @@ export default function Navbar({ introDone = false }) {
           )}
         </AnimatePresence>
 
-        {/* hint tooltip (idle) */}
+        {/* Tooltips */}
         {!isDragging && !chainPulled && (
           <motion.div
             className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap pointer-events-none bg-white/80 dark:bg-gray-800/80 px-2 py-1 rounded-full"
@@ -356,7 +351,6 @@ export default function Navbar({ introDone = false }) {
           </motion.div>
         )}
 
-        {/* dragging tooltip */}
         {isDragging && displayDragY > 0 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -370,7 +364,6 @@ export default function Navbar({ introDone = false }) {
           </motion.div>
         )}
 
-        {/* quick release bloom */}
         {!isDragging && displayDragY > 0 && (
           <motion.div
             className="absolute inset-0 rounded-full bg-green-300 opacity-30"
@@ -457,8 +450,8 @@ export default function Navbar({ introDone = false }) {
                         </span>
                         <FaArrowUp
                           className={`w-3 h-3 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${isActive(item.path)
-                              ? "text-green-600 dark:text-green-400"
-                              : "text-gray-800 dark:text-gray-200 group-hover:text-green-600 dark:group-hover:text-green-400"
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-gray-800 dark:text-gray-200 group-hover:text-green-600 dark:group-hover:text-green-400"
                             }`}
                         />
                       </Link>
@@ -542,8 +535,8 @@ export default function Navbar({ introDone = false }) {
                       <span className="text-sm tracking-[0.3em] uppercase">{item.label}</span>
                       <FaArrowUp
                         className={`w-4 h-4 rotate-45 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${isActive(item.path)
-                            ? "text-green-600 dark:text-green-400"
-                            : "text-gray-800 dark:text-gray-200 group-hover:text-green-600 dark:group-hover:text-green-400"
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-gray-800 dark:text-gray-200 group-hover:text-green-600 dark:group-hover:text-green-400"
                           }`}
                       />
                     </Link>
