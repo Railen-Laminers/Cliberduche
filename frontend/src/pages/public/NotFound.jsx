@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiAlertTriangle } from "react-icons/fi";
 import MagneticButton from "../../components/MagneticButton";
-import BackgroundDecor from "../../components/BackgroundDecor";
 import railen1 from "/notFound/railen1.png";
 import railen2 from "/notFound/railen2.png";
 import edsen1 from "/notFound/edsen1.png";
@@ -319,8 +318,7 @@ export default function NotFound() {
     }, [hovered, easterEggActive, activeImages]);
 
     return (
-        <div className="relative flex flex-col items-center justify-center min-h-screen bg-white px-4 overflow-x-hidden">
-            <BackgroundDecor pattern="grid" color="gray" opacity={0.1} blurCircles={false} />
+        <div className="relative flex flex-col items-center justify-center min-h-screen bg-transparent px-4 overflow-x-hidden">
 
             <canvas
                 ref={canvasRef}

@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
-import BackgroundDecor from "../../components/BackgroundDecor";
 import PortfolioHero from "../../components/PortfolioHero";
 import ChromaGrid from "../../components/ChromaGrid";
 
@@ -143,9 +142,11 @@ export default function About({ introDone = true }) {
             backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')`,
           }}
         >
+          {/* Dark overlay for better text visibility */}
+          <div className="absolute inset-0 bg-black/30" />
           <BlockReveal active={heroRevealed} rows={8} cols={12} />
         </div>
-        <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-black/30">
+        <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-transparent">
           <div className="text-sm tracking-[0.3em] uppercase text-white/80 mb-3">About</div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
             <LetterReveal
@@ -166,8 +167,11 @@ export default function About({ introDone = true }) {
               backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')`,
               backgroundPosition: "left center",
             }}
-          />
-          <BlockReveal active={heroRevealed} rows={8} cols={12} />
+          >
+            {/* Dark overlay for better text visibility */}
+            <div className="absolute inset-0 bg-black/30" />
+            <BlockReveal active={heroRevealed} rows={8} cols={12} />
+          </div>
         </div>
         <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2">
           <div className="hidden md:block flex-1" />
@@ -189,9 +193,8 @@ export default function About({ introDone = true }) {
       <section
         id="company"
         ref={companyRef}
-        className={`relative px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${companyAnim} overflow-hidden`}
+        className={`relative px-6 md:px-10 py-16 md:py-20 bg-transparent transition-all duration-1000 ${companyAnim} overflow-hidden`}
       >
-        <BackgroundDecor pattern="grid" color="green" opacity={0.15} blurCircles={true} />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div>
@@ -254,9 +257,8 @@ export default function About({ introDone = true }) {
       <section
         id="projects"
         ref={projectsRef}
-        className={`relative px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${projectsAnim} overflow-hidden`}
+        className={`relative px-6 md:px-10 py-16 md:py-20 bg-transparent transition-all duration-1000 ${projectsAnim} overflow-hidden`}
       >
-        <BackgroundDecor pattern="grid" color="blue" opacity={0.15} blurCircles={true} />
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 md:h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl order-2 md:order-1">
@@ -297,9 +299,8 @@ export default function About({ introDone = true }) {
       {/* ========== MISSION, VISION & CORE VALUES ========== */}
       <section
         id="mission-vision"
-        className="relative px-6 md:px-10 py-16 md:py-20 bg-[#f4faf7] overflow-hidden"
+        className="relative px-6 md:px-10 py-16 md:py-20 bg-transparent overflow-hidden"
       >
-        <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Heading */}
           <div ref={mvHeadingRef} className={`text-center transition-all duration-1000 ${mvHeadingAnim}`}>
@@ -411,10 +412,8 @@ export default function About({ introDone = true }) {
       <section
         id="leadership"
         ref={leadershipRef}
-        className={`relative px-6 md:px-10 py-16 md:py-20 bg-white transition-all duration-1000 ${leadershipAnim} overflow-hidden`}
+        className={`relative px-6 md:px-10 py-16 md:py-20 bg-transparent transition-all duration-1000 ${leadershipAnim} overflow-hidden`}
       >
-        <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
-
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-[#0b2545] mb-4">Our Team</h2>
@@ -454,9 +453,8 @@ export default function About({ introDone = true }) {
       {/* ========== INSIGHTS & PORTFOLIO ========== */}
       <section
         id="insights"
-        className="relative px-6 md:px-10 py-16 md:py-20 bg-white overflow-hidden"
+        className="relative px-6 md:px-10 py-16 md:py-20 bg-transparent overflow-hidden"
       >
-        <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Insights heading */}
           <div

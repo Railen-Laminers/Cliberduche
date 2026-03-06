@@ -69,3 +69,30 @@
     scrollbar-width: thin;
     scrollbar-color: #1f7a8c #0b2545;
 }
+
+/* ===== FIXED GRID BACKGROUND ===== */
+.grid-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+
+    background-image:
+        /* BIG OUTER GRID (GREEN) */
+        linear-gradient(to right, rgba(22, 163, 74, 0.20) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(22, 163, 74, 0.20) 1px, transparent 1px),
+
+        /* SMALL INNER GRID (BLUE) with lower opacity */
+        linear-gradient(to right, rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+
+    background-size:
+        160px 160px,
+        /* big tiles */
+        160px 160px,
+        20px 20px,
+        /* small tiles */
+        20px 20px;
+
+    background-repeat: repeat;
+}

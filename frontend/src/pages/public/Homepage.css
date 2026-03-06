@@ -1,3 +1,5 @@
+/* Homepage.css */
+
 @keyframes pan {
     0% {
         transform: translateX(-2%) scale(1.05);
@@ -18,28 +20,23 @@
 
 .perspective {
     perspective: 1100px;
-    /* distance from viewer to the element */
     -webkit-perspective: 1100px;
     perspective-origin: center;
 }
 
-/* Card inner should preserve 3D for children */
 .card-inner {
     transform-style: preserve-3d;
     will-change: transform;
-    /* help text rendering when transforms are present */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Optional soft shadows for depth illusion */
 .perspective .card-shadow {
     box-shadow: 0 8px 30px rgba(11, 37, 69, 0.12);
     transition: box-shadow 300ms ease;
 }
 
 .perspective:hover .card-inner {
-    /* slight CSS-only tilt fallback, additive to inline transform if JS is disabled */
     transform: rotateX(6deg) rotateY(-6deg) translateZ(6px);
 }
 
@@ -55,7 +52,6 @@
     height: 16rem;
 }
 
-/* Custom animations */
 @keyframes fade-in-up {
     from {
         opacity: 0;
@@ -99,4 +95,13 @@
 
 .animate-float {
     animation: float 3s ease-in-out infinite;
+}
+
+/* ===== SITE WRAPPER ===== */
+.site-wrapper {
+    position: relative;
+    min-height: 100vh;
+    background: transparent;
+    /* let the grid show through */
+    z-index: 1;
 }

@@ -17,10 +17,9 @@ export default function Homepage() {
     const introDone = !introPlaying;
     const { pathname } = useLocation();
 
-    // Scroll to top on route change – instant, not smooth
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-        // --- CHANGE HERE: dispatch an object with smooth: false ---
+
         const event = new CustomEvent("smooth-scroll-set-target", {
             detail: { value: 0, smooth: false }
         });
@@ -31,7 +30,9 @@ export default function Homepage() {
     const noTopPadding = isHome || pathname === "/projects" || pathname === "/about";
 
     return (
-        <div className="bg-[#f4faf7] text-[#0b2545] min-h-screen bg-white">
+        <div className="site-wrapper">
+            {/* FIXED GRID BACKGROUND REMOVED FROM HERE */}
+
             <Navbar introDone={introDone} />
 
             <SmoothScroll ease={0.08} className="smooth-scroll">
@@ -48,8 +49,6 @@ export default function Homepage() {
                         <Route path="/about" element={<About introDone={introDone} />} />
                         <Route path="/projects" element={<Projects introDone={introDone} />} />
                         <Route path="/contact" element={<Contact introDone={introDone} />} />
-
-                        {/* 404 Route */}
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </main>

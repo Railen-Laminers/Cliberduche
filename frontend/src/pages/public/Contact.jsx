@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { FaPhone, FaEnvelope, FaInfinity, FaCheckCircle, FaTimes, FaClock } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import Map from "./Map";
-import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
 
 export default function Contact({ introDone = true }) {
@@ -80,10 +79,9 @@ export default function Contact({ introDone = true }) {
     return (
         <section
             id="contact"
-            className="relative p-6 md:px-10 bg-white overflow-hidden flex flex-col justify-center"
+            className="relative p-6 md:px-10 bg-transparent overflow-hidden flex flex-col justify-center"
             style={{ minHeight: "calc(var(--vh, 1vh) * 100)" }}
         >
-            <BackgroundDecor pattern="grid" color="green" opacity={0.10} blurCircles={false} />
 
             <div className="max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-12 md:gap-16 items-center relative z-10">
                 {/* LEFT COLUMN – COMPANY INFO & MAP (unchanged) */}

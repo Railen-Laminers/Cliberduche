@@ -5,7 +5,6 @@ import { useNavigate, Link } from "react-router-dom";
 import office from "/office.jpg";
 import { LetterReveal, BlockReveal } from "../../components/RevealAnimations";
 import ScrollReveal from "../../components/ScrollReveal";
-import BackgroundDecor from "../../components/BackgroundDecor";
 import MagneticButton from "../../components/MagneticButton";
 import { FaInfinity, FaPhoneAlt, FaLeaf } from "react-icons/fa";
 
@@ -281,8 +280,7 @@ function ServiceFullViewportSection({ service, index, active, animConfig }) {
     const desktopFlexClass = isEvenIndex ? "md:flex-row-reverse" : "md:flex-row";
 
     return (
-        <section className="relative w-full bg-white overflow-hidden">
-            <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
+        <section className="relative w-full bg-transparent overflow-hidden">
             <div className="max-w-7xl mx-auto w-full border border-gray-200">
                 <div className={`flex flex-col ${desktopFlexClass}`}>
                     {/* IMAGE SECTION */}
@@ -470,6 +468,7 @@ export default function Home({ introDone = true }) {
                         className="absolute inset-0 bg-cover bg-center bg-fixed"
                         style={{ backgroundImage: `url(${office})` }}
                     />
+                    {/* Dark overlay for better text readability */}
                     <div className="absolute inset-0 bg-black/30" />
                 </div>
 
@@ -533,9 +532,8 @@ export default function Home({ introDone = true }) {
             {/* ========== WHAT WE DO ========== */}
             <section
                 ref={introRef}
-                className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-gradient-to-b from-white to-[#f4faf7] transition-all duration-1000 ${introAnim} overflow-hidden`}
+                className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-transparent transition-all duration-1000 ${introAnim} overflow-hidden`}
             >
-                <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
                 <div className="max-w-4xl mx-auto text-center relative z-10">
                     <div
                         ref={mvHeadingRef}
@@ -568,9 +566,8 @@ export default function Home({ introDone = true }) {
             {/* ========== OUR CORE SERVICES HEADER ========== */}
             <section
                 ref={coreServicesRef}
-                className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-white transition-all duration-1000 overflow-hidden`}
+                className={`relative px-6 md:px-16 lg:px-24 py-20 md:py-24 bg-transparent transition-all duration-1000 overflow-hidden`}
             >
-                <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="flex items-center gap-4 mb-4">
                         <div className="h-px w-16 bg-green-300"></div>
@@ -605,9 +602,8 @@ export default function Home({ introDone = true }) {
             {/* ========== STATS ========== */}
             <section
                 ref={whyRef}
-                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 overflow-hidden`}
+                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-transparent transition-all duration-1000 overflow-hidden`}
             >
-                <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="text-center mb-16">
                         <h2
@@ -685,9 +681,8 @@ export default function Home({ introDone = true }) {
             {/* ========== TESTIMONIALS (Minimalist, no cards) ========== */}
             <section
                 ref={testimonialsRef}
-                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-white transition-all duration-1000 overflow-hidden`}
+                className={`relative px-6 md:px-16 lg:px-24 py-24 bg-transparent transition-all duration-1000 overflow-hidden`}
             >
-                <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={false} />
                 <div className="max-w-7xl mx-auto relative z-10">
                     {/* Section Header */}
                     <div className="text-center mb-16">
@@ -757,9 +752,9 @@ export default function Home({ introDone = true }) {
                             backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80')`,
                         }}
                     />
-                    <div className="absolute inset-0 bg-black/60"></div>
+                    {/* Dark overlay for better text readability */}
+                    <div className="absolute inset-0 bg-black/50"></div>
                 </div>
-                <BackgroundDecor pattern="grid" color="gray" opacity={0.05} blurCircles={false} />
                 <div
                     ref={ctaContentRef}
                     className={`relative z-10 max-w-4xl mx-auto text-center transition-all duration-1000`}

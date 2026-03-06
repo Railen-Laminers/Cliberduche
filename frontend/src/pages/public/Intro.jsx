@@ -102,19 +102,33 @@ export default function Intro({ title, onFinish }) {
       <style>{`
         .letter { display: inline-block; }
 
+        /* Animated intro grid with big green + small blue */
         .intro-grid {
           position: absolute;
           inset: 0;
+          pointer-events: none;
+          z-index: 0;
+
           background-image:
-            linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
-          background-size: 60px 60px;
+            linear-gradient(to right, rgba(22, 163, 74, 0.20) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(22, 163, 74, 0.20) 1px, transparent 1px),
+            linear-gradient(to right, rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+
+          background-size:
+            160px 160px,
+            160px 160px,
+            20px 20px,
+            20px 20px;
+
+          background-repeat: repeat;
+
           animation: gridMove 8s linear infinite;
         }
 
         @keyframes gridMove {
-          from { transform: translateY(0); }
-          to { transform: translateY(60px); }
+          from { background-position: 0 0, 0 0, 0 0, 0 0; }
+          to { background-position: 0 160px, 160px 0, 0 20px, 20px 0; }
         }
       `}</style>
 

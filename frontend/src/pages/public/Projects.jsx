@@ -12,7 +12,6 @@ import {
 } from "react-icons/fa";
 import useScrollAnimation from "../../hooks/useScrollAnimation";
 import PerspectiveCard from "../../components/PerspectiveCard";
-import BackgroundDecor from "../../components/BackgroundDecor";
 import { projects } from "./projectsData";
 import heroImage from "/projects/northport_ongoing/northport_img_5.jpg";
 import { BlockReveal, LetterReveal } from "../../components/RevealAnimations";
@@ -204,9 +203,7 @@ const CarouselView = ({
   const isLast = currentSlide === totalSlides - 1;
 
   return (
-    <div className="relative bg-white">
-      <BackgroundDecor pattern="grid" color="green" opacity={0.1} blurCircles={false} />
-
+    <div className="relative bg-transparent">
       {/* Slides container (draggable area) */}
       <div
         ref={carouselRef}
@@ -382,9 +379,7 @@ const CompletedList = ({ completedProjects, openProject }) => {
   if (completedProjects.length === 0) return null;
 
   return (
-    <div className="relative bg-white px-6 md:px-10 py-16 md:py-20 overflow-hidden">
-      <BackgroundDecor pattern="grid" color="blue" opacity={0.1} blurCircles={true} />
-
+    <div className="relative bg-transparent px-6 md:px-10 py-16 md:py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         <div ref={headingRef} className={`transition-all duration-1000 ${headingAnim}`}>
           <div className="flex items-center gap-4 mb-8 justify-end">
@@ -423,9 +418,7 @@ const CompletedList = ({ completedProjects, openProject }) => {
 // ---------- ExpandedView (unchanged) ----------
 const ExpandedView = ({ allProjects, openProject }) => {
   return (
-    <div className="relative bg-white px-6 md:px-10 py-16 md:py-20 overflow-hidden">
-      <BackgroundDecor pattern="lines" color="green" opacity={0.1} blurCircles={true} />
-
+    <div className="relative bg-transparent px-6 md:px-10 py-16 md:py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="divide-y divide-gray-200">
           {allProjects.map((project, index) => (
@@ -716,16 +709,18 @@ export default function Projects({ introDone = true }) {
   }, [viewMode]);
 
   return (
-    <div className="bg-white text-[#0b2545] overflow-x-hidden">
-      {/* Hero section (unchanged) */}
+    <div className="bg-transparent text-[#0b2545] overflow-x-hidden">
+      {/* Hero section (updated with dark overlay) */}
       <div className="relative min-h-screen overflow-hidden lg:hidden">
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
+          {/* Dark overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/30" />
           <BlockReveal active={heroRevealed} rows={8} cols={12} />
         </div>
-        <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-black/30">
+        <div className="absolute inset-0 flex flex-col justify-center items-start p-6 md:p-12 bg-transparent">
           <div className="text-sm tracking-[0.3em] uppercase text-white/80 mb-3">Projects</div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
             <LetterReveal
@@ -742,8 +737,11 @@ export default function Projects({ introDone = true }) {
           <div
             className="absolute inset-0 bg-cover bg-center bg-fixed"
             style={{ backgroundImage: `url(${heroImage})`, backgroundPosition: "center" }}
-          />
-          <BlockReveal active={heroRevealed} rows={8} cols={12} />
+          >
+            {/* Dark overlay for better text visibility */}
+            <div className="absolute inset-0 bg-black/30" />
+            <BlockReveal active={heroRevealed} rows={8} cols={12} />
+          </div>
         </div>
         <div className="relative w-full md:w-1/2 flex flex-col order-1 md:order-2 overflow-hidden">
           <div className="hidden md:block flex-1" />
@@ -762,8 +760,7 @@ export default function Projects({ introDone = true }) {
       </div>
 
       {/* Projects header (unchanged) */}
-      <div ref={projectsSectionRef} className="relative bg-white pt-16 pb-8 px-6 md:px-10 overflow-hidden">
-        <BackgroundDecor pattern="grid" color="blue" opacity={0.08} blurCircles={false} />
+      <div ref={projectsSectionRef} className="relative bg-transparent pt-16 pb-8 px-6 md:px-10 overflow-hidden">
         <div ref={headerRef} className={`max-w-7xl mx-auto relative z-10 transition-all duration-1000 ${headerAnim}`}>
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
             <div className="flex items-center gap-4">

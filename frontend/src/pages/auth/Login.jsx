@@ -4,7 +4,6 @@ import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import useScrollAnimation from '../../hooks/useScrollAnimation';
 import logo from '/logo/cliberduche_logo.png';
 import PerspectiveCard from '../../components/PerspectiveCard';
-import BackgroundDecor from '../../components/BackgroundDecor'; // <-- import the decor
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -29,13 +28,6 @@ export default function Login() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#0b2545] via-[#1f7a8c] to-[#0b2545] flex items-center justify-center px-4 relative">
-            {/* Background grid pattern (no blur circles) */}
-            <BackgroundDecor
-                pattern="grid"
-                color="green"
-                blurCircles={false}
-                opacity={0.1}
-            />
 
             {/* Fixed Return Home Button */}
             <Link
