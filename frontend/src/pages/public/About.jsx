@@ -14,6 +14,14 @@ import PortfolioHero from "../../components/PortfolioHero";
 import ChromaGrid from "../../components/ChromaGrid";
 
 import northport_img from "/projects/northport_ongoing/northport_img_1.png";
+import Rolando from "/teamMembers/RolandoS.Climaco.jpg"; //  President
+import MariaBella from "/teamMembers/MariaBellaJ.Climaco.jpg"; // Vice President
+import Rolisdio from "/teamMembers/RolisdioS.Climaco.jpg"; // Safety Officer
+import Benilda from "/teamMembers/BenildaPadilla.jpg"; //  Purchasing Head
+import Ofelia from "/teamMembers/OfeliaMacaldo.jpg"; // HR Admin
+import Christina from "/teamMembers/Ma.CristinaDino.jpg"; // Accounting Head
+import Genesis from "/teamMembers/GenesisEmmanuelDeGuzman.jpg"; // Project Manager
+import Kathleen from "/teamMembers/KatleenMaeC.Martinez.jpg";  //  QA/QC Engineer
 
 export default function About({ introDone = true }) {
   // ========== ANIMATION CONFIGURATION ==========
@@ -57,55 +65,63 @@ export default function About({ introDone = true }) {
     transitionDelay: `${delay}s`,
   });
 
-  // ========== REAL TEAM DATA ==========
+  // ========== REAL TEAM DATA (using imported images) ==========
   const realTeamMembers = [
     {
-      name: "John Climaco",
-      title: "Founder & CEO",
+      name: "Rolando S. Climaco",
+      title: "President",
       brief:
-        "Founder with over 20 years in construction. Built Cliberduche from the ground up, driven by a vision to provide for his family without leaving the country.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+        "Leads the company with strategic vision and decades of experience in construction and land development.",
+      imageUrl: Rolando,
     },
     {
-      name: "Maria Climaco",
-      title: "Director",
+      name: "Maria Bella J. Climaco",
+      title: "Vice President",
       brief:
-        "The founder’s spouse, now a director overseeing operations and community relations. Ensures that family values and sustainable practices guide every project.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+        "Oversees operations and community relations, ensuring family values and sustainable practices guide every project.",
+      imageUrl: MariaBella,
     },
     {
-      name: "Pedro Climaco",
-      title: "Director",
+      name: "Rolisdio S. Climaco",
+      title: "Safety Officer",
       brief:
-        "The founder’s brother, a seasoned engineer who manages project execution and site safety. Committed to delivering precision and quality on every site.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+        "Ensures strict adherence to safety protocols on all sites, promoting a culture of safety first.",
+      imageUrl: Rolisdio,
     },
     {
-      name: "Ana Santos",
+      name: "Benilda Padilla",
+      title: "Purchasing Head",
+      brief:
+        "Manages procurement of materials and resources, ensuring quality and cost-efficiency.",
+      imageUrl: Benilda,
+    },
+    {
+      name: "Ofelia Macaldo",
+      title: "HR Admin",
+      brief:
+        "Handles human resources and administrative functions, fostering a supportive work environment.",
+      imageUrl: Ofelia,
+    },
+    {
+      name: "Ma. Cristina Dino",
+      title: "Accounting Head",
+      brief:
+        "Oversees financial management and accounting, ensuring transparency and fiscal responsibility.",
+      imageUrl: Christina,
+    },
+    {
+      name: "Genesis Emmanuel De Guzman",
       title: "Project Manager",
       brief:
-        "Coordinates large-scale developments. Certified in environmental compliance, she ensures projects meet both client expectations and regulatory standards.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+        "Coordinates project execution, ensuring timelines, quality, and client satisfaction.",
+      imageUrl: Genesis,
     },
     {
-      name: "Carlos Reyes",
-      title: "Operations Manager",
+      name: "Katleen Mae C. Martinez",
+      title: "QA/QC Engineer",
       brief:
-        "Oversees daily operations and logistics. With 15 years in construction management, he ensures efficient resource allocation and project timelines are met.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      name: "Luisa Fernandez",
-      title: "Site Engineer",
-      brief:
-        "Supervises on-site construction activities, ensuring quality control and adherence to safety standards. Experienced in geotechnical assessments.",
-      imageUrl:
-        "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+        "Implements quality assurance and control processes to meet regulatory and client standards.",
+      imageUrl: Kathleen,
     },
   ];
 
@@ -125,10 +141,10 @@ export default function About({ introDone = true }) {
       title: member.name,
       subtitle: member.title,
       handle: handle,
-      brief: member.brief,          // brief is now included
+      brief: member.brief,
       borderColor: color,
       gradient: `linear-gradient(145deg, ${color}, #000)`,
-      url: "", // optional external link
+      url: "",
     };
   });
 

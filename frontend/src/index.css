@@ -78,20 +78,18 @@
     z-index: 0;
 
     background-image:
-        /* BIG OUTER GRID (GREEN) */
-        linear-gradient(to right, rgba(22, 163, 74, 0.20) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(22, 163, 74, 0.20) 1px, transparent 1px),
+        /* BIG OUTER GRID (GREEN) - subtle */
+        linear-gradient(to right, rgba(22, 163, 74, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(22, 163, 74, 0.08) 1px, transparent 1px),
 
-        /* SMALL INNER GRID (BLUE) with lower opacity */
+        /* SMALL INNER GRID (BLUE) - still soft */
         linear-gradient(to right, rgba(37, 99, 235, 0.06) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
 
     background-size:
+        160px 160px, /* big tiles */
         160px 160px,
-        /* big tiles */
-        160px 160px,
-        20px 20px,
-        /* small tiles */
+        20px 20px,   /* small tiles */
         20px 20px;
 
     background-repeat: repeat;
