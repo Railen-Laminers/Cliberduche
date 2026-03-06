@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaTimes, FaBars, FaArrowUp } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
 import gsap from "gsap";
 import logo from "/logo/cliberduche_logo.png";
 import { useTheme } from "../context/ThemeContext";
@@ -17,9 +17,11 @@ export default function Navbar({ introDone = false }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Chain states
-  const [dragY, setDragY] = useState(0);
+  // Keep a boolean dragging state for UI toggles (this doesn't carry the per-frame value).
   const [isDragging, setIsDragging] = useState(false);
+
+  // Small "display" value of drag for React-driven UI that needs to update (throttled to RAF).
+  const [displayDragY, setDisplayDragY] = useState(0);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,7 +36,41 @@ export default function Navbar({ introDone = false }) {
   const chainLength = isDarkMode ? 72 : 48;
   const chainPulled = isDarkMode;
 
-  // Scroll & resize detection
+  // ---------- Motion values for smooth dragging ----------
+  const dragY = useMotionValue(0);
+  // chainHeight = chainLength + dragY
+  const chainHeight = useTransform(dragY, (v) => chainLength + v);
+
+  // subtle box shadow that grows with pull
+  const bulbShadow = useTransform(
+    dragY,
+    (v) => `0px ${6 + v * 0.3}px ${14 + v * 0.3}px rgba(0,0,0,0.28)`
+  );
+
+  // inner bar scale for the bulb (three bars)
+  const innerBarScaleX = useTransform(dragY, (v) => 1 + v * 0.02);
+
+  // Rotate/swing effect for a natural feel
+  const bulbRotate = useTransform(dragY, (v) => (v > 0 ? Math.min(8, v * 0.08) : 0));
+
+  // Subscribe to dragY for a throttled React-facing display value (one RAF update per frame max).
+  useEffect(() => {
+    let raf = null;
+    const handler = (v) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        setDisplayDragY(Math.max(0, Math.round(v)));
+        raf = null;
+      });
+    };
+    const unsubscribe = dragY.onChange(handler);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      unsubscribe();
+    };
+  }, [dragY]);
+
+  // ---------- rest of original logic (scroll/resize/intros/GSAP...) ----------
   useEffect(() => {
     const handleScrollAndResize = () => {
       const currentScrollPos = window.scrollY;
@@ -57,7 +93,6 @@ export default function Navbar({ introDone = false }) {
     };
   }, []);
 
-  // Detect mobile/tablet
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -67,14 +102,12 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Load state after intro
   useEffect(() => {
     if (introDone) {
       setTimeout(() => setIsLoaded(true), 300);
     }
   }, [introDone]);
 
-  // GSAP sequential animation
   useEffect(() => {
     if (isLoaded && !animationRan.current) {
       const navLinks = desktopNavRef.current?.children;
@@ -117,7 +150,6 @@ export default function Navbar({ introDone = false }) {
     };
   }, [isLoaded]);
 
-  // Prevent body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "unset";
     return () => {
@@ -125,7 +157,6 @@ export default function Navbar({ introDone = false }) {
     };
   }, [isOpen]);
 
-  // Close on Escape
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -134,7 +165,6 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  // Close mobile menu on resize to lg
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsOpen(false);
@@ -143,7 +173,7 @@ export default function Navbar({ introDone = false }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Chain drag handlers
+  // ---------- Drag handlers using MotionValue ----------
   const handleDragStart = () => {
     setIsDragging(true);
   };
@@ -151,20 +181,17 @@ export default function Navbar({ introDone = false }) {
   const handleDragEnd = (event, info) => {
     setIsDragging(false);
     const finalDragY = Math.max(0, info.offset.y);
+
+    // trigger theme toggle if pulled far enough
     if (finalDragY > 8) {
       toggleTheme();
     }
-    // snap back visually with a short delay to keep UX tidy
-    setTimeout(() => {
-      setDragY(0);
-    }, 120);
+
+    // smooth spring animation back to 0
+    animate(dragY, 0, { type: "spring", stiffness: 420, damping: 36, mass: 0.6 });
   };
 
-  const handleDrag = (event, info) => {
-    const newDragY = Math.max(0, info.offset.y);
-    setDragY(newDragY);
-  };
-
+  // ---------- navigation data ----------
   const navItems = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About" },
@@ -173,7 +200,6 @@ export default function Navbar({ introDone = false }) {
   ];
 
   const isActive = (path) => location.pathname === path;
-  // Updated link classes – light mode uses dark text, dark mode uses light text
   const desktopLinkClass = (path) =>
     isActive(path)
       ? "text-green-600 dark:text-green-400"
@@ -181,82 +207,87 @@ export default function Navbar({ introDone = false }) {
 
   const hideLogo = (isMobile && isOpen) || !isTop;
 
-  // Chain component for reuse (smoothed transitions & denser segments)
+  // ---------- Chain component (re-usable) ----------
   const ChainComponent = ({ isMobile = false }) => (
     <div
       className={`flex flex-col items-center ${isMobile
-          ? 'absolute top-full left-1/2 transform -translate-x-1/2'
-          : 'absolute lg:right-6 lg:left-auto lg:transform-none left-1/2 transform -translate-x-1/2 top-full'
+        ? "absolute top-full left-1/2 transform -translate-x-1/2"
+        : "absolute lg:right-6 lg:left-auto lg:transform-none left-1/2 transform -translate-x-1/2 top-full"
         } z-10`}
       ref={isMobile ? mobileChainRef : navBarRef}
     >
-      {/* Chain */}
+      {/* Chain (height driven by motion value) */}
       <motion.div
         className="w-1 bg-gradient-to-b from-gray-400 to-gray-600 dark:from-gray-500 dark:to-gray-300 rounded-full shadow-sm relative"
-        animate={{ height: chainLength + dragY }}
+        style={{
+          // chainHeight is a MotionValue -> motion will map it to style
+          height: chainHeight,
+          transformOrigin: "top center",
+        }}
         transition={{
-          // use a spring always; tune parameters depending on drag state for smoothness
           type: "spring",
           stiffness: isDragging ? 420 : 220,
           damping: isDragging ? 40 : 28,
           mass: 0.6,
         }}
-        style={{
-          height: `${chainLength + dragY}px`,
-          transformOrigin: "top center",
-        }}
       >
-        {dragY > 4 && (
-          <div className="absolute inset-0 flex flex-col justify-evenly">
-            {Array.from({ length: Math.max(0, Math.floor((chainLength + dragY) / 4)) }).map((_, i) => (
-              <div
-                key={i}
-                className="w-full h-0.5 bg-gray-500 dark:bg-gray-400 rounded-full opacity-40"
-              />
-            ))}
-          </div>
-        )}
+        {/* segments: use a fixed maximum number of small segments; opacity enters when dragging */}
+        <div className="absolute inset-0 flex flex-col justify-evenly pointer-events-none">
+          {Array.from({ length: Math.max(0, Math.floor((chainLength + 80) / 4)) }).map((_, i) => (
+            <div
+              key={i}
+              className="w-full h-0.5 bg-gray-500 dark:bg-gray-400 rounded-full"
+              style={{
+                opacity: displayDragY > 4 ? 0.4 : 0.06,
+                transition: "opacity 160ms linear",
+              }}
+            />
+          ))}
+        </div>
       </motion.div>
 
       {/* Bulb */}
       <motion.div
         drag="y"
-        // allow a nicer range for pulling
         dragConstraints={{ top: 0, bottom: 80 }}
-        dragElastic={0.18}   // small elasticity so it feels responsive but not rubbery
-        dragMomentum={false} // prevent overshoot / lingering momentum
+        dragElastic={0.18}
+        dragMomentum={false}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
-        onDrag={handleDrag}
-        whileHover={{ scale: 1.05 }}
-        whileDrag={{
-          scale: 1.12,
-          boxShadow: `0 ${6 + dragY * 0.3}px ${14 + dragY * 0.3}px rgba(0,0,0,0.3)`,
+        // set the MotionValue directly on drag (no React setState here)
+        onDrag={(e, info) => {
+          const v = Math.max(0, info.offset.y);
+          dragY.set(v);
         }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ cursor: "grabbing" }}
         className="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 dark:from-green-300 dark:to-green-500 rounded-full shadow-lg border-2 border-green-500 dark:border-green-400 transition-shadow duration-200 relative overflow-hidden cursor-grab active:cursor-grabbing"
-        animate={{ rotateZ: chainPulled ? 180 : 0 }}
-        transition={{ duration: 0.45, ease: "easeInOut" }}
-        style={{ top: -20 }}
+        // apply motion-driven styles for shadow / rotate
+        style={{
+          top: -20,
+          boxShadow: bulbShadow,
+          rotate: bulbRotate,
+        }}
       >
         <div className="w-full h-full rounded-full bg-gradient-to-br from-green-300 to-transparent opacity-60" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex flex-col space-y-0.5">
             <motion.div
               className="w-3 h-0.5 bg-green-700 dark:bg-green-200 rounded-full opacity-60"
-              animate={{ scaleX: 1 + dragY * 0.02 }}
+              style={{ scaleX: innerBarScaleX }}
             />
             <motion.div
               className="w-3 h-0.5 bg-green-700 dark:bg-green-200 rounded-full opacity-60"
-              animate={{ scaleX: 1 + dragY * 0.02 }}
+              style={{ scaleX: innerBarScaleX }}
             />
             <motion.div
               className="w-3 h-0.5 bg-green-700 dark:bg-green-200 rounded-full opacity-60"
-              animate={{ scaleX: 1 + dragY * 0.02 }}
+              style={{ scaleX: innerBarScaleX }}
             />
           </div>
         </div>
 
-        {/* Sun and Moon icons with animation */}
+        {/* Sun / Moon icon area */}
         <AnimatePresence mode="wait">
           {isDarkMode ? (
             <motion.div
@@ -313,7 +344,7 @@ export default function Navbar({ introDone = false }) {
           )}
         </AnimatePresence>
 
-        {/* Tooltips */}
+        {/* hint tooltip (idle) */}
         {!isDragging && !chainPulled && (
           <motion.div
             className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap pointer-events-none bg-white/80 dark:bg-gray-800/80 px-2 py-1 rounded-full"
@@ -325,20 +356,22 @@ export default function Navbar({ introDone = false }) {
           </motion.div>
         )}
 
-        {isDragging && dragY > 4 && (
+        {/* dragging tooltip */}
+        {isDragging && displayDragY > 0 && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: dragY > 8 ? 1 : 0.8, scale: dragY > 8 ? 1.08 : 1 }}
-            className={`absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-xs text-white px-3 py-1.5 rounded-full whitespace-nowrap pointer-events-none font-medium transition-all duration-200 ${dragY > 8 ? "bg-green-600" : "bg-green-500"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: displayDragY > 8 ? 1 : 0.9, scale: displayDragY > 8 ? 1.06 : 1 }}
+            className={`absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-xs text-white px-3 py-1.5 rounded-full whitespace-nowrap pointer-events-none font-medium transition-all duration-150 ${displayDragY > 8 ? "bg-green-600" : "bg-green-500"
               }`}
           >
-            {dragY > 8
+            {displayDragY > 8
               ? `🌟 Release to switch to ${isDarkMode ? "Light" : "Dark"} Mode!`
-              : `Pull ${Math.max(0, Math.round(8 - dragY))}px more`}
+              : `Pull ${Math.max(0, 8 - displayDragY)}px more`}
           </motion.div>
         )}
 
-        {!isDragging && dragY > 0 && (
+        {/* quick release bloom */}
+        {!isDragging && displayDragY > 0 && (
           <motion.div
             className="absolute inset-0 rounded-full bg-green-300 opacity-30"
             initial={{ scale: 1.1, opacity: 0.45 }}
