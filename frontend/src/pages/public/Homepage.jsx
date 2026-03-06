@@ -17,14 +17,15 @@ export default function Homepage() {
     const introDone = !introPlaying;
     const { pathname } = useLocation();
 
-    // Scroll to top on route change
+    // Scroll to top on route change – instant, not smooth
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-        const event = new CustomEvent("smooth-scroll-set-target", { detail: 0 });
+        // --- CHANGE HERE: dispatch an object with smooth: false ---
+        const event = new CustomEvent("smooth-scroll-set-target", {
+            detail: { value: 0, smooth: false }
+        });
         window.dispatchEvent(event);
     }, [pathname]);
-
-  
 
     const isHome = pathname === "/";
     const noTopPadding = isHome || pathname === "/projects" || pathname === "/about";

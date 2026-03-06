@@ -59,11 +59,11 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
     const pointerDownRef = useRef(false);
     const pointerStartYRef = useRef(0);
 
-    // --- NEW: Safety mechanisms ---
-    const lastScrollUpdateRef = useRef(performance.now()); // for watchdog
-    const errorCountRef = useRef(0);                        // count consecutive errors
-    const maxErrors = 5;                                     // threshold to fallback
-    const fallbackModeRef = useRef(false);                   // if true, use native scroll
+    // Safety mechanisms
+    const lastScrollUpdateRef = useRef(performance.now());
+    const errorCountRef = useRef(0);
+    const maxErrors = 5;
+    const fallbackModeRef = useRef(false);
 
     // Helper to get max scroll
     const getMaxScroll = () =>
@@ -74,12 +74,10 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
         targetRef.current = Math.max(0, Math.min(targetRef.current, max));
     };
 
-    // --- NEW: Fallback to native scrolling if too many errors occur
     const enableFallbackMode = () => {
         if (fallbackModeRef.current) return;
         fallbackModeRef.current = true;
         document.documentElement.style.scrollBehavior = "smooth";
-        // Clean up custom listeners (will be done in cleanup, but also stop animation)
         if (rafRef.current) {
             cancelAnimationFrame(rafRef.current);
             rafRef.current = null;
@@ -88,7 +86,6 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
     };
 
     useEffect(() => {
-        // If we are already in fallback mode, just enable native smooth scroll and exit
         if (fallbackModeRef.current) {
             document.documentElement.style.scrollBehavior = "smooth";
             return () => {
@@ -96,7 +93,6 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             };
         }
 
-        // If coarse pointer, use native smooth scroll
         if (!isFinePointer.current) {
             const originalBehavior = document.documentElement.style.scrollBehavior;
             document.documentElement.style.scrollBehavior = "smooth";
@@ -112,13 +108,11 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             const pos = window.scrollY;
             targetRef.current = pos;
             currentRef.current = pos;
-            lastScrollUpdateRef.current = performance.now(); // reset watchdog
+            lastScrollUpdateRef.current = performance.now();
         };
 
-        // RAF loop with watchdog and error handling
         const animate = () => {
             try {
-                // If fallback triggered, stop animation
                 if (fallbackModeRef.current) return;
 
                 const target = targetRef.current;
@@ -136,7 +130,6 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
                     lastScrollUpdateRef.current = performance.now();
                 }
 
-                // Watchdog: if no update for 500ms, force resync with actual scroll
                 if (performance.now() - lastScrollUpdateRef.current > 500) {
                     const actual = window.scrollY;
                     targetRef.current = actual;
@@ -144,18 +137,16 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
                     lastScrollUpdateRef.current = performance.now();
                 }
 
-                // Reset error count on successful frame
                 errorCountRef.current = 0;
             } catch (err) {
                 console.warn("SmoothScroll animation error:", err);
                 errorCountRef.current++;
                 if (errorCountRef.current >= maxErrors) {
                     enableFallbackMode();
-                    return; // stop this loop
+                    return;
                 }
             }
 
-            // Continue loop only if not in fallback mode
             if (!fallbackModeRef.current) {
                 rafRef.current = requestAnimationFrame(animate);
             }
@@ -163,7 +154,7 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
 
         rafRef.current = requestAnimationFrame(animate);
 
-        // ----- Scroll handler with error protection -----
+        // ----- Scroll handler -----
         const onScroll = () => {
             if (fallbackModeRef.current) return;
 
@@ -202,35 +193,31 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             }
         };
 
-        // ----- Wheel handler with throttling and error handling -----
+        // ----- Wheel handler -----
         let wheelTimeout;
         const onWheel = (e) => {
             if (fallbackModeRef.current) return;
 
             try {
-                // Find the nearest scrollable parent under the cursor
                 const targetEl = e.target;
                 const scrollableParent = getScrollableParent(targetEl, "vertical");
 
                 if (scrollableParent) {
-                    // Let the nested element handle the wheel natively
                     return;
                 }
 
-                // No scrollable parent – scroll the page
                 e.preventDefault();
 
                 let delta = e.deltaY;
-                if (e.deltaMode === 1) delta *= 16;          // line
-                else if (e.deltaMode === 2) delta *= window.innerHeight; // page
+                if (e.deltaMode === 1) delta *= 16;
+                else if (e.deltaMode === 2) delta *= window.innerHeight;
 
-                // Throttle: accumulate deltas over a short period to avoid micro‑updates
                 if (wheelTimeout) clearTimeout(wheelTimeout);
                 wheelTimeout = setTimeout(() => {
                     targetRef.current += delta;
                     clampTarget();
                     wheelTimeout = null;
-                }, 0); // schedule for next tick to allow coalescing
+                }, 0);
 
                 isUserScrollingRef.current = true;
                 clearTimeout(userScrollTimeoutRef.current);
@@ -244,7 +231,7 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             }
         };
 
-        // ----- Keyboard handler with error handling -----
+        // ----- Keyboard handler -----
         const onKeyDown = (e) => {
             if (fallbackModeRef.current) return;
 
@@ -252,7 +239,6 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
                 if (e.ctrlKey || e.altKey || e.metaKey) return;
                 if (isTypingElement(document.activeElement)) return;
 
-                // If focus is inside a scrollable container, do not interfere
                 const scrollableParent = getScrollableParent(document.activeElement, "vertical");
                 if (scrollableParent) return;
 
@@ -306,14 +292,37 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             }
         };
 
-        // ----- Custom event for programmatic scrolling -----
+        // ----- UPDATED: Custom event for programmatic scrolling -----
         const onSetTarget = (ev) => {
             try {
-                const v = typeof ev.detail === "number" ? ev.detail : 0;
-                targetRef.current = v;   // set target position
-                currentRef.current = v;  // reset current scroll instantly
-                window.scrollTo(0, v);   // teleport user
-                clampTarget();
+                let targetValue, smooth = false; // default to instant
+
+                // Handle old number format for backward compatibility
+                if (typeof ev.detail === 'number') {
+                    targetValue = ev.detail;          // old style: number = instant jump
+                } else {
+                    targetValue = ev.detail.value;
+                    smooth = ev.detail.smooth !== false; // smooth if true or missing? we default to smooth only if explicitly true
+                    // Actually we want to treat missing smooth as false to keep existing behaviour? 
+                    // Let's decide: if smooth is not present, we default to false (instant) for safety.
+                    // But for the button we explicitly set smooth: true.
+                    // So:
+                    // smooth = ev.detail.smooth === true; // only true if explicitly true
+                }
+                // Simpler: only smooth if detail.smooth === true
+                smooth = ev.detail.smooth === true;
+
+                if (smooth) {
+                    // Smooth animation: only update target, let RAF handle it
+                    targetRef.current = targetValue;
+                    clampTarget();
+                } else {
+                    // Instant jump: update both refs and scroll immediately
+                    targetRef.current = targetValue;
+                    currentRef.current = targetValue;
+                    window.scrollTo(0, targetValue);
+                    clampTarget();
+                }
             } catch (err) {
                 console.warn("SmoothScroll onSetTarget error:", err);
             }
@@ -338,7 +347,6 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
         };
         const onPointerMove = (ev) => {
             if (!pointerDownRef.current) return;
-            // If moved more than a few px, treat as drag (no extra flag needed)
         };
         const onPointerUp = () => {
             pointerDownRef.current = false;
@@ -350,12 +358,11 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             if (!document.hidden) requestAnimationFrame(syncInitial);
         };
 
-        // ----- Hybrid device detection: if a touch event occurs, switch to native -----
+        // ----- Hybrid device detection -----
         const onTouchStart = () => {
-            // If we thought it was fine pointer but user touched screen, switch to native
             if (isFinePointer.current) {
                 isFinePointer.current = false;
-                enableFallbackMode(); // will set native scroll and clean up
+                enableFallbackMode();
             }
         };
 
@@ -374,7 +381,7 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
         window.addEventListener("keydown", onKeyDown, { passive: false });
         window.addEventListener("smooth-scroll-set-target", onSetTarget);
         document.addEventListener("visibilitychange", onVisibility);
-        document.addEventListener("touchstart", onTouchStart, { passive: true, once: true }); // detect touch once
+        document.addEventListener("touchstart", onTouchStart, { passive: true, once: true });
 
         const supportsPointer = !!window.PointerEvent;
         if (supportsPointer) {
@@ -387,14 +394,12 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             document.addEventListener("mouseup", onPointerUp, { passive: true });
         }
 
-        // Use scrollend event for more accurate user scroll detection (modern browsers)
         if ('onscrollend' in window) {
             document.addEventListener('scrollend', () => {
                 isUserScrollingRef.current = false;
             }, { passive: true });
         }
 
-        // Initial sync after mount / route change
         requestAnimationFrame(syncInitial);
 
         // Cleanup
@@ -429,7 +434,7 @@ export default function SmoothScroll({ children, ease = 0.08, className = "" }) 
             clearTimeout(userScrollTimeoutRef.current);
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
-    }, [ease, pathname]); // note: fallbackModeRef and errorCountRef are stable refs, not dependencies
+    }, [ease, pathname]);
 
     return <div className={className}>{children}</div>;
 }

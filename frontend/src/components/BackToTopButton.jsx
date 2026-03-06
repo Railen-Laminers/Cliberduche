@@ -33,8 +33,11 @@ export default function BackToTopButton({ className = "fixed bottom-6 right-6" }
                 behavior: "smooth",
             });
         } else {
+            // --- CHANGE HERE: dispatch an object with smooth: true ---
             window.dispatchEvent(
-                new CustomEvent("smooth-scroll-set-target", { detail: 0 })
+                new CustomEvent("smooth-scroll-set-target", {
+                    detail: { value: 0, smooth: true }
+                })
             );
         }
     };
