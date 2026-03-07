@@ -439,7 +439,7 @@ export default function About({ introDone = true }) {
               <div className="h-px w-16 bg-blue-300 dark:bg-blue-600"></div>
             </div>
             <p className="text-gray-600 dark:text-gray-400 max-w-3xl mx-auto text-lg">
-              Meet the people behind Cliberduche. Founded in 2018 by <strong>John Climaco</strong>,
+              Meet the people behind Cliberduche. Founded in 2018 by <strong>Rolando Climaco</strong>,
               our leadership combines decades of construction experience with a deep commitment to
               integrity and sustainable development. Today, together with his family and a dedicated
               team of professionals, we continue to build lasting partnerships—one project at a time.
