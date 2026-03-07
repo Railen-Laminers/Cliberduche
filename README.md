@@ -1,13 +1,11 @@
-Wala pang backend to ahh bali frontend lang to kaya npm run dev nalang kung gusto nyu i run
 
 Backend
 - composer install
+- open xampp
+- php artisan serve
+- php artisan queue:work
+
 
 Frontend
 - npm install
 
-
-Tasks for frontend
-
-Enhancements
-- YUng mga images pa
